@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CA Inter Foundation Daily Bites</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #060913;
+      color: #f1f5f9;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .status-frame {
+      width: 380px;
+      height: 675px; /* 9:16 vertical ratio */
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0,0,0,0.85);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4 flex flex-col items-center justify-center">
+
+  <!-- Top Selector Toolbar -->
+  <div class="max-w-xl w-full mb-6 flex flex-col items-center gap-3">
+    <div class="text-center">
+      <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-950/70 px-3 py-1 rounded-full border border-indigo-500/30">CA Inter Foundation Engine</span>
+      <h1 class="text-xl md:text-2xl font-black mt-2 text-white">Daily WhatsApp Status Series</h1>
+      <p class="text-xs text-slate-400 mt-1">2-Day Foundation Rotation: Accounts ➔ Law ➔ GST ➔ Income Tax</p>
+    </div>
+
+    <!-- Navigation Pills -->
+    <div class="flex flex-wrap justify-center gap-1.5 p-1.5 bg-slate-900/90 rounded-2xl border border-slate-800 backdrop-blur-md">
+      <button onclick="renderDay(0)" id="btn-0" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-indigo-600 text-white">Day 1: Acc Modern</button>
+      <button onclick="renderDay(1)" id="btn-1" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 2: Acc Logic</button>
+      <button onclick="renderDay(2)" id="btn-2" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 3: Law Core</button>
+      <button onclick="renderDay(3)" id="btn-3" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 4: MOA vs AOA</button>
+      <button onclick="renderDay(4)" id="btn-4" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 5: GST Basics</button>
+      <button onclick="renderDay(5)" id="btn-5" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 6: GST RCM</button>
+      <button onclick="renderDay(6)" id="btn-6" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 7: Tax Intro</button>
+      <button onclick="renderDay(7)" id="btn-7" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 8: Tax Flow</button>
+    </div>
+
+    <button onclick="downloadPNG()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      Download WhatsApp Status (PNG)
+    </button>
+  </div>
+
+  <!-- 9:16 WhatsApp Status Card Container -->
+  <div id="statusCanvas" class="status-frame flex flex-col justify-between p-5 border border-slate-700/50 bg-[#0a0f1d] text-white">
+    <!-- Content dynamically injected here -->
+  </div>
+
+  <script>
+    const statusData = [
+      {
+        day: "Day 01",
+        subject: "ACCOUNTING BASICS",
+        tagColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/40",
+        badge: "MODERN RULES (ALICE)",
+        bgGradient: "radial-gradient(circle at 10% 10%, #0d2847 0%, #060b14 100%)",
+        borderColor: "#0284c7",
+        rule1Title: "A & E (Assets & Expenses)",
+        rule1Desc: "Normal Balance = DEBIT",
+        rule1Sub: "• Increase ➔ DEBIT (Dr.)\n• Decrease ➔ CREDIT (Cr.)",
+        rule2Title: "L, I & C (Liab., Income, Capital)",
+        rule2Desc: "Normal Balance = CREDIT",
+        rule2Sub: "• Increase ➔ CREDIT (Cr.)\n• Decrease ➔ DEBIT (Dr.)",
+        coreLogic: "Golden Rules vs Modern Logic",
+        coreText: "Traditional rules (Real, Personal, Nominal) confusing lagte hain? Bas ALICE framework yaad rakho—Balance Sheet aur P&L dono solve ho jayenge!",
+        trick: "A.L.I.C.E. Memory Trick: Left Side (A, E) Dr. se badhte hain, Right Side (L, I, C) Cr. se badhte hain!",
+        nextTopic: "Day 02: Capital vs Revenue Expenditure Logic"
+      },
+      {
+        day: "Day 02",
+        subject: "ACCOUNTING BASICS",
+        tagColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/40",
+        badge: "CAPITAL VS REVENUE",
+        bgGradient: "radial-gradient(circle at 10% 10%, #0c2340 0%, #050912 100%)",
+        borderColor: "#0284c7",
+        rule1Title: "Capital Expenditure (Balance Sheet)",
+        rule1Desc: "Benefits > 1 Accounting Period",
+        rule1Sub: "• Earning capacity badhaye\n• Asset ko ready-to-use banaye (Freight/Installations)",
+        rule2Title: "Revenue Expenditure (P&L A/c)",
+        rule2Desc: "Benefits ≤ 1 Accounting Period",
+        rule2Sub: "• Operating efficiency maintain kare\n• Day-to-day repair, wages, rent",
+        coreLogic: "Ready-To-Use Test (ICAI Trap)",
+        coreText: "Second-hand machinery kharidne ke baad usko chalu karne tak ka overhauling ya repairs hamesha CAPITALISE hoga!",
+        trick: "Earning Capacity Boost = Capitalize; Existing Capacity Maintain = Expense Off!",
+        nextTopic: "Day 03: Corporate Law - Nature of Company & Corporate Veil"
+      },
+      {
+        day: "Day 03",
+        subject: "CORPORATE LAW BASICS",
+        tagColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
+        badge: "CORPORATE VEIL & IDENTITY",
+        bgGradient: "radial-gradient(circle at 10% 10%, #0b3820 0%, #05140b 100%)",
+        borderColor: "#10b981",
+        rule1Title: "Separate Legal Entity (Salomon Rule)",
+        rule1Desc: "Company ≠ Its Members/Directors",
+        rule1Sub: "• Company can hold property in its own name\n• Macaura Case: Shareholder ka koi insurable interest nahi",
+        rule2Title: "Lifting the Corporate Veil",
+        rule2Desc: "When Courts ignore separate identity",
+        rule2Sub: "• Protection of revenue (Sir Dinshaw Maneckjee)\n• Fraud prevention / Public interest",
+        coreLogic: "Perpetual Succession",
+        coreText: "'Members may come and members may go, but the company goes on forever' — jab tak Companies Act ke hisab se Winding-up na ho.",
+        trick: "Company artificial legal person hai, natural nahi. Sign nahi karegi, Common Seal ya Authorized Signatory chalegi!",
+        nextTopic: "Day 04: MOA vs AOA (Charter vs Internal Rules)"
+      },
+      {
+        day: "Day 04",
+        subject: "CORPORATE LAW BASICS",
+        tagColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
+        badge: "MOA vs AOA & DOCTRINES",
+        bgGradient: "radial-gradient(circle at 10% 10%, #07331c 0%, #04120a 100%)",
+        borderColor: "#10b981",
+        rule1Title: "MOA (Charter of Company)",
+        rule1Desc: "External Relations & Limits (Sec 4)",
+        rule1Sub: "• 6 Clauses: Name, Situation, Object, Capital, Liab, Subscription\n• Object ke bahar = Ultra Vires (Void-ab-initio)",
+        rule2Title: "AOA (Internal Bye-Laws)",
+        rule2Desc: "Internal Management (Sec 5)",
+        rule2Sub: "• Subordinate to MOA\n• Can be altered by Special Resolution (SR)",
+        coreLogic: "Indoor Management vs Constructive Notice",
+        coreText: "Constructive Notice protects the company (outsider knows MOA/AOA). Indoor Management (Turquand Rule) protects the outsider!",
+        trick: "Ultra Vires Act can NEVER be ratified, even by unanimous consent of all shareholders!",
+        nextTopic: "Day 05: GST - Backbone of Indirect Taxes & Supply Concept"
+      },
+      {
+        day: "Day 05",
+        subject: "GST BASICS",
+        tagColor: "bg-amber-500/20 text-amber-400 border-amber-500/40",
+        badge: "DUAL GST & SECTION 7 CORE",
+        bgGradient: "radial-gradient(circle at 10% 10%, #382405 0%, #140d02 100%)",
+        borderColor: "#f59e0b",
+        rule1Title: "Dual GST Framework (Destination Based)",
+        rule1Desc: "Consuming State gets the revenue",
+        rule1Sub: "• Intra-State (Within State): CGST + SGST/UTGST\n• Inter-State (Between States): IGST (Center collects)",
+        rule2Title: "Scope of Supply [Section 7(1)(a)]",
+        rule2Desc: "3 Essential Pillars",
+        rule2Sub: "1. Goods or Services\n2. For Consideration\n3. In course/furtherance of Business",
+        coreLogic: "Schedule I (No Consideration, Still Supply!)",
+        coreText: "Permanent transfer of business assets on which ITC availed, ya supplies between Related/Distinct persons = SUPPLY even without consideration!",
+        trick: "GST is Destination Based: Tax hamesha wahan jayega jahan goods consume honge, jahan se originate hue wahan nahi!",
+        nextTopic: "Day 06: Forward Charge vs Reverse Charge (RCM Basics)"
+      },
+      {
+        day: "Day 06",
+        subject: "GST BASICS",
+        tagColor: "bg-amber-500/20 text-amber-400 border-amber-500/40",
+        badge: "RCM BASICS (SEC 9(3) & 9(4))",
+        bgGradient: "radial-gradient(circle at 10% 10%, #301f04 0%, #120b01 100%)",
+        borderColor: "#f59e0b",
+        rule1Title: "Forward Charge (FCM) vs RCM",
+        rule1Desc: "Who pays tax to Government?",
+        rule1Sub: "• FCM: Supplier collects & deposits tax\n• RCM: Recipient is directly liable to pay tax to Govt.",
+        rule2Title: "Key 9(3) Notified Services",
+        rule2Desc: "Mandatory RCM Triggers",
+        rule2Sub: "• GTA (Goods Transport Agency) if 5% opted\n• Legal Services by Advocates to Business Entities\n• Director services to Company",
+        coreLogic: "Golden RCM Rule for ITC",
+        coreText: "RCM ki liability sirf aur sirf CASH LEDGER se pay hoti hai (ITC use nahi ho sakta), par pay karne ke baad uska 100% ITC claim kar sakte ho!",
+        trick: "RCM Payment = Cash Only! But same month me ITC claim allowable subject to Sec 16!",
+        nextTopic: "Day 07: Income Tax - Previous Year, AY & Computation Flow"
+      },
+      {
+        day: "Day 07",
+        subject: "INCOME TAX BASICS",
+        tagColor: "bg-purple-500/20 text-purple-400 border-purple-500/40",
+        badge: "PY vs AY & CHARGING SEC 4",
+        bgGradient: "radial-gradient(circle at 10% 10%, #300c3b 0%, #110414 100%)",
+        borderColor: "#a855f7",
+        rule1Title: "Previous Year (PY) vs AY",
+        rule1Desc: "The Earning Year vs Assessment Year",
+        rule1Sub: "• PY: Financial year jisme income earn hui (1 Apr - 31 Mar)\n• AY: Agla saal jisme tax assess & pay hota hai",
+        rule2Title: "Total Income Computation Flow",
+        rule2Desc: "5 Heads of Income",
+        rule2Sub: "1. Salaries  2. House Property  3. PGBP\n4. Capital Gains  5. Other Sources\n➔ Sum = Gross Total Income (GTI)",
+        coreLogic: "GTI vs Total Income",
+        coreText: "Total Income = GTI minus Chapter VI-A Deductions (80C se 80U). Tax hamesha Total Income (rounded to nearest ₹10) par lagta hai.",
+        trick: "New Tax Regime [Sec 115BAC] default hai! Usme Chapter VI-A ke maximum deductions disallowed hain!",
+        nextTopic: "Day 08: Surcharge, Health & Education Cess, and Rebate u/s 87A"
+      },
+      {
+        day: "Day 08",
+        subject: "INCOME TAX BASICS",
+        tagColor: "bg-purple-500/20 text-purple-400 border-purple-500/40",
+        badge: "RATES, CESS & REBATE 87A",
+        bgGradient: "radial-gradient(circle at 10% 10%, #280a32 0%, #0e0312 100%)",
+        borderColor: "#a855f7",
+        rule1Title: "Rebate u/s 87A (Relief for Small Taxpayers)",
+        rule1Desc: "Resident Individuals Only",
+        rule1Sub: "• Old Regime: Total Income ≤ ₹5 Lakh ➔ Max Rebate ₹12,500\n• New Regime: Total Income ≤ ₹7 Lakh ➔ Max Rebate ₹25,000",
+        rule2Title: "Health & Education Cess",
+        rule2Desc: "Mandatory 4% on all Assessees",
+        rule2Sub: "• (Tax on Total Income - Rebate + Surcharge) par 4% lagta hai\n• Never calculate cess directly on income!",
+        coreLogic: "Surcharge Nature",
+        coreText: "Surcharge is a 'Tax on Tax' applicable only on high income earners (> ₹50L in Old, > ₹50L in New with capped rates).",
+        trick: "First calculate Base Tax ➔ Deduct 87A ➔ Add Surcharge (if applicable) ➔ Then add 4% HEC!",
+        nextTopic: "Day 09: Moving to ICAI Syllabus - AS 1 (Disclosure of Policies)"
+      }
+    ];
+
+    function renderDay(index) {
+      // Update Tab Styles
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        if(i === index) {
+          btn.className = "tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+        } else {
+          btn.className = "tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white";
+        }
+      });
+
+      const d = statusData[index];
+      const container = document.getElementById('statusCanvas');
+      container.style.background = d.bgGradient;
+      container.style.borderColor = d.borderColor;
+
+      container.innerHTML = `
+        <!-- Top Status Bar -->
+        <div>
+          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${d.tagColor}">
+              ${d.day} • ${d.subject}
+            </span>
+            <span class="text-[9px] mono font-bold text-slate-400 tracking-widest uppercase">ICAI Foundation Hub</span>
+          </div>
+
+          <div class="mt-3">
+            <span class="text-[10px] font-bold text-amber-400 tracking-wider uppercase block">Core Concept #0${index+1}</span>
+            <h2 class="text-lg font-black tracking-tight text-white leading-tight mt-0.5">${d.badge}</h2>
+          </div>
+        </div>
+
+        <!-- 2 Comparison / Pillar Cards -->
+        <div class="space-y-2.5 my-auto">
+          <!-- Card 1 -->
+          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-2.5 backdrop-blur-md">
+            <div class="flex justify-between items-center mb-1">
+              <h4 class="text-xs font-extrabold text-amber-300">${d.rule1Title}</h4>
+              <span class="text-[9px] mono bg-white/10 px-1.5 py-0.5 rounded text-slate-300">${d.rule1Desc}</span>
+            </div>
+            <p class="text-[10.5px] text-slate-300 leading-snug whitespace-pre-line font-medium">${d.rule1Sub}</p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-2.5 backdrop-blur-md">
+            <div class="flex justify-between items-center mb-1">
+              <h4 class="text-xs font-extrabold text-cyan-300">${d.rule2Title}</h4>
+              <span class="text-[9px] mono bg-white/10 px-1.5 py-0.5 rounded text-slate-300">${d.rule2Desc}</span>
+            </div>
+            <p class="text-[10.5px] text-slate-300 leading-snug whitespace-pre-line font-medium">${d.rule2Sub}</p>
+          </div>
+
+          <!-- Core Insight Box -->
+          <div class="bg-slate-950/70 border-l-2 border-indigo-500 rounded-r-xl p-2.5">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-indigo-400 block">${d.coreLogic}</span>
+            <p class="text-[10.5px] text-slate-200 mt-0.5 leading-snug">${d.coreText}</p>
+          </div>
+        </div>
+
+        <!-- Bottom Trick & Next Teaser -->
+        <div class="space-y-2 pt-2 border-t border-white/10">
+          <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 rounded-xl p-2 text-center">
+            <span class="text-[9px] font-black uppercase text-amber-300 tracking-wider block">⚡ ICAI Exam Memory Trick</span>
+            <p class="text-[10.5px] font-bold text-white mt-0.5 leading-tight">${d.trick}</p>
+          </div>
+
+          <div class="flex items-center justify-between text-[9px] text-slate-400 px-1 font-semibold">
+            <span>Next: ${d.nextTopic}</span>
+            <span class="mono text-slate-500">CA-INTER</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // PNG Download Function using html2canvas
+    function downloadPNG() {
+      const card = document.getElementById('statusCanvas');
+      html2canvas(card, {
+        scale: 3, // Ultra-high resolution crisp text
+        useCORS: true,
+        backgroundColor: null
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `CA_Inter_Status_${Date.now()}.png`;
+        link.url = canvas.toDataURL('image/png');
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Initial render
+    renderDay(0);
+  </script>
+</body>
+</html>
