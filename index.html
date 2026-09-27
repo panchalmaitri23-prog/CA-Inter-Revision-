@@ -3,299 +3,525 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CA Inter Foundation Daily Bites</title>
+  <title>CA Inter Pro Revision Station</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #060913;
-      color: #f1f5f9;
+      background: #040711;
+      color: #f8fafc;
+      -webkit-tap-highlight-color: transparent;
     }
     .mono { font-family: 'JetBrains Mono', monospace; }
-    .status-frame {
-      width: 380px;
-      height: 675px; /* 9:16 vertical ratio */
+    
+    /* Perfect 9:16 WhatsApp Status Ratio Card */
+    .status-card {
+      width: 360px;
+      height: 640px;
       border-radius: 28px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 25px 60px -15px rgba(0,0,0,0.85);
+      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.9);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
-<body class="min-h-screen py-8 px-4 flex flex-col items-center justify-center">
+<body class="min-h-screen py-6 px-3 flex flex-col items-center justify-start">
 
-  <!-- Top Selector Toolbar -->
-  <div class="max-w-xl w-full mb-6 flex flex-col items-center gap-3">
-    <div class="text-center">
-      <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-950/70 px-3 py-1 rounded-full border border-indigo-500/30">CA Inter Foundation Engine</span>
-      <h1 class="text-xl md:text-2xl font-black mt-2 text-white">Daily WhatsApp Status Series</h1>
-      <p class="text-xs text-slate-400 mt-1">2-Day Foundation Rotation: Accounts ➔ Law ➔ GST ➔ Income Tax</p>
+  <!-- Mobile Top Dashboard Header -->
+  <header class="w-full max-w-md flex items-center justify-between px-2 mb-4">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-500/25">
+        CA
+      </div>
+      <div>
+        <h1 class="text-sm font-black tracking-tight text-white flex items-center gap-1.5">
+          CA INTER HUB <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">PRO</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-medium">Daily 9:16 WhatsApp Status Engine</p>
+      </div>
     </div>
 
-    <!-- Navigation Pills -->
-    <div class="flex flex-wrap justify-center gap-1.5 p-1.5 bg-slate-900/90 rounded-2xl border border-slate-800 backdrop-blur-md">
-      <button onclick="renderDay(0)" id="btn-0" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-indigo-600 text-white">Day 1: Acc Modern</button>
-      <button onclick="renderDay(1)" id="btn-1" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 2: Acc Logic</button>
-      <button onclick="renderDay(2)" id="btn-2" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 3: Law Core</button>
-      <button onclick="renderDay(3)" id="btn-3" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 4: MOA vs AOA</button>
-      <button onclick="renderDay(4)" id="btn-4" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 5: GST Basics</button>
-      <button onclick="renderDay(5)" id="btn-5" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 6: GST RCM</button>
-      <button onclick="renderDay(6)" id="btn-6" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 7: Tax Intro</button>
-      <button onclick="renderDay(7)" id="btn-7" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">Day 8: Tax Flow</button>
+    <!-- Mode Selector: Status vs Quick Quiz -->
+    <div class="flex items-center bg-slate-900 border border-slate-800 p-1 rounded-xl">
+      <button onclick="switchView('status')" id="btn-status" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-indigo-600 text-white transition-all">Poster</button>
+      <button onclick="switchView('quiz')" id="btn-quiz" class="px-2.5 py-1 text-[11px] font-bold rounded-lg text-slate-400 hover:text-white transition-all">Quiz</button>
     </div>
+  </header>
 
-    <button onclick="downloadPNG()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-      Download WhatsApp Status (PNG)
+  <!-- Horizontal Scrollable Subject Days Carousel -->
+  <div class="w-full max-w-md overflow-x-auto hide-scrollbar flex gap-2 pb-3 px-1">
+    <button onclick="setDay(0)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center border border-cyan-500/50 bg-cyan-950/40">
+      <span class="text-[9px] mono font-bold text-cyan-400">DAY 01</span>
+      <span class="text-xs font-black text-white">Acc: ALICE</span>
+    </button>
+    <button onclick="setDay(1)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-cyan-400">DAY 02</span>
+      <span class="text-xs font-black text-slate-300">Acc: Cap/Rev</span>
+    </button>
+    <button onclick="setDay(2)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-emerald-400">DAY 03</span>
+      <span class="text-xs font-black text-slate-300">Law: Veil</span>
+    </button>
+    <button onclick="setDay(3)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-emerald-400">DAY 04</span>
+      <span class="text-xs font-black text-slate-300">Law: MOA/AOA</span>
+    </button>
+    <button onclick="setDay(4)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-amber-400">DAY 05</span>
+      <span class="text-xs font-black text-slate-300">GST: Supply</span>
+    </button>
+    <button onclick="setDay(5)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-amber-400">DAY 06</span>
+      <span class="text-xs font-black text-slate-300">GST: RCM</span>
+    </button>
+    <button onclick="setDay(6)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-purple-400">DAY 07</span>
+      <span class="text-xs font-black text-slate-300">Tax: PY & AY</span>
+    </button>
+    <button onclick="setDay(7)" class="day-tab flex-shrink-0 px-3.5 py-2 rounded-2xl glass-pill flex flex-col items-center">
+      <span class="text-[9px] mono font-bold text-purple-400">DAY 08</span>
+      <span class="text-xs font-black text-slate-300">Tax: Rebate 87A</span>
     </button>
   </div>
 
-  <!-- 9:16 WhatsApp Status Card Container -->
-  <div id="statusCanvas" class="status-frame flex flex-col justify-between p-5 border border-slate-700/50 bg-[#0a0f1d] text-white">
-    <!-- Content dynamically injected here -->
+  <!-- Action Bar -->
+  <div class="w-full max-w-md flex items-center justify-between gap-2.5 my-2 px-1">
+    <button onclick="downloadStatusPNG()" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      Download Poster (PNG)
+    </button>
+    <button onclick="copyCaption()" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs flex items-center gap-1.5 border border-slate-700 active:scale-95 transition-all">
+      <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+      <span id="captionBtnText">Copy Caption</span>
+    </button>
+  </div>
+
+  <!-- Main 9:16 WhatsApp Status Card -->
+  <div id="statusContainer" class="status-card flex flex-col justify-between p-5 text-white border transition-all mt-1">
+    <!-- Dynamic Injected Canvas Content -->
+  </div>
+
+  <!-- Quiz Mode Container (Hidden by default) -->
+  <div id="quizContainer" class="status-card hidden flex-col justify-between p-5 text-white border border-indigo-500/40 bg-slate-950 mt-1">
+    <div>
+      <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+        <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+          ICAI RAPID FIRE TEST
+        </span>
+        <span class="text-[10px] mono text-slate-400" id="quizDayTag">Day 01</span>
+      </div>
+      <div class="mt-4">
+        <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Concept Check</span>
+        <h3 class="text-sm font-extrabold mt-1 text-white leading-snug" id="quizQuestion">Loading question...</h3>
+      </div>
+      <div class="mt-4 space-y-2" id="quizOptions">
+        <!-- Injected options -->
+      </div>
+    </div>
+
+    <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300" id="quizExplanation">
+      💡 Tap an option to verify your exam concept logic!
+    </div>
   </div>
 
   <script>
-    const statusData = [
+    const curriculum = [
       {
         day: "Day 01",
-        subject: "ACCOUNTING BASICS",
-        tagColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/40",
-        badge: "MODERN RULES (ALICE)",
-        bgGradient: "radial-gradient(circle at 10% 10%, #0d2847 0%, #060b14 100%)",
-        borderColor: "#0284c7",
-        rule1Title: "A & E (Assets & Expenses)",
-        rule1Desc: "Normal Balance = DEBIT",
-        rule1Sub: "• Increase ➔ DEBIT (Dr.)\n• Decrease ➔ CREDIT (Cr.)",
-        rule2Title: "L, I & C (Liab., Income, Capital)",
-        rule2Desc: "Normal Balance = CREDIT",
-        rule2Sub: "• Increase ➔ CREDIT (Cr.)\n• Decrease ➔ DEBIT (Dr.)",
-        coreLogic: "Golden Rules vs Modern Logic",
-        coreText: "Traditional rules (Real, Personal, Nominal) confusing lagte hain? Bas ALICE framework yaad rakho—Balance Sheet aur P&L dono solve ho jayenge!",
-        trick: "A.L.I.C.E. Memory Trick: Left Side (A, E) Dr. se badhte hain, Right Side (L, I, C) Cr. se badhte hain!",
-        nextTopic: "Day 02: Capital vs Revenue Expenditure Logic"
+        subject: "ACCOUNTING FOUNDATION",
+        themeColor: "#38bdf8",
+        badge: "ALICE FRAMEWORK & MODERN RULES",
+        iconSvg: `<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #0c2d48 0%, #040d1a 100%)",
+        borderColor: "rgba(56, 189, 248, 0.4)",
+        col1Title: "DEBIT FAMILIES (A + E)",
+        col1Sub: "Assets & Expenses",
+        col1Points: ["• Normal balance is always DEBIT", "• + Inflow / Increase ➔ DEBIT (Dr.)", "• - Outflow / Decrease ➔ CREDIT (Cr.)"],
+        col2Title: "CREDIT FAMILIES (L + I + C)",
+        col2Sub: "Liabilities, Income & Capital",
+        col2Points: ["• Normal balance is always CREDIT", "• + Increase / Growth ➔ CREDIT (Cr.)", "• - Decrease / Reduction ➔ DEBIT (Dr.)"],
+        icaiTrap: "Accrued income is an ASSET (Dr.), while Unearned income is a LIABILITY (Cr.). Never confuse the two in final accounts!",
+        examHack: "ALICE Trick: Left Hand = A, E (Dr. increases). Right Hand = L, I, C (Cr. increases). Perfect balance every single time!",
+        quiz: {
+          q: "When an owner withdraws goods for personal use, what is the correct credit entry?",
+          options: ["Sales Account", "Drawings Account", "Purchases Account", "Capital Account"],
+          correct: 2,
+          exp: "Goods withdrawn for personal use reduce the original inventory at cost; hence Purchases A/c is credited (not Sales A/c)."
+        }
       },
       {
         day: "Day 02",
-        subject: "ACCOUNTING BASICS",
-        tagColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/40",
-        badge: "CAPITAL VS REVENUE",
-        bgGradient: "radial-gradient(circle at 10% 10%, #0c2340 0%, #050912 100%)",
-        borderColor: "#0284c7",
-        rule1Title: "Capital Expenditure (Balance Sheet)",
-        rule1Desc: "Benefits > 1 Accounting Period",
-        rule1Sub: "• Earning capacity badhaye\n• Asset ko ready-to-use banaye (Freight/Installations)",
-        rule2Title: "Revenue Expenditure (P&L A/c)",
-        rule2Desc: "Benefits ≤ 1 Accounting Period",
-        rule2Sub: "• Operating efficiency maintain kare\n• Day-to-day repair, wages, rent",
-        coreLogic: "Ready-To-Use Test (ICAI Trap)",
-        coreText: "Second-hand machinery kharidne ke baad usko chalu karne tak ka overhauling ya repairs hamesha CAPITALISE hoga!",
-        trick: "Earning Capacity Boost = Capitalize; Existing Capacity Maintain = Expense Off!",
-        nextTopic: "Day 03: Corporate Law - Nature of Company & Corporate Veil"
+        subject: "ACCOUNTING FOUNDATION",
+        themeColor: "#38bdf8",
+        badge: "CAPITAL VS REVENUE EXPENDITURE",
+        iconSvg: `<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #082846 0%, #030a14 100%)",
+        borderColor: "rgba(56, 189, 248, 0.4)",
+        col1Title: "CAPITAL EXPENDITURE",
+        col1Sub: "Balance Sheet Asset Addition",
+        col1Points: ["• Enduring benefit across > 1 accounting cycle", "• Increases earning capacity or asset lifespan", "• Ready-to-use costs (Freight, trial run, site prep)"],
+        col2Title: "REVENUE EXPENDITURE",
+        col2Sub: "P&L Statement Charge",
+        col2Points: ["• Benefits exhausted in current period (≤ 1 year)", "• Maintains existing efficiency & operations", "• Routine maintenance, insurance, standard repairs"],
+        icaiTrap: "Overhauling expenses of a second-hand machine incurred BEFORE putting it into working operation are CAPITAL in nature!",
+        examHack: "Ask one question: Does it boost existing capacity? YES = Capitalize. NO (only keeps it running) = Expense Off.",
+        quiz: {
+          q: "Legal fees paid to defend title of an existing factory building is treated as:",
+          options: ["Capital Expenditure", "Revenue Expenditure", "Deferred Revenue Expenditure", "Prepaid Expense"],
+          correct: 1,
+          exp: "Defending an existing title does not enhance earning capacity or add a new asset—it merely maintains title, hence Revenue Expenditure."
+        }
       },
       {
         day: "Day 03",
-        subject: "CORPORATE LAW BASICS",
-        tagColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
-        badge: "CORPORATE VEIL & IDENTITY",
-        bgGradient: "radial-gradient(circle at 10% 10%, #0b3820 0%, #05140b 100%)",
-        borderColor: "#10b981",
-        rule1Title: "Separate Legal Entity (Salomon Rule)",
-        rule1Desc: "Company ≠ Its Members/Directors",
-        rule1Sub: "• Company can hold property in its own name\n• Macaura Case: Shareholder ka koi insurable interest nahi",
-        rule2Title: "Lifting the Corporate Veil",
-        rule2Desc: "When Courts ignore separate identity",
-        rule2Sub: "• Protection of revenue (Sir Dinshaw Maneckjee)\n• Fraud prevention / Public interest",
-        coreLogic: "Perpetual Succession",
-        coreText: "'Members may come and members may go, but the company goes on forever' — jab tak Companies Act ke hisab se Winding-up na ho.",
-        trick: "Company artificial legal person hai, natural nahi. Sign nahi karegi, Common Seal ya Authorized Signatory chalegi!",
-        nextTopic: "Day 04: MOA vs AOA (Charter vs Internal Rules)"
+        subject: "CORPORATE LAW",
+        themeColor: "#34d399",
+        badge: "SEPARATE LEGAL ENTITY & VEIL",
+        iconSvg: `<svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #093722 0%, #02120a 100%)",
+        borderColor: "rgba(52, 211, 153, 0.4)",
+        col1Title: "SALOMON DOCTRINE",
+        col1Sub: "Independent Corporate Identity",
+        col1Points: ["• Company is distinct from members & promoters", "• Own property rights in corporate name", "• Macaura Case: Shareholder has zero insurable interest"],
+        col2Title: "LIFTING CORPORATE VEIL",
+        col2Sub: "Judicial Disregard of Entity",
+        col2Points: ["• Protection of revenue (Dinshaw Maneckjee case)", "• Prevention of fraud or improper conduct", "• Determining enemy character of company (Daimler)"],
+        icaiTrap: "Even a 99.9% majority shareholder cannot claim ownership over company-owned assets in their personal capacity!",
+        examHack: "Salomon rule is the general rule; Lifting of the veil is the judicial exception invoked only when fraud or tax avoidance is proven.",
+        quiz: {
+          q: "In Macaura v. Northern Assurance Co., why was insurance rejected?",
+          options: ["Company was bankrupt", "Timber was illegally harvested", "Shareholder had no insurable interest in company property", "Policy was expired"],
+          correct: 2,
+          exp: "Assets belong to the company, not its shareholders. A shareholder cannot insure company assets under their personal name."
+        }
       },
       {
         day: "Day 04",
-        subject: "CORPORATE LAW BASICS",
-        tagColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
-        badge: "MOA vs AOA & DOCTRINES",
-        bgGradient: "radial-gradient(circle at 10% 10%, #07331c 0%, #04120a 100%)",
-        borderColor: "#10b981",
-        rule1Title: "MOA (Charter of Company)",
-        rule1Desc: "External Relations & Limits (Sec 4)",
-        rule1Sub: "• 6 Clauses: Name, Situation, Object, Capital, Liab, Subscription\n• Object ke bahar = Ultra Vires (Void-ab-initio)",
-        rule2Title: "AOA (Internal Bye-Laws)",
-        rule2Desc: "Internal Management (Sec 5)",
-        rule2Sub: "• Subordinate to MOA\n• Can be altered by Special Resolution (SR)",
-        coreLogic: "Indoor Management vs Constructive Notice",
-        coreText: "Constructive Notice protects the company (outsider knows MOA/AOA). Indoor Management (Turquand Rule) protects the outsider!",
-        trick: "Ultra Vires Act can NEVER be ratified, even by unanimous consent of all shareholders!",
-        nextTopic: "Day 05: GST - Backbone of Indirect Taxes & Supply Concept"
+        subject: "CORPORATE LAW",
+        themeColor: "#34d399",
+        badge: "MOA vs AOA & TURQUAND RULE",
+        iconSvg: `<svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #06301d 0%, #020f08 100%)",
+        borderColor: "rgba(52, 211, 153, 0.4)",
+        col1Title: "MEMORANDUM (MOA)",
+        col1Sub: "Constitutional Charter (Sec 4)",
+        col1Points: ["• Defines scope of external relations & objectives", "• 6 Fundamental Clauses: Name, Object, Capital etc.", "• Ultra Vires the MOA is completely void-ab-initio"],
+        col2Title: "ARTICLES (AOA)",
+        col2Sub: "Internal Regulations (Sec 5)",
+        col2Points: ["• Governs internal operational bylaws & procedures", "• Subordinate to the MOA & Companies Act", "• Alterable by Special Resolution (SR) anytime"],
+        icaiTrap: "An act ultra vires the MOA CANNOT be ratified even by 100% unanimous consent of all shareholders!",
+        examHack: "Constructive Notice protects the Company (outsider presumed to read). Indoor Management (Turquand Rule) protects the outsider!",
+        quiz: {
+          q: "An act ultra vires the Articles of Association (AOA) can be validated by:",
+          options: ["NCLT order only", "Passing a Special Resolution", "Board of Directors resolution", "It can never be validated"],
+          correct: 1,
+          exp: "Acts ultra vires the AOA (but within MOA) can be ratified by altering the AOA via Special Resolution."
+        }
       },
       {
         day: "Day 05",
-        subject: "GST BASICS",
-        tagColor: "bg-amber-500/20 text-amber-400 border-amber-500/40",
-        badge: "DUAL GST & SECTION 7 CORE",
-        bgGradient: "radial-gradient(circle at 10% 10%, #382405 0%, #140d02 100%)",
-        borderColor: "#f59e0b",
-        rule1Title: "Dual GST Framework (Destination Based)",
-        rule1Desc: "Consuming State gets the revenue",
-        rule1Sub: "• Intra-State (Within State): CGST + SGST/UTGST\n• Inter-State (Between States): IGST (Center collects)",
-        rule2Title: "Scope of Supply [Section 7(1)(a)]",
-        rule2Desc: "3 Essential Pillars",
-        rule2Sub: "1. Goods or Services\n2. For Consideration\n3. In course/furtherance of Business",
-        coreLogic: "Schedule I (No Consideration, Still Supply!)",
-        coreText: "Permanent transfer of business assets on which ITC availed, ya supplies between Related/Distinct persons = SUPPLY even without consideration!",
-        trick: "GST is Destination Based: Tax hamesha wahan jayega jahan goods consume honge, jahan se originate hue wahan nahi!",
-        nextTopic: "Day 06: Forward Charge vs Reverse Charge (RCM Basics)"
+        subject: "GST LAW FOUNDATION",
+        themeColor: "#fbbf24",
+        badge: "DUAL GST & SECTION 7 PILLARS",
+        iconSvg: `<svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #382405 0%, #120a02 100%)",
+        borderColor: "rgba(251, 191, 36, 0.4)",
+        col1Title: "TAX LEVY ARCHITECTURE",
+        col1Sub: "Destination-Based Principle",
+        col1Points: ["• Intra-State Supply (Within State) = CGST + SGST", "• Inter-State Supply (Across Borders) = IGST", "• Tax flows to the consuming state, not originating"],
+        col2Title: "SCOPE OF SUPPLY [SEC 7]",
+        col2Sub: "The 3 Invariable Pillars",
+        col2Points: ["• Must involve Goods or Services", "• Transacted for a Consideration (monetary/non-monetary)", "• Executed in course or furtherance of business"],
+        icaiTrap: "Schedule I supplies (e.g. transfer of business asset with ITC availed, or distinct persons) = SUPPLY EVEN WITHOUT CONSIDERATION!",
+        examHack: "No supply = No GST! Always verify Section 7 first before calculating value, rate, or input tax credit.",
+        quiz: {
+          q: "Which schedule lists activities treated as neither supply of goods nor services (Negative List)?",
+          options: ["Schedule I", "Schedule II", "Schedule III", "Schedule IV"],
+          correct: 2,
+          exp: "Schedule III contains the negative list (e.g., employee to employer, sale of land, actionable claims other than lottery/betting)."
+        }
       },
       {
         day: "Day 06",
-        subject: "GST BASICS",
-        tagColor: "bg-amber-500/20 text-amber-400 border-amber-500/40",
-        badge: "RCM BASICS (SEC 9(3) & 9(4))",
-        bgGradient: "radial-gradient(circle at 10% 10%, #301f04 0%, #120b01 100%)",
-        borderColor: "#f59e0b",
-        rule1Title: "Forward Charge (FCM) vs RCM",
-        rule1Desc: "Who pays tax to Government?",
-        rule1Sub: "• FCM: Supplier collects & deposits tax\n• RCM: Recipient is directly liable to pay tax to Govt.",
-        rule2Title: "Key 9(3) Notified Services",
-        rule2Desc: "Mandatory RCM Triggers",
-        rule2Sub: "• GTA (Goods Transport Agency) if 5% opted\n• Legal Services by Advocates to Business Entities\n• Director services to Company",
-        coreLogic: "Golden RCM Rule for ITC",
-        coreText: "RCM ki liability sirf aur sirf CASH LEDGER se pay hoti hai (ITC use nahi ho sakta), par pay karne ke baad uska 100% ITC claim kar sakte ho!",
-        trick: "RCM Payment = Cash Only! But same month me ITC claim allowable subject to Sec 16!",
-        nextTopic: "Day 07: Income Tax - Previous Year, AY & Computation Flow"
+        subject: "GST LAW FOUNDATION",
+        themeColor: "#fbbf24",
+        badge: "REVERSE CHARGE MECHANISM (RCM)",
+        iconSvg: `<svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #2f1d04 0%, #100801 100%)",
+        borderColor: "rgba(251, 191, 36, 0.4)",
+        col1Title: "FORWARD CHARGE (FCM)",
+        col1Sub: "Standard Mechanism",
+        col1Points: ["• Supplier collects tax on invoice & deposits to Govt.", "• Recipient gets tax invoice to claim eligible ITC", "• General rule across majority supplies"],
+        col2Title: "REVERSE CHARGE (RCM)",
+        col2Sub: "Section 9(3) Mandatory Shift",
+        col2Points: ["• Recipient directly remits tax to Government", "• Notified list: GTA (5%), Advocates, Directors", "• RCM liability MUST be paid in CASH only!"],
+        icaiTrap: "You CANNOT use your Electronic Credit Ledger to pay RCM liability. However, once paid in cash, it is eligible for 100% ITC in same month!",
+        examHack: "RCM Payment = Cash Ledger Only! ITC cannot offset RCM output liability under any circumstances.",
+        quiz: {
+          q: "Can a registered recipient use available ITC balance to settle their GST liability under RCM?",
+          options: ["Yes, up to 100%", "Yes, up to 99% under Rule 86B", "No, it must be paid strictly via Electronic Cash Ledger", "Only with commissioner permission"],
+          correct: 2,
+          exp: "Under Section 49, ITC can only be utilized for output tax on supplies made, not for tax payable under reverse charge."
+        }
       },
       {
         day: "Day 07",
-        subject: "INCOME TAX BASICS",
-        tagColor: "bg-purple-500/20 text-purple-400 border-purple-500/40",
-        badge: "PY vs AY & CHARGING SEC 4",
-        bgGradient: "radial-gradient(circle at 10% 10%, #300c3b 0%, #110414 100%)",
-        borderColor: "#a855f7",
-        rule1Title: "Previous Year (PY) vs AY",
-        rule1Desc: "The Earning Year vs Assessment Year",
-        rule1Sub: "• PY: Financial year jisme income earn hui (1 Apr - 31 Mar)\n• AY: Agla saal jisme tax assess & pay hota hai",
-        rule2Title: "Total Income Computation Flow",
-        rule2Desc: "5 Heads of Income",
-        rule2Sub: "1. Salaries  2. House Property  3. PGBP\n4. Capital Gains  5. Other Sources\n➔ Sum = Gross Total Income (GTI)",
-        coreLogic: "GTI vs Total Income",
-        coreText: "Total Income = GTI minus Chapter VI-A Deductions (80C se 80U). Tax hamesha Total Income (rounded to nearest ₹10) par lagta hai.",
-        trick: "New Tax Regime [Sec 115BAC] default hai! Usme Chapter VI-A ke maximum deductions disallowed hain!",
-        nextTopic: "Day 08: Surcharge, Health & Education Cess, and Rebate u/s 87A"
+        subject: "INCOME TAX FOUNDATION",
+        themeColor: "#c084fc",
+        badge: "PY vs AY & TOTAL INCOME FLOW",
+        iconSvg: `<svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #350f42 0%, #120317 100%)",
+        borderColor: "rgba(192, 132, 252, 0.4)",
+        col1Title: "THE EARNING DUALITY",
+        col1Sub: "Previous Year vs Assessment Year",
+        col1Points: ["• Previous Year (PY): 12-month period where income is earned", "• Assessment Year (AY): Immediately succeeding year of taxation", "• Exception: Non-resident shipping, persons leaving India"],
+        col2Title: "5 COMPUTATION HEADS",
+        col2Sub: "Aggregated Gross Total Income",
+        col2Points: ["• 1. Salaries  2. House Property  3. PGBP", "• 4. Capital Gains  5. Other Sources (IFOS)", "• GTI minus Chapter VI-A Deductions = Net Total Income"],
+        icaiTrap: "Agricultural income is exempt u/s 10(1), but is integrated with non-agri income for tax rate determination (Partial Integration Rule)!",
+        examHack: "Tax is always computed on Total Income (rounded to nearest ₹10 u/s 288A), not on Gross Total Income!",
+        quiz: {
+          q: "Under which circumstance is income of the Previous Year taxed in the very same Previous Year?",
+          options: ["Salaried employees with TDS", "Persons leaving India with no intention of returning", "Any company paying advance tax", "Hindu Undivided Family (HUF)"],
+          correct: 1,
+          exp: "Section 174 creates an accelerated assessment exception for individuals leaving India permanently during the current year."
+        }
       },
       {
         day: "Day 08",
-        subject: "INCOME TAX BASICS",
-        tagColor: "bg-purple-500/20 text-purple-400 border-purple-500/40",
-        badge: "RATES, CESS & REBATE 87A",
-        bgGradient: "radial-gradient(circle at 10% 10%, #280a32 0%, #0e0312 100%)",
-        borderColor: "#a855f7",
-        rule1Title: "Rebate u/s 87A (Relief for Small Taxpayers)",
-        rule1Desc: "Resident Individuals Only",
-        rule1Sub: "• Old Regime: Total Income ≤ ₹5 Lakh ➔ Max Rebate ₹12,500\n• New Regime: Total Income ≤ ₹7 Lakh ➔ Max Rebate ₹25,000",
-        rule2Title: "Health & Education Cess",
-        rule2Desc: "Mandatory 4% on all Assessees",
-        rule2Sub: "• (Tax on Total Income - Rebate + Surcharge) par 4% lagta hai\n• Never calculate cess directly on income!",
-        coreLogic: "Surcharge Nature",
-        coreText: "Surcharge is a 'Tax on Tax' applicable only on high income earners (> ₹50L in Old, > ₹50L in New with capped rates).",
-        trick: "First calculate Base Tax ➔ Deduct 87A ➔ Add Surcharge (if applicable) ➔ Then add 4% HEC!",
-        nextTopic: "Day 09: Moving to ICAI Syllabus - AS 1 (Disclosure of Policies)"
+        subject: "INCOME TAX FOUNDATION",
+        themeColor: "#c084fc",
+        badge: "TAX COMPUTATION, REBATE & CESS",
+        iconSvg: `<svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+        bgGradient: "radial-gradient(circle at 10% 10%, #2b0b36 0%, #0f0214 100%)",
+        borderColor: "rgba(192, 132, 252, 0.4)",
+        col1Title: "REBATE U/S 87A",
+        col1Sub: "Resident Individuals Only",
+        col1Points: ["• Old Regime: Total Income ≤ ₹5,00,000 ➔ Max ₹12,500", "• New Regime (115BAC): Income ≤ ₹7,00,000 ➔ Max ₹25,000", "• Non-residents are STRICTLY INELIGIBLE for 87A"],
+        col2Title: "4% HEALTH & EDUCATION CESS",
+        col2Sub: "Universal Tax Surcharge Add-on",
+        col2Points: ["• Mandatory on all assessees without exception", "• Calculated ON: (Base Tax - 87A + Surcharge)", "• NEVER compute 4% cess directly on gross income!"],
+        icaiTrap: "Section 115BAC (New Tax Regime) is the default regime! Assessees must actively opt out if they wish to choose Old Regime.",
+        examHack: "Tax Calculation Order: Base Tax ➔ Less Rebate 87A ➔ Add Surcharge (if > ₹50L) ➔ Add 4% Cess ➔ Deduct TDS/Advance Tax.",
+        quiz: {
+          q: "What is the maximum Section 87A rebate for a resident individual under the default New Tax Regime (Sec 115BAC)?",
+          options: ["₹12,500 (Income up to ₹5 Lakh)", "₹25,000 (Income up to ₹7 Lakh)", "₹30,000 (Income up to ₹7.5 Lakh)", "Zero (No rebate in New Regime)"],
+          correct: 1,
+          exp: "Under Section 115BAC, resident individuals with total income up to ₹7,00,000 enjoy a full rebate up to ₹25,000, making tax payable nil."
+        }
       }
     ];
 
-    function renderDay(index) {
-      // Update Tab Styles
-      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    let currentDayIndex = 0;
+    let activeView = 'status';
+
+    function setDay(index) {
+      currentDayIndex = index;
+      
+      // Update carousel tab styling
+      document.querySelectorAll('.day-tab').forEach((tab, i) => {
         if(i === index) {
-          btn.className = "tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+          tab.classList.add('border-indigo-400', 'bg-indigo-900/40', 'scale-105');
+          tab.querySelector('span:last-child').classList.remove('text-slate-300');
+          tab.querySelector('span:last-child').classList.add('text-white');
         } else {
-          btn.className = "tab-btn px-3 py-1.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white";
+          tab.classList.remove('border-indigo-400', 'bg-indigo-900/40', 'scale-105');
+          tab.querySelector('span:last-child').classList.add('text-slate-300');
+          tab.querySelector('span:last-child').classList.remove('text-white');
         }
       });
 
-      const d = statusData[index];
-      const container = document.getElementById('statusCanvas');
-      container.style.background = d.bgGradient;
-      container.style.borderColor = d.borderColor;
+      renderStatusCard();
+      renderQuiz();
+    }
 
-      container.innerHTML = `
-        <!-- Top Status Bar -->
+    function renderStatusCard() {
+      const data = curriculum[currentDayIndex];
+      const card = document.getElementById('statusContainer');
+      
+      card.style.background = data.bgGradient;
+      card.style.borderColor = data.borderColor;
+
+      card.innerHTML = `
+        <!-- Top Status Header -->
         <div>
-          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-            <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${d.tagColor}">
-              ${d.day} • ${d.subject}
-            </span>
-            <span class="text-[9px] mono font-bold text-slate-400 tracking-widest uppercase">ICAI Foundation Hub</span>
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full animate-ping" style="background-color: ${data.themeColor}"></span>
+              <span class="text-[9.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border glass-pill" style="color: ${data.themeColor}; border-color: ${data.borderColor}">
+                ${data.day} • ${data.subject}
+              </span>
+            </div>
+            <span class="text-[9px] mono font-bold text-slate-400 uppercase tracking-widest">ICAI MODULE CORE</span>
           </div>
 
-          <div class="mt-3">
-            <span class="text-[10px] font-bold text-amber-400 tracking-wider uppercase block">Core Concept #0${index+1}</span>
-            <h2 class="text-lg font-black tracking-tight text-white leading-tight mt-0.5">${d.badge}</h2>
+          <div class="mt-2.5 flex items-start gap-2.5">
+            <div class="p-2 rounded-2xl glass-pill shrink-0">
+              ${data.iconSvg}
+            </div>
+            <div>
+              <span class="text-[9px] font-black uppercase tracking-widest text-amber-300">Foundation Pillar</span>
+              <h2 class="text-sm font-black text-white leading-tight mt-0.5">${data.badge}</h2>
+            </div>
           </div>
         </div>
 
-        <!-- 2 Comparison / Pillar Cards -->
-        <div class="space-y-2.5 my-auto">
-          <!-- Card 1 -->
-          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-2.5 backdrop-blur-md">
-            <div class="flex justify-between items-center mb-1">
-              <h4 class="text-xs font-extrabold text-amber-300">${d.rule1Title}</h4>
-              <span class="text-[9px] mono bg-white/10 px-1.5 py-0.5 rounded text-slate-300">${d.rule1Desc}</span>
+        <!-- 2 Comparison High-Contrast Columns -->
+        <div class="space-y-2 my-auto">
+          <!-- Pillar 1 -->
+          <div class="p-2.5 rounded-2xl glass-pill border border-white/10">
+            <div class="flex items-center justify-between mb-1">
+              <h4 class="text-xs font-black text-amber-300">${data.col1Title}</h4>
+              <span class="text-[8.5px] mono font-bold bg-white/10 px-1.5 py-0.5 rounded text-slate-300">${data.col1Sub}</span>
             </div>
-            <p class="text-[10.5px] text-slate-300 leading-snug whitespace-pre-line font-medium">${d.rule1Sub}</p>
+            <div class="space-y-0.5">
+              ${data.col1Points.map(p => `<p class="text-[10px] text-slate-200 leading-snug font-medium">${p}</p>`).join('')}
+            </div>
           </div>
 
-          <!-- Card 2 -->
-          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-2.5 backdrop-blur-md">
-            <div class="flex justify-between items-center mb-1">
-              <h4 class="text-xs font-extrabold text-cyan-300">${d.rule2Title}</h4>
-              <span class="text-[9px] mono bg-white/10 px-1.5 py-0.5 rounded text-slate-300">${d.rule2Desc}</span>
+          <!-- Pillar 2 -->
+          <div class="p-2.5 rounded-2xl glass-pill border border-white/10">
+            <div class="flex items-center justify-between mb-1">
+              <h4 class="text-xs font-black text-cyan-300">${data.col2Title}</h4>
+              <span class="text-[8.5px] mono font-bold bg-white/10 px-1.5 py-0.5 rounded text-slate-300">${data.col2Sub}</span>
             </div>
-            <p class="text-[10.5px] text-slate-300 leading-snug whitespace-pre-line font-medium">${d.rule2Sub}</p>
+            <div class="space-y-0.5">
+              ${data.col2Points.map(p => `<p class="text-[10px] text-slate-200 leading-snug font-medium">${p}</p>`).join('')}
+            </div>
           </div>
 
-          <!-- Core Insight Box -->
-          <div class="bg-slate-950/70 border-l-2 border-indigo-500 rounded-r-xl p-2.5">
-            <span class="text-[9px] font-bold uppercase tracking-wider text-indigo-400 block">${d.coreLogic}</span>
-            <p class="text-[10.5px] text-slate-200 mt-0.5 leading-snug">${d.coreText}</p>
+          <!-- ICAI Trap Box -->
+          <div class="p-2 rounded-xl bg-red-950/40 border border-red-500/30">
+            <div class="flex items-center gap-1 text-[9px] font-extrabold text-red-400 uppercase tracking-wider">
+              <span>⚠️ ICAI Exam Trap:</span>
+            </div>
+            <p class="text-[9.5px] text-slate-200 mt-0.5 leading-snug font-medium">${data.icaiTrap}</p>
           </div>
         </div>
 
-        <!-- Bottom Trick & Next Teaser -->
-        <div class="space-y-2 pt-2 border-t border-white/10">
-          <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 rounded-xl p-2 text-center">
-            <span class="text-[9px] font-black uppercase text-amber-300 tracking-wider block">⚡ ICAI Exam Memory Trick</span>
-            <p class="text-[10.5px] font-bold text-white mt-0.5 leading-tight">${d.trick}</p>
+        <!-- Bottom Exam Memory Hack & Branding -->
+        <div class="space-y-1.5 pt-2 border-t border-white/10">
+          <div class="p-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-emerald-500/20 border border-amber-400/40 text-center">
+            <span class="text-[9px] font-black uppercase text-amber-300 tracking-wider">⚡ 10-Second Memory Hack</span>
+            <p class="text-[10px] font-bold text-white leading-tight mt-0.5">${data.examHack}</p>
           </div>
 
-          <div class="flex items-center justify-between text-[9px] text-slate-400 px-1 font-semibold">
-            <span>Next: ${d.nextTopic}</span>
-            <span class="mono text-slate-500">CA-INTER</span>
+          <div class="flex items-center justify-between text-[8.5px] text-slate-400 px-1 font-semibold">
+            <span>CA INTERMEDIATE SPEED REVISION</span>
+            <span class="mono text-amber-400">#CrackCA</span>
           </div>
         </div>
       `;
     }
 
-    // PNG Download Function using html2canvas
-    function downloadPNG() {
-      const card = document.getElementById('statusCanvas');
+    function renderQuiz() {
+      const data = curriculum[currentDayIndex];
+      document.getElementById('quizDayTag').innerText = `${data.day} • ${data.subject}`;
+      document.getElementById('quizQuestion').innerText = data.quiz.q;
+      
+      const optContainer = document.getElementById('quizOptions');
+      optContainer.innerHTML = '';
+      
+      data.quiz.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-all flex items-center justify-between";
+        btn.innerHTML = `<span>${opt}</span><span class="text-[10px] mono text-slate-500">#${idx+1}</span>`;
+        btn.onclick = () => selectOption(idx, data.quiz.correct, data.quiz.exp);
+        optContainer.appendChild(btn);
+      });
+
+      document.getElementById('quizExplanation').innerHTML = "💡 Tap an option to verify your exam concept logic!";
+    }
+
+    function selectOption(selectedIdx, correctIdx, explanation) {
+      const buttons = document.getElementById('quizOptions').querySelectorAll('button');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if(idx === correctIdx) {
+          btn.className = "w-full text-left p-2.5 rounded-xl border border-emerald-500 bg-emerald-950/80 text-xs font-bold text-emerald-300 flex items-center justify-between";
+        } else if(idx === selectedIdx) {
+          btn.className = "w-full text-left p-2.5 rounded-xl border border-red-500 bg-red-950/80 text-xs font-bold text-red-300 flex items-center justify-between";
+        }
+      });
+
+      document.getElementById('quizExplanation').innerHTML = `
+        <span class="font-bold ${selectedIdx === correctIdx ? 'text-emerald-400' : 'text-amber-400'}">
+          ${selectedIdx === correctIdx ? '✅ Correct Answer!' : '❌ Incorrect!'}
+        </span>
+        <p class="mt-1">${explanation}</p>
+      `;
+    }
+
+    function switchView(mode) {
+      activeView = mode;
+      const statusBtn = document.getElementById('btn-status');
+      const quizBtn = document.getElementById('btn-quiz');
+      const statusCard = document.getElementById('statusContainer');
+      const quizCard = document.getElementById('quizContainer');
+
+      if(mode === 'status') {
+        statusBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg bg-indigo-600 text-white transition-all";
+        quizBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg text-slate-400 hover:text-white transition-all";
+        statusCard.classList.remove('hidden');
+        statusCard.classList.add('flex');
+        quizCard.classList.add('hidden');
+        quizCard.classList.remove('flex');
+      } else {
+        quizBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg bg-indigo-600 text-white transition-all";
+        statusBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-lg text-slate-400 hover:text-white transition-all";
+        quizCard.classList.remove('hidden');
+        quizCard.classList.add('flex');
+        statusCard.classList.add('hidden');
+        statusCard.classList.remove('flex');
+      }
+    }
+
+    function downloadStatusPNG() {
+      const card = document.getElementById('statusContainer');
       html2canvas(card, {
-        scale: 3, // Ultra-high resolution crisp text
+        scale: 3,
         useCORS: true,
         backgroundColor: null
       }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `CA_Inter_Status_${Date.now()}.png`;
-        link.url = canvas.toDataURL('image/png');
+        link.download = `CA_Inter_${curriculum[currentDayIndex].day.replace(' ', '_')}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
     }
 
-    // Initial render
-    renderDay(0);
+    function copyCaption() {
+      const d = curriculum[currentDayIndex];
+      const text = `⚖️ CA INTER REVISION [${d.day}] • ${d.subject}\n🔥 TOPIC: ${d.badge}\n\n📌 KEY CONCEPTS:\n${d.col1Title}: ${d.col1Sub}\n${d.col2Title}: ${d.col2Sub}\n\n⚠️ ICAI TRAP: ${d.icaiTrap}\n\n⚡ MEMORY HACK: ${d.examHack}\n\n#CAInter #ICAI #RevisionHub`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('captionBtnText');
+        btn.innerText = "Copied! ✅";
+        setTimeout(() => { btn.innerText = "Copy Caption"; }, 2000);
+      });
+    }
+
+    // Initialize first day
+    setDay(0);
   </script>
 </body>
 </html>
+
