@@ -5,73 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Meridian CA - Study & Revision Station</title>
   
-  <!-- Embedded High-Res App Icon (Fixes Grey Icon on Homescreen) -->
+  <!-- High-Res Vector App Icon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='28' fill='%23FFF1F2'/><circle cx='60' cy='60' r='50' stroke='%23FB7185' stroke-width='4' stroke-dasharray='6 4'/><path d='M42 80V48L60 68L78 48V80' stroke='%23E11D48' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='48' cy='95' r='3.5' fill='%23E11D48'/><circle cx='60' cy='95' r='4' fill='%23FB7185'/><circle cx='72' cy='95' r='3.5' fill='%23E11D48'/></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='28' fill='%23FFF1F2'/><circle cx='60' cy='60' r='50' stroke='%23FB7185' stroke-width='4' stroke-dasharray='6 4'/><path d='M42 80V48L60 68L78 48V80' stroke='%23E11D48' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='48' cy='95' r='3.5' fill='%23E11D48'/><circle cx='60' cy='95' r='4' fill='%23FB7185'/><circle cx='72' cy='95' r='3.5' fill='%23E11D48'/></svg>">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            appbg: '#F8FAFC',
-            pureWhite: '#FFFFFF',
-            softPink: '#FFF1F2',
-            roseAccent: '#E11D48',
-            roseBorder: '#FECDD3',
-            mintGreen: '#10B981',
-            mintSoft: '#ECFDF5',
-            skyZen: '#0284C7',
-            skySoft: '#E0F2FE',
-            slateSubtle: '#64748B',
-            textDark: '#0F172A'
-          },
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
+    :root {
+      --bg-gradient: linear-gradient(180deg, #FFF1F2 0%, #FAF5FF 40%, #F8FAFC 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(244, 63, 94, 0.16);
+      --primary-accent: #E11D48;
+      --secondary-tint: #FFF1F2;
+      --highlight-green: #10B981;
+      --shadow-3d: 0 14px 28px -6px rgba(225, 29, 72, 0.08), 0 6px 12px -3px rgba(0, 0, 0, 0.04);
+      --btn-3d-shadow: 0 6px 0px #BE123C;
+    }
+
+    body[data-theme="blue"] {
+      --bg-gradient: linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 40%, #F8FAFC 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(2, 132, 199, 0.16);
+      --primary-accent: #0284C7;
+      --secondary-tint: #E0F2FE;
+      --highlight-green: #0D9488;
+      --shadow-3d: 0 14px 28px -6px rgba(2, 132, 199, 0.08), 0 6px 12px -3px rgba(0, 0, 0, 0.04);
+      --btn-3d-shadow: 0 6px 0px #0369A1;
+    }
+
+    body[data-theme="green"] {
+      --bg-gradient: linear-gradient(180deg, #ECFDF5 0%, #F0FDF4 40%, #F8FAFC 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(16, 185, 129, 0.18);
+      --primary-accent: #059669;
+      --secondary-tint: #D1FAE5;
+      --highlight-green: #059669;
+      --shadow-3d: 0 14px 28px -6px rgba(16, 185, 129, 0.08), 0 6px 12px -3px rgba(0, 0, 0, 0.04);
+      --btn-3d-shadow: 0 6px 0px #047857;
+    }
+
+    body[data-theme="lilac"] {
+      --bg-gradient: linear-gradient(180deg, #FAF5FF 0%, #F3E8FF 40%, #F8FAFC 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(147, 51, 234, 0.16);
+      --primary-accent: #7C3AED;
+      --secondary-tint: #EDE9FE;
+      --highlight-green: #059669;
+      --shadow-3d: 0 14px 28px -6px rgba(124, 58, 237, 0.08), 0 6px 12px -3px rgba(0, 0, 0, 0.04);
+      --btn-3d-shadow: 0 6px 0px #6D28D9;
+    }
+
     body {
-      background: linear-gradient(180deg, #FFF1F2 0%, #F8FAFC 25%, #F0FDF4 100%);
+      background: var(--bg-gradient);
       color: #0F172A;
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
       min-height: 100vh;
+      transition: background 0.4s ease;
     }
     
-    .light-card {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(244, 63, 94, 0.12);
-      box-shadow: 0 4px 20px -2px rgba(225, 29, 72, 0.05);
-      transition: all 0.25s ease;
+    .card-3d {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.25rem;
+      box-shadow: var(--shadow-3d);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .light-card:hover {
-      border-color: rgba(225, 29, 72, 0.25);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px -4px rgba(225, 29, 72, 0.1);
+    .card-3d:hover {
+      transform: translateY(-3px) scale(1.002);
     }
 
-    .interactive-btn {
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    .btn-3d {
+      box-shadow: var(--btn-3d-shadow);
+      transition: all 0.15s ease;
     }
-    .interactive-btn:active {
-      transform: scale(0.96);
+    .btn-3d:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0px rgba(0,0,0,0.2) !important;
     }
 
     .tab-content {
@@ -83,7 +101,7 @@
     }
 
     .nav-active {
-      color: #E11D48 !important;
+      color: var(--primary-accent) !important;
       position: relative;
     }
     .nav-active::before {
@@ -92,149 +110,133 @@
       top: -8px;
       left: 50%;
       transform: translateX(-50%);
-      width: 22px;
+      width: 20px;
       height: 3px;
-      background: #E11D48;
+      background: var(--primary-accent);
       border-radius: 9999px;
-      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+      box-shadow: 0 2px 8px var(--primary-accent);
     }
   </style>
 </head>
 <body class="pb-28">
 
-  <!-- ==================== SPLASH ENTRANCE ==================== -->
-  <div id="splash-gate" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/95 backdrop-blur-md text-center p-6 transition-opacity duration-500">
-    <div class="relative w-24 h-24 mb-4">
-      <div class="absolute inset-0 bg-rose-200 rounded-full blur-xl opacity-60"></div>
-      <svg class="relative w-full h-full drop-shadow-md" viewBox="0 0 120 120" fill="none">
-        <circle cx="60" cy="60" r="54" stroke="#FB7185" stroke-width="2.5" stroke-dasharray="6 4"/>
-        <circle cx="60" cy="60" r="46" fill="#FFF1F2"/>
-        <path d="M42 80V48L60 68L78 48V80" stroke="#E11D48" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="48" cy="94" r="3" fill="#E11D48"/>
-        <circle cx="60" cy="94" r="3.5" fill="#FB7185"/>
-        <circle cx="72" cy="94" r="3" fill="#E11D48"/>
-      </svg>
-    </div>
-    <h1 class="text-xl font-extrabold tracking-widest text-textDark uppercase">Meridian CA</h1>
-    <p class="text-xs text-roseAccent font-mono mt-1 font-semibold uppercase tracking-wider">Serene Revision Engine</p>
-    <div class="mt-4 flex items-center gap-2 text-[11px] text-slateSubtle bg-softPink px-3.5 py-1 rounded-full border border-roseBorder">
-      <span class="w-2 h-2 rounded-full bg-mintGreen animate-ping"></span> Clean Light Edition
-    </div>
-  </div>
-
-  <!-- ==================== TOP CLEAN HEADER ==================== -->
-  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-rose-100 px-4 py-3">
+  <!-- ==================== TOP CLEAN HEADER WITH PALETTE SWITCHER ==================== -->
+  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/60 px-4 py-3">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
       <!-- Logo Crest -->
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-softPink border border-roseBorder flex items-center justify-center shadow-sm">
+        <div class="w-9 h-9 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-md shadow-black/5">
           <svg class="w-5 h-5" viewBox="0 0 120 120" fill="none">
-            <path d="M44 76V50L60 68L76 50V76" stroke="#E11D48" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M44 76V50L60 68L76 50V76" stroke="var(--primary-accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div>
-          <span class="text-xs font-black tracking-wide text-textDark uppercase block leading-tight">Meridian CA</span>
-          <span class="text-[9px] text-roseAccent font-semibold tracking-wider uppercase">Study Sanctuary</span>
+          <span class="text-xs font-black tracking-wide text-slate-900 uppercase block leading-tight">Meridian CA</span>
+          <span class="text-[9px] font-bold tracking-wider uppercase" style="color: var(--primary-accent)">Station Preview</span>
         </div>
       </div>
 
-      <!-- Level Selector Dropdown -->
+      <!-- Controls: Palette Switcher & Level Dropdown -->
       <div class="flex items-center gap-2">
-        <select id="level-select" onchange="handleLevelChange(this.value)" class="bg-softPink border border-roseBorder text-xs font-bold rounded-xl px-2.5 py-1.5 text-textDark focus:outline-none focus:border-roseAccent">
+        <!-- 1-Tap Theme Switcher -->
+        <div class="flex items-center bg-white border border-slate-200 p-1 rounded-xl shadow-inner gap-1">
+          <button onclick="setTheme('rose')" title="Rose Sanctuary" class="w-5 h-5 rounded-full bg-rose-400 focus:scale-110 transition"></button>
+          <button onclick="setTheme('blue')" title="Nordic Glacier" class="w-5 h-5 rounded-full bg-sky-400 focus:scale-110 transition"></button>
+          <button onclick="setTheme('green')" title="Zen Botanical" class="w-5 h-5 rounded-full bg-emerald-400 focus:scale-110 transition"></button>
+          <button onclick="setTheme('lilac')" title="Royal Lilac" class="w-5 h-5 rounded-full bg-purple-400 focus:scale-110 transition"></button>
+        </div>
+
+        <!-- Level Selector Dropdown -->
+        <select id="level-select" onchange="handleLevelChange(this.value)" class="bg-white border border-slate-200 text-xs font-bold rounded-xl px-2.5 py-1.5 text-slate-800 shadow-sm focus:outline-none">
           <option value="inter">CA Intermediate</option>
           <option value="foundation">CA Foundation</option>
           <option value="final">CA Final</option>
         </select>
-
-        <div class="hidden sm:flex items-center gap-1.5 bg-mintSoft px-2.5 py-1.5 rounded-xl border border-emerald-200 text-[10px] font-mono font-bold text-mintGreen">
-          <i class="fa-regular fa-clock"></i>
-          <span>124 Days Left</span>
-        </div>
       </div>
     </div>
   </header>
 
-  <!-- ==================== MAIN CARDS ==================== -->
+  <!-- ==================== MAIN TABS ==================== -->
   <main class="max-w-4xl mx-auto px-4 mt-4 space-y-4">
 
     <!-- VIEW 1: COMMAND & MATRIX -->
     <section id="pane-command" class="tab-content space-y-4">
       
-      <!-- Serene Study Timer -->
-      <div class="light-card rounded-2xl p-5 text-center relative overflow-hidden border-rose-100">
+      <!-- 3D Focus Study Timer -->
+      <div class="card-3d p-6 text-center relative overflow-hidden">
         <div class="flex justify-between items-center text-xs mb-1">
-          <span class="font-mono text-slateSubtle uppercase tracking-wider text-[11px]">Focus Sanctuary</span>
-          <span id="tier-badge" class="bg-softPink text-roseAccent border border-roseBorder text-[10px] font-bold px-2.5 py-0.5 rounded-full">CA Inter • Adv. Acc</span>
+          <span class="font-mono text-slate-500 uppercase tracking-wider text-[11px]">Active Study Cycle</span>
+          <span id="tier-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border" style="background: var(--secondary-tint); color: var(--primary-accent); border-color: var(--card-border)">CA Inter • Adv. Acc</span>
         </div>
 
-        <div class="py-3">
-          <div id="live-timer" class="text-5xl font-black font-mono tracking-wider text-textDark">
+        <div class="py-4">
+          <div id="live-timer" class="text-5xl md:text-6xl font-black font-mono tracking-wider text-slate-900 drop-shadow-sm">
             00:00:00
           </div>
-          <p class="text-xs text-slateSubtle mt-1">Calm self-paced revision • Zero pressure</p>
+          <p class="text-xs text-slate-500 mt-2 font-medium">Self-Paced Focus Engine • Continuous Local Log</p>
         </div>
 
         <div class="flex items-center justify-center gap-3 mt-1">
-          <button id="btn-timer" onclick="handleTimerToggle()" class="interactive-btn px-6 py-2.5 rounded-xl bg-mintGreen text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-md shadow-emerald-200">
+          <button id="btn-timer" onclick="handleTimerToggle()" class="btn-3d px-6 py-2.5 rounded-xl text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2" style="background: var(--primary-accent)">
             <i class="fa-solid fa-play"></i> Start Study
           </button>
-          <button onclick="handleTimerReset()" class="interactive-btn px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 font-bold text-xs uppercase hover:bg-slate-200">
+          <button onclick="handleTimerReset()" class="px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs uppercase hover:bg-slate-200">
             Reset
           </button>
         </div>
       </div>
 
       <!-- Revision Round Matrix -->
-      <div class="light-card rounded-2xl p-4 space-y-3">
+      <div class="card-3d p-5 space-y-3">
         <div class="flex justify-between items-center">
-          <h2 class="text-xs font-bold text-textDark uppercase tracking-wider flex items-center gap-2">
-            <i class="fa-solid fa-layer-group text-roseAccent"></i> Revision Round Matrix
+          <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-layer-group" style="color: var(--primary-accent)"></i> Revision Round Matrix
           </h2>
-          <span class="text-[10px] bg-skySoft text-skyZen font-bold px-2 py-0.5 rounded-md font-mono">Live Tracker</span>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-md font-mono" style="background: var(--secondary-tint); color: var(--primary-accent)">Round Flow</span>
         </div>
 
         <div class="space-y-2.5" id="index-card-container">
-          <!-- Dynamically populated via JS -->
+          <!-- Dynamically Rendered -->
         </div>
       </div>
     </section>
 
     <!-- VIEW 2: STUDY SANCTUM (CARDS) -->
     <section id="pane-sanctum" class="tab-content hidden space-y-4">
-      <div class="light-card rounded-xl p-3 flex items-center justify-between text-xs">
-        <span class="font-mono text-slateSubtle">Subject Standard: <strong class="text-textDark">AS 2 (Inventories)</strong></span>
-        <span class="text-mintGreen font-bold text-[11px] bg-mintSoft px-2 py-0.5 rounded-md border border-emerald-100">
-          <i class="fa-solid fa-check-double"></i> 100% ICAI Standard
+      <div class="card-3d p-3 flex items-center justify-between text-xs">
+        <span class="font-mono text-slate-600">Active Standard: <strong class="text-slate-900">AS 2 (Inventories)</strong></span>
+        <span class="text-emerald-700 font-bold text-[11px] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+          <i class="fa-solid fa-check-double"></i> 100% ICAI Aligned
         </span>
       </div>
 
-      <!-- Concept Card (Soft Pink Touch) -->
-      <div class="light-card rounded-2xl p-4 space-y-2 border-l-4 border-roseAccent">
+      <!-- Concept Card -->
+      <div class="card-3d p-4 space-y-2 border-l-4" style="border-left-color: var(--primary-accent)">
         <div class="flex justify-between items-center">
-          <span class="text-[10px] font-mono uppercase bg-softPink text-roseAccent font-bold px-2 py-0.5 rounded border border-roseBorder">Core Principle</span>
-          <span class="text-[11px] text-roseAccent font-bold"><i class="fa-solid fa-star"></i> 1.5D LDR</span>
+          <span class="text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded border" style="background: var(--secondary-tint); color: var(--primary-accent); border-color: var(--card-border)">Core Provision</span>
+          <span class="text-[11px] font-bold" style="color: var(--primary-accent)"><i class="fa-solid fa-star"></i> 1.5D LDR</span>
         </div>
-        <h3 class="text-xs font-bold text-textDark">Valuation Rule (AS 2 Para 5)</h3>
+        <h3 class="text-xs font-bold text-slate-900">Valuation Principle (AS 2 Para 5)</h3>
         <p class="text-xs text-slate-700 leading-relaxed">
-          Inventories are valued at <strong>lower of cost and net realizable value (NRV)</strong>. Cost includes purchase price, direct conversion costs, and expenses incurred to bring stock to its current location.
+          Inventories are valued at the <strong>lower of cost and net realizable value (NRV)</strong>. Cost includes purchase price, direct conversion costs, and expenses incurred to bring stock to its current location.
         </p>
-        <div class="bg-mintSoft border border-emerald-200 rounded-xl p-2.5 text-[11px] text-emerald-800 font-mono">
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-[11px] text-emerald-900 font-mono">
           <strong>ICAI Marking Keyword:</strong> Item-by-item comparison of Cost vs NRV.
         </div>
       </div>
 
-      <!-- PYQ Card (Soft Blue Touch) -->
-      <div class="light-card rounded-2xl p-4 space-y-2 border-l-4 border-skyZen">
+      <!-- Solved PYQ Card -->
+      <div class="card-3d p-4 space-y-2 border-l-4 border-sky-400">
         <div class="flex justify-between items-center">
-          <span class="text-[10px] font-mono uppercase bg-skySoft text-skyZen font-bold px-2 py-0.5 rounded border border-sky-200">ICAI Past Exam</span>
-          <span class="text-[10px] font-mono text-slateSubtle">May 2023 • 5 Marks</span>
+          <span class="text-[10px] font-mono uppercase bg-sky-50 text-sky-700 font-bold px-2 py-0.5 rounded border border-sky-200">ICAI Past Exam</span>
+          <span class="text-[10px] font-mono text-slate-500">May 2023 • 5 Marks</span>
         </div>
-        <p class="text-xs text-textDark font-medium">
+        <p class="text-xs text-slate-900 font-medium">
           Raw Material X purchased at ₹150/unit. Current replacement cost is ₹120. If finished good sells at ₹220 (Total cost ₹200), calculate raw material valuation.
         </p>
         <details class="text-xs text-slate-700">
-          <summary class="cursor-pointer text-skyZen font-bold text-[11px] mt-1 hover:underline">
-            View ICAI Suggested Answer & Provision
+          <summary class="cursor-pointer font-bold text-[11px] mt-1 hover:underline" style="color: var(--primary-accent)">
+            View ICAI Suggested Answer & Provision Breakdown
           </summary>
           <div class="mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-[11px] leading-relaxed space-y-1">
             <p><strong>Provision:</strong> Materials are NOT written down below cost if the finished products in which they are incorporated are expected to be sold at or above cost.</p>
@@ -244,38 +246,57 @@
       </div>
     </section>
 
-    <!-- VIEW 3: ANALYTICS LEDGER -->
+    <!-- VIEW 3: ANALYTICS DASHBOARD (LEDGER) -->
     <section id="pane-analytics" class="tab-content hidden space-y-4">
+      <!-- 2-Day Shift Comparison Cards -->
       <div class="grid grid-cols-2 gap-3">
-        <div class="light-card rounded-2xl p-4 text-center">
-          <span class="text-[10px] font-mono text-slateSubtle uppercase block mb-1">Yesterday</span>
-          <div class="text-2xl font-black text-textDark font-mono">6.5 <span class="text-xs font-normal text-slateSubtle">hrs</span></div>
-          <span class="text-[10px] text-slateSubtle mt-1 block">Completed 2 Rounds</span>
+        <div class="card-3d p-4 text-center">
+          <span class="text-[10px] font-mono text-slate-500 uppercase block mb-1">Yesterday</span>
+          <div class="text-2xl font-black text-slate-900 font-mono">6.5 <span class="text-xs font-normal text-slate-500">hrs</span></div>
+          <span class="text-[10px] text-slate-500 mt-1 block">Completed 2 Rounds</span>
         </div>
-        <div class="light-card rounded-2xl p-4 text-center border-emerald-200 bg-mintSoft/30">
-          <span class="text-[10px] font-mono text-emerald-700 uppercase block mb-1 font-bold">Today</span>
-          <div class="text-2xl font-black text-mintGreen font-mono">7.8 <span class="text-xs font-normal text-slateSubtle">hrs</span></div>
-          <span class="text-[10px] text-mintGreen font-bold mt-1 block">+1.3 hrs Expansion</span>
+        <div class="card-3d p-4 text-center border-emerald-200 bg-emerald-50/40">
+          <span class="text-[10px] font-mono text-emerald-800 uppercase block mb-1 font-bold">Today</span>
+          <div class="text-2xl font-black text-emerald-700 font-mono">7.8 <span class="text-xs font-normal text-slate-500">hrs</span></div>
+          <span class="text-[10px] text-emerald-700 font-bold mt-1 block">+1.3 hrs Expansion</span>
         </div>
       </div>
 
-      <div class="light-card rounded-2xl p-4 space-y-3">
-        <div class="text-xs font-bold text-textDark">Weekly Balance by Subject</div>
-        <div class="space-y-2 text-[11px] font-mono">
-          <div class="flex justify-between text-slate-700 font-semibold">
-            <span>Advanced Accounts</span>
-            <span class="text-roseAccent">40%</span>
-          </div>
-          <div class="w-full bg-rose-100 h-2 rounded-full overflow-hidden">
-            <div class="bg-roseAccent h-full rounded-full" style="width: 40%"></div>
+      <!-- Balance Allocation -->
+      <div class="card-3d p-5 space-y-3">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-900">
+          <span>Weekly Time Distribution</span>
+          <span class="text-[10px] font-mono text-slate-500">Self-Target Balance</span>
+        </div>
+        <div class="space-y-3 text-[11px] font-mono">
+          <div>
+            <div class="flex justify-between text-slate-700 font-semibold mb-1">
+              <span>Advanced Accounting</span>
+              <span style="color: var(--primary-accent)">40%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width: 40%; background: var(--primary-accent)"></div>
+            </div>
           </div>
 
-          <div class="flex justify-between text-slate-700 font-semibold pt-1">
-            <span>Corporate Law</span>
-            <span class="text-mintGreen">35%</span>
+          <div>
+            <div class="flex justify-between text-slate-700 font-semibold mb-1">
+              <span>Corporate Law</span>
+              <span class="text-emerald-600">35%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 35%"></div>
+            </div>
           </div>
-          <div class="w-full bg-emerald-100 h-2 rounded-full overflow-hidden">
-            <div class="bg-mintGreen h-full rounded-full" style="width: 35%"></div>
+
+          <div>
+            <div class="flex justify-between text-slate-700 font-semibold mb-1">
+              <span>Taxation</span>
+              <span class="text-sky-600">25%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-sky-500 h-full rounded-full transition-all duration-500" style="width: 25%"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -283,18 +304,18 @@
 
   </main>
 
-  <!-- ==================== BOTTOM CLEAN DOCK ==================== -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-md border-t border-rose-100 px-8 py-3 shadow-lg">
+  <!-- ==================== BOTTOM DOCK NAVIGATION ==================== -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-md border-t border-slate-200/80 px-8 py-3 shadow-lg">
     <div class="max-w-md mx-auto flex items-center justify-between text-xs">
-      <button onclick="handleTabSwitch('command')" id="nav-btn-command" class="interactive-btn nav-active flex flex-col items-center gap-1 text-slate-400 hover:text-roseAccent transition">
+      <button onclick="handleTabSwitch('command')" id="nav-btn-command" class="nav-active flex flex-col items-center gap-1 text-slate-400 transition">
         <i class="fa-solid fa-gauge-high text-base"></i>
         <span class="text-[10px] font-bold">Command</span>
       </button>
-      <button onclick="handleTabSwitch('sanctum')" id="nav-btn-sanctum" class="interactive-btn flex flex-col items-center gap-1 text-slate-400 hover:text-roseAccent transition">
+      <button onclick="handleTabSwitch('sanctum')" id="nav-btn-sanctum" class="flex flex-col items-center gap-1 text-slate-400 transition">
         <i class="fa-solid fa-book-open text-base"></i>
         <span class="text-[10px] font-bold">Sanctum</span>
       </button>
-      <button onclick="handleTabSwitch('analytics')" id="nav-btn-analytics" class="interactive-btn flex flex-col items-center gap-1 text-slate-400 hover:text-roseAccent transition">
+      <button onclick="handleTabSwitch('analytics')" id="nav-btn-analytics" class="flex flex-col items-center gap-1 text-slate-400 transition">
         <i class="fa-solid fa-chart-simple text-base"></i>
         <span class="text-[10px] font-bold">Ledger</span>
       </button>
@@ -303,6 +324,22 @@
 
   <!-- ==================== CONTROLLER SCRIPT ==================== -->
   <script>
+    // Theme Palette Switcher Engine
+    function setTheme(theme) {
+      if (theme === 'rose') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', theme);
+      }
+      localStorage.setItem('meridian_theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('meridian_theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+
+    // Dynamic Syllabus Data
     const levelData = {
       inter: [
         { name: 'AS 2: Valuation of Inventories', sub: 'Module Unit 1 • Core Principles', r1: 'R1 Active', r2: 'R2', ldr: true },
@@ -318,19 +355,11 @@
       ]
     };
 
-    // Splash Entrance Fadeout
     window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash-gate');
-        if (splash) {
-          splash.style.opacity = '0';
-          setTimeout(() => splash.remove(), 450);
-        }
-      }, 1100);
       renderLevelMatrix('inter');
     });
 
-    // Switch Level Dropdown
+    // Level Dropdown
     function handleLevelChange(level) {
       renderLevelMatrix(level);
       const badge = document.getElementById('tier-badge');
@@ -345,16 +374,16 @@
       const items = levelData[level] || [];
       items.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'flex items-center justify-between bg-white border border-rose-100 rounded-xl p-3.5 shadow-sm hover:border-rose-300 transition';
+        card.className = 'flex items-center justify-between bg-white border border-slate-100 rounded-xl p-3.5 shadow-sm hover:border-slate-300 transition';
         card.innerHTML = `
           <div>
-            <div class="text-xs font-bold text-textDark">${item.name}</div>
-            <div class="text-[10px] text-slateSubtle font-mono">${item.sub}</div>
+            <div class="text-xs font-bold text-slate-900">${item.name}</div>
+            <div class="text-[10px] text-slate-500 font-mono">${item.sub}</div>
           </div>
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-softPink text-roseAccent border border-roseBorder">${item.r1}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold" style="background: var(--secondary-tint); color: var(--primary-accent); border: 1px solid var(--card-border)">${item.r1}</span>
             <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-100 text-slate-500">${item.r2}</span>
-            <i class="fa-solid fa-star ${item.ldr ? 'text-roseAccent' : 'text-slate-300'} text-xs"></i>
+            <i class="fa-solid fa-star ${item.ldr ? 'text-rose-500' : 'text-slate-300'} text-xs"></i>
           </div>
         `;
         container.appendChild(card);
@@ -380,7 +409,7 @@
       if (!timerRunning) {
         timerRunning = true;
         btn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause`;
-        btn.className = "interactive-btn px-6 py-2.5 rounded-xl bg-roseAccent text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-md shadow-rose-200";
+        btn.style.background = '#EF4444';
         timerInterval = setInterval(() => {
           seconds++;
           const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -392,7 +421,7 @@
         timerRunning = false;
         clearInterval(timerInterval);
         btn.innerHTML = `<i class="fa-solid fa-play"></i> Resume`;
-        btn.className = "interactive-btn px-6 py-2.5 rounded-xl bg-mintGreen text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-md shadow-emerald-200";
+        btn.style.background = 'var(--primary-accent)';
       }
     }
 
@@ -403,7 +432,7 @@
       document.getElementById('live-timer').textContent = '00:00:00';
       const btn = document.getElementById('btn-timer');
       btn.innerHTML = `<i class="fa-solid fa-play"></i> Start Study`;
-      btn.className = "interactive-btn px-6 py-2.5 rounded-xl bg-mintGreen text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-md shadow-emerald-200";
+      btn.style.background = 'var(--primary-accent)';
     }
   </script>
 </body>
