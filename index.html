@@ -1,583 +1,605 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-  <title>CA Nexus – Sovereign Revision & Active Recall Engine</title>
-  
-  <!-- High-Res Vector App Icon (CA Nexus Monogram) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='28' fill='%23FBF9FF'/><circle cx='60' cy='60' r='50' stroke='%237A5CFF' stroke-width='4' stroke-dasharray='6 4'/><path d='M40 82V38L80 82V38' stroke='%237A5CFF' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='40' cy='38' r='4' fill='%23FF7EB0'/><circle cx='80' cy='82' r='4' fill='%237EDCC4'/></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='28' fill='%23FBF9FF'/><circle cx='60' cy='60' r='50' stroke='%237A5CFF' stroke-width='4' stroke-dasharray='6 4'/><path d='M40 82V38L80 82V38' stroke='%237A5CFF' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/><circle cx='40' cy='38' r='4' fill='%23FF7EB0'/><circle cx='80' cy='82' r='4' fill='%237EDCC4'/></svg>">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhity</title>
+  <meta name="description" content="Dhity - CA Practical Case Arena, Spaced Recall Engine & Global Pomodoro Timer" />
 
-  <!-- Google Fonts & Font Awesome Icons -->
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #FBF9FF;
-      --glass: rgba(255, 255, 255, 0.78);
-      --glass-border: rgba(255, 255, 255, 0.95);
-      --text: #2A2340;
-      --mute: #75708A;
-      --mint: #7EDCC4;
-      --lav: #B7A6FF;
-      --peach: #FFC2A6;
-      --pink: #FF9EC4;
-      --primary: #7A5CFF;
-      --primary-gradient: linear-gradient(120deg, #7A5CFF, #FF7EB0);
-      --red: #E4572E;
-      --green: #0F3B33;
-      --paper: #FFFDF7;
-      --pline: #EAE2CF;
-      --shadow-3d: 0 14px 34px -4px rgba(122, 92, 255, 0.14), 0 4px 12px rgba(0, 0, 0, 0.03);
+      --bg: #0b0f19;
+      --panel: #111827;
+      --panel2: #1f2937;
+      --line: #374151;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --violet: #8b7cff;
+      --cyan: #4de1d0;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
     }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      margin: 0;
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      overflow-x: hidden;
-      line-height: 1.5;
-      padding-bottom: 96px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
-
-    h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; margin: 0; }
-
-    /* Floating Ambient Aurora Blobs */
-    .blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(75px);
-      opacity: 0.52;
-      z-index: 0;
-      animation: floatMotion 14s ease-in-out infinite alternate;
-      pointer-events: none;
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
     }
-    .b1 { width: 360px; height: 360px; background: var(--mint); top: -60px; left: -60px; }
-    .b2 { width: 420px; height: 420px; background: var(--lav); top: 160px; right: -120px; animation-delay: -4s; }
-    .b3 { width: 340px; height: 340px; background: var(--peach); bottom: -80px; left: 25%; animation-delay: -8s; }
-    @keyframes floatMotion {
-      50% { transform: translate(35px, -40px) scale(1.08); }
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-      margin: auto;
-      padding: 0 16px;
-    }
-
-    /* 3D Glass Surface */
-    .glass-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      box-shadow: var(--shadow-3d);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
-    }
-
-    /* Shimmer Text */
-    .grad-text {
-      background: linear-gradient(90deg, #7A5CFF, #FF7EB0, #FFA06B);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      background-size: 200%;
-      animation: gradShimmer 5s linear infinite;
-    }
-    @keyframes gradShimmer { to { background-position: 200%; } }
-
-    /* 3D Tactile Buttons */
-    .btn {
-      position: relative;
-      overflow: hidden;
-      border: 0;
-      border-radius: 14px;
-      padding: 12px 24px;
-      font: 600 14px 'Poppins', sans-serif;
-      cursor: pointer;
-      color: #fff;
-      background: var(--primary-gradient);
-      box-shadow: 0 8px 20px rgba(122, 92, 255, 0.32);
-      transition: transform 0.15s, box-shadow 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn:active {
-      transform: translateY(2px) scale(0.97);
-      box-shadow: 0 4px 10px rgba(122, 92, 255, 0.25);
-    }
-    .btn::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -70%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.6), transparent);
-      transform: skewX(-20deg);
-      animation: shineLoop 3.5s infinite;
-    }
-    @keyframes shineLoop { 60%, 100% { left: 130%; } }
-
-    .btn.o {
-      background: rgba(255, 255, 255, 0.88);
-      color: var(--text);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      border: 1px solid var(--glass-border);
-    }
-    .btn.o::after { display: none; }
-
-    /* 3D Flip Flashcards */
-    .flip {
-      perspective: 1000px;
-      width: 100%;
-      min-height: 180px;
-      cursor: pointer;
-    }
-    .fi {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
-      transform-style: preserve-3d;
-    }
-    .flip.flipped .fi { transform: rotateY(180deg); }
-    .face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      padding: 22px;
-      border-radius: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-shadow: var(--shadow-3d);
-    }
-    .face.front { background: var(--glass); border: 1px solid var(--glass-border); }
-    .face.back {
-      transform: rotateY(180deg);
-      background: linear-gradient(135deg, rgba(126, 220, 196, 0.88), rgba(183, 166, 255, 0.88));
-      border: 1px solid rgba(255, 255, 255, 0.85);
-    }
-
-    /* Ledger Paper Strict Red-Ink Check */
-    .paper-ledger {
-      background: var(--paper);
-      color: #1B2A26;
-      border: 5px solid var(--green);
-      border-radius: 22px;
-      padding: 20px;
-      background-image: repeating-linear-gradient(transparent 0 25px, var(--pline) 25px 26px);
-      box-shadow: 0 16px 36px rgba(15, 59, 51, 0.12);
-    }
-    .paper-ledger .fix {
-      display: none;
-      font-family: 'Caveat', cursive;
-      font-size: 20px;
-      color: var(--red);
-      font-weight: 700;
-    }
-    .paper-ledger.checked .wrong {
-      color: var(--red);
-      text-decoration: line-through;
-      text-decoration-thickness: 2px;
-    }
-    .paper-ledger.checked .fix {
-      display: inline;
-      animation: popIn 0.4s both;
-    }
-    @keyframes popIn { from { opacity: 0; transform: translateY(-4px) rotate(-4deg); } }
-
-    /* Interactive Notebook Tasks */
-    .task-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    }
-    .task-box {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--lav);
-      border-radius: 7px;
-      display: grid;
-      place-items: center;
-      font-size: 13px;
-      color: transparent;
-      transition: 0.2s;
-      flex-shrink: 0;
-    }
-    .task-item.done .task-box {
-      background: var(--lav);
-      color: #fff;
-      transform: scale(1.1);
-    }
-    .task-item.done span.title {
-      text-decoration: line-through;
-      text-decoration-color: var(--red);
-      color: var(--mute);
-    }
-
-    /* Confetti Particle */
-    .confetti {
-      position: fixed;
-      top: -20px;
-      width: 10px;
-      height: 14px;
-      z-index: 99;
-      animation: fallDown 1.8s linear forwards;
-      pointer-events: none;
-    }
-    @keyframes fallDown {
-      to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
-    }
-
-    /* Bottom Navigation Dock */
-    .dock-btn.active {
-      color: #7A5CFF;
-      position: relative;
-    }
-    .dock-btn.active::before {
-      content: '';
-      position: absolute;
-      top: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 22px;
-      height: 3px;
-      background: var(--primary-gradient);
-      border-radius: 99px;
-      box-shadow: 0 2px 8px rgba(122, 92, 255, 0.4);
+    input[type="range"]::-webkit-slider-thumb {
+      background: var(--violet);
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-  <!-- Floating Aurora Background -->
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-
-  <div class="wrap">
-    <!-- ==================== HEADER ==================== -->
-    <header style="display:flex; justify-content:space-between; align-items:center; padding:18px 0;">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div style="width:40px; height:40px; border-radius:14px; background:linear-gradient(135deg, #7A5CFF, #FF7EB0); display:grid; place-items:center; color:#fff; font-weight:800; font-size:19px; box-shadow:0 6px 16px rgba(122,92,255,0.28);">
-          N
+  <!-- TOP HEADER & PERSISTENT POMODORO -->
+  <header class="sticky top-0 z-40 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 px-4 lg:px-8 py-3.5">
+    <div class="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Lockup -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8b7cff] to-[#4de1d0] grid place-items-center font-black text-xl text-white shadow-lg shadow-[#8b7cff]/20">
+          D
         </div>
         <div>
-          <div style="font-family:'Poppins'; font-weight:800; font-size:20px; line-height:1.1;">CA <span class="grad-text">Nexus</span></div>
-          <span style="font-size:10px; color:var(--mute); font-weight:600; text-transform:uppercase; letter-spacing:1px;">The Central Revision Hub</span>
+          <h1 class="font-extrabold text-lg tracking-tight leading-none text-white">Dhity</h1>
+          <span class="text-[9px] font-mono font-bold tracking-widest text-gray-400 uppercase mt-1 block">INTELLIGENCE</span>
         </div>
       </div>
 
-      <!-- Level Selector Dropdown -->
-      <select id="level-select" onchange="handleLevelChange(this.value)" style="background:rgba(255,255,255,0.92); border:1px solid var(--glass-border); padding:8px 12px; border-radius:14px; font-family:'Poppins'; font-size:12px; font-weight:600; color:var(--text); outline:none; box-shadow:0 4px 14px rgba(0,0,0,0.04);">
-        <option value="inter">CA Intermediate</option>
-        <option value="foundation">CA Foundation</option>
-        <option value="final">CA Final</option>
-      </select>
-    </header>
-
-    <!-- ==================== TAB 1: COMMAND MATRIX ==================== -->
-    <section id="tab-command" class="tab-pane" style="display:flex; flex-direction:column; gap:18px; margin-top:6px;">
-      
-      <!-- Focus Timer Card -->
-      <div class="glass-card" style="padding:24px; text-align:center;">
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:600; color:var(--mute);">
-          <span style="letter-spacing:1px; text-transform:uppercase;">Unbroken Focus Arc</span>
-          <span id="tier-pill" style="background:linear-gradient(90deg, rgba(122,92,255,0.15), rgba(255,126,176,0.15)); color:#7A5CFF; padding:4px 12px; border-radius:99px; font-weight:700;">CA Inter • Adv. Acc</span>
-        </div>
-
-        <div style="margin:16px 0 14px;">
-          <div id="live-timer" style="font-family:'JetBrains Mono', monospace; font-size:50px; font-weight:700; letter-spacing:2px; color:var(--text);">
-            00:00:00
-          </div>
-          <p style="font-size:12px; color:var(--mute); margin:4px 0 0;">Self-paced deep revision • Zero stress alerts</p>
-        </div>
-
-        <div style="display:flex; justify-content:center; gap:10px;">
-          <button id="btn-timer" onclick="toggleTimer()" class="btn">
-            <i class="fa-solid fa-play"></i> Start Study
+      <!-- GLOBAL POMODORO TIMER BAR -->
+      <div class="flex items-center gap-2 p-1.5 rounded-2xl border border-gray-700 bg-gray-900 shadow-md">
+        <!-- Mode Badges -->
+        <div class="flex items-center bg-gray-800 rounded-xl p-0.5 border border-gray-700/60">
+          <button id="pomoFocusBtn" onclick="setPomodoroMode('work')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-gray-900 text-white shadow-sm flex items-center gap-1">
+            <span>⚡ Focus</span>
+            <span id="focusMinLabel" class="text-[10px] text-gray-400 font-mono">(25m)</span>
           </button>
-          <button onclick="resetTimer()" class="btn o" style="font-family:'Poppins'; font-size:13px;">
-            Reset
+          <button id="pomoBreakBtn" onclick="setPomodoroMode('break')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white flex items-center gap-1">
+            <span>☕ Rest</span>
+            <span id="breakMinLabel" class="text-[10px] text-gray-400 font-mono">(5m)</span>
           </button>
         </div>
+
+        <!-- Digital Timer -->
+        <div class="flex flex-col min-w-[62px] px-2 text-center">
+          <span id="pomoDisplay" class="font-mono font-extrabold text-base text-white tabular-nums tracking-tight">25:00</span>
+          <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden mt-0.5">
+            <div id="pomoProgress" class="h-full bg-gradient-to-r from-[#8b7cff] to-[#4de1d0] w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <!-- Timer Controls -->
+        <button id="pomoToggleBtn" onclick="togglePomodoro()" class="w-8 h-8 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white flex items-center justify-center font-bold hover:brightness-110 active:scale-95 transition-all" title="Start/Pause">
+          ▶
+        </button>
+        <button onclick="resetPomodoro()" class="w-8 h-8 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 flex items-center justify-center transition-colors" title="Reset">
+          ↺
+        </button>
+        <button onclick="toggleSettingsModal(true)" class="w-8 h-8 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 flex items-center justify-center transition-colors" title="Settings">
+          ⚙
+        </button>
       </div>
 
-      <!-- Revision Round Tracker -->
-      <div class="glass-card" style="padding:22px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <h3 style="font-size:16px; display:flex; align-items:center; gap:8px;">
-            <span>📒</span> Revision Matrix Tracker
-          </h3>
-          <span id="completion-badge" style="font-size:11px; font-family:'Caveat', cursive; font-weight:700; color:var(--red); font-size:18px;">Tap item to mark done ✍️</span>
-        </div>
-
-        <!-- Progress Bar -->
-        <div style="height:10px; background:rgba(0,0,0,0.06); border-radius:8px; overflow:hidden; margin-bottom:16px;">
-          <div id="progress-bar-fill" style="height:100%; width:33%; background:linear-gradient(90deg, var(--mint), var(--lav), var(--pink)); transition:width 0.5s ease;"></div>
-        </div>
-
-        <!-- Interactive Task Items -->
-        <div id="tasks-container" style="display:flex; flex-direction:column; gap:10px;">
-          <div class="task-item done" onclick="toggleTask(this)">
-            <div class="task-box">✓</div>
-            <div style="flex:1;">
-              <span class="title" style="font-size:13px; font-weight:600;">AS 2: Valuation of Inventories</span>
-              <div style="font-size:11px; color:var(--mute);">Cost Formula, NRV Adjustments (R1 Complete)</div>
-            </div>
-            <span style="font-size:10px; font-weight:700; color:#E4572E; background:#FFF1F2; padding:3px 8px; border-radius:6px;">1.5D LDR</span>
-          </div>
-
-          <div class="task-item" onclick="toggleTask(this)">
-            <div class="task-box">✓</div>
-            <div style="flex:1;">
-              <span class="title" style="font-size:13px; font-weight:600;">AS 10: Property, Plant & Equipment</span>
-              <div style="font-size:11px; color:var(--mute);">Component Depr. & Decommissioning Provision</div>
-            </div>
-            <span style="font-size:10px; font-weight:700; color:#7A5CFF; background:#F4F0FF; padding:3px 8px; border-radius:6px;">R2 Active</span>
-          </div>
-
-          <div class="task-item" onclick="toggleTask(this)">
-            <div class="task-box">✓</div>
-            <div style="flex:1;">
-              <span class="title" style="font-size:13px; font-weight:600;">AS 16: Borrowing Costs</span>
-              <div style="font-size:11px; color:var(--mute);">Qualifying Assets & Capitalisation Windows</div>
-            </div>
-            <span style="font-size:10px; font-weight:700; color:var(--mute); background:#F1F5F9; padding:3px 8px; border-radius:6px;">R1 Pending</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== TAB 2: SANCTUM (FLASHCARDS & RED INK) ==================== -->
-    <section id="tab-sanctum" class="tab-pane" style="display:none; flex-direction:column; gap:18px; margin-top:6px;">
-      
-      <!-- 3D Flip Flashcard Drill -->
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <h2 style="font-size:19px;">Nexus Flashcard Drill</h2>
-          <p style="font-size:12px; color:var(--mute); margin-top:2px;">Tap card to flip between Question and ICAI Answer</p>
-        </div>
-        <span style="background:var(--mint); color:var(--green); font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px;">100% ICAI</span>
+      <!-- Session Streak Badge -->
+      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gray-800/80 border border-gray-700 text-xs">
+        <span class="text-amber-400">🔥 Streak:</span>
+        <strong class="font-mono font-bold text-white">14 Days</strong>
       </div>
 
-      <div class="flip" onclick="this.classList.toggle('flipped')">
-        <div class="fi">
-          <div class="face front">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--mute); font-weight:600;">
-              <span>AS 2 · Valuation Rule</span>
-              <span style="color:#7A5CFF;">👆 Tap to Flip</span>
-            </div>
-            <h4 style="font-size:15px; margin:14px 0 8px;">Q: Finished goods sold at gain; raw material replacement cost is lower than cost. Valuation rule?</h4>
-            <p style="font-size:12px; color:var(--mute); margin:0;">Para 24 of AS 2 regarding raw material write-down.</p>
+    </div>
+  </header>
+
+  <!-- MAIN EDITORIAL CONTENT -->
+  <main class="max-w-[1400px] w-full mx-auto p-4 lg:p-6 flex-1 grid grid-cols-1 lg:grid-cols-[1.45fr_0.95fr] gap-6 items-start">
+    
+    <!-- LEFT PANE (60%): Interactive Practical Case Execution -->
+    <section class="space-y-4">
+      <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-xl">
+        
+        <!-- Case Meta Header -->
+        <div class="flex flex-wrap items-center justify-between pb-4 border-b border-gray-800 gap-2 mb-4">
+          <div class="flex items-center gap-2">
+            <span id="caseTag" class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              AS 16
+            </span>
+            <span id="caseTitle" class="text-sm font-bold text-white">Borrowing Costs</span>
           </div>
-          <div class="face back">
-            <span style="font-size:11px; font-weight:700; color:var(--green); text-transform:uppercase;">ICAI Suggested Answer</span>
-            <p style="font-size:13px; font-weight:600; color:var(--text); margin:8px 0;">
-              Materials are <strong>NOT written down below cost</strong> if the finished products in which they will be incorporated are expected to be sold at or above cost.
+          
+          <!-- Dynamic Score Counter -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400 font-mono">ICAI Score:</span>
+            <div class="px-3 py-1 rounded-xl bg-gray-800 border border-gray-700 font-mono font-bold text-sm">
+              <span id="scoreCounter" class="text-emerald-400">0</span>
+              <span id="maxScore" class="text-gray-400"> / 5 Marks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Facts -->
+        <div class="space-y-3 mb-6">
+          <h2 id="scenarioHeadline" class="text-xl font-bold text-white tracking-tight">
+            Qualifying Asset, Suspension Window & Capitalisation
+          </h2>
+          <div class="p-4 rounded-2xl bg-gray-800/60 border border-gray-700 text-xs leading-relaxed text-gray-200 space-y-2">
+            <p id="scenarioFacts">
+              Nova Infrastructure Ltd. obtained a specific loan of ₹50,00,000 at 12% p.a. on 1st April 2025 for constructing a manufacturing plant. The active construction was halted for 3 months due to an abnormal labour strike. Surplus loan funds yielded ₹65,000 in temporary treasury bills.
             </p>
-            <span style="font-size:11px; font-weight:700; color:#5B21B6;">Exam Key: Valued at original cost, NOT replacement cost.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ledger Paper Strict Red-Ink Check -->
-      <div>
-        <div style="margin-bottom:8px;">
-          <h2 style="font-size:19px;">Red Ink <span class="grad-text">Correction Check</span></h2>
-          <p style="font-size:12px; color:var(--mute); margin:2px 0 10px;">ICAI-style strict ledger checking. Press button to simulate red pen markings.</p>
-          <button class="btn" onclick="checkLedgerAnswer()" style="background:var(--red); box-shadow:0 6px 16px rgba(228,87,46,0.35);">Check Answer ✍️</button>
-          <button class="btn o" onclick="resetLedgerAnswer()" style="margin-left:6px;">Reset</button>
-        </div>
-
-        <div id="ledger-paper-box" class="paper-ledger">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 style="color:var(--green); font-size:15px;">Practice · Question 3</h3>
-            <span style="font-size:11px; color:#5E6B66; font-weight:600;">AS 10 · PPE Cost</span>
-          </div>
-          <div style="font-size:11px; color:#5E6B66; margin:4px 0 10px;">Provision evaluation • 4 Marks</div>
-          <p style="font-size:13px; line-height:26px; margin:0;">
-            Cost of PPE includes purchase price, <span class="wrong">selling expenses</span><span class="fix"> import duty</span>, and <span class="wrong">interest on loan always</span><span class="fix"> directly attributable site costs</span>.
-          </p>
-          <div id="ledger-note" style="display:none; font-family:'Caveat', cursive; color:var(--red); font-size:18px; margin-top:8px;">
-            ← "selling expenses" capital cost mein add nahi hote!
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ==================== TAB 3: LEDGER ANALYTICS ==================== -->
-    <section id="tab-analytics" class="tab-pane" style="display:none; flex-direction:column; gap:16px; margin-top:6px;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div class="glass-card" style="padding:18px; text-align:center;">
-          <span style="font-size:10px; color:var(--mute); text-transform:uppercase; font-weight:600;">Yesterday</span>
-          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono'; margin:4px 0;">6.5 <span style="font-size:12px; font-weight:500;">hrs</span></div>
-          <span style="font-size:11px; color:var(--mute);">2 Rounds Finished</span>
-        </div>
-        <div class="glass-card" style="padding:18px; text-align:center; border-color:rgba(126,220,196,0.6); background:rgba(236,253,245,0.7);">
-          <span style="font-size:10px; color:#0F3B33; text-transform:uppercase; font-weight:700;">Today</span>
-          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono'; color:#059669; margin:4px 0;">7.8 <span style="font-size:12px; font-weight:500;">hrs</span></div>
-          <span style="font-size:11px; color:#059669; font-weight:600;">+1.3 hrs Velocity</span>
-        </div>
-      </div>
-
-      <div class="glass-card" style="padding:20px;">
-        <h4 style="font-size:14px; margin-bottom:12px;">Subject Time Allocation</h4>
-        <div style="display:flex; flex-direction:column; gap:12px; font-size:12px; font-weight:600;">
-          <div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <span>Advanced Accounting</span>
-              <span style="color:#7A5CFF;">45%</span>
-            </div>
-            <div style="height:8px; background:rgba(0,0,0,0.05); border-radius:6px; overflow:hidden;">
-              <div style="width:45%; height:100%; background:linear-gradient(90deg, #7A5CFF, #FF7EB0); border-radius:6px;"></div>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <span>Corporate & Other Laws</span>
-              <span style="color:#059669;">35%</span>
-            </div>
-            <div style="height:8px; background:rgba(0,0,0,0.05); border-radius:6px; overflow:hidden;">
-              <div style="width:35%; height:100%; background:#10B981; border-radius:6px;"></div>
+            <div id="scenarioQuestion" class="pt-2 border-t border-gray-700 font-semibold text-indigo-400">
+              Requirement: Compute borrowing cost to be capitalised and amount charged to P&L under AS 16.
             </div>
           </div>
         </div>
+
+        <!-- Step-Marking Checklists -->
+        <div class="space-y-3 mb-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">
+              ICAI Step-Marking Matrix
+            </h3>
+            <span class="text-[11px] text-gray-400 font-mono">Check achieved working steps</span>
+          </div>
+
+          <div id="stepsContainer" class="space-y-2.5">
+            <!-- Dynamically populated steps -->
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-800">
+          <div class="flex items-center gap-2">
+            <button onclick="toggleModelSolution()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs font-semibold text-white transition-all">
+              📖 <span id="solBtnText">View Model Answer</span>
+            </button>
+            <button onclick="resetChecklist()" class="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-400 hover:text-white transition-all" title="Reset Steps">
+              ↺
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="openMistakeModal()" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition-all">
+              ⚠️ Flag Mistake
+            </button>
+            <button onclick="claimFullMarks()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white text-xs font-bold hover:brightness-110 shadow-md transition-all">
+              ✨ Full Marks Check
+            </button>
+          </div>
+        </div>
+
+        <!-- Model Answer Box -->
+        <div id="solutionBox" class="hidden mt-5 p-4 rounded-2xl bg-gray-800 border border-indigo-500/40 space-y-2">
+          <div class="text-xs font-mono font-bold text-emerald-400">OFFICIAL ICAI SUGGESTED SOLUTION</div>
+          <p id="modelAnswerText" class="text-xs text-gray-200 leading-relaxed"></p>
+          <div id="trapWatch" class="pt-2 border-t border-gray-700 text-[11px] text-rose-400 font-mono"></div>
+        </div>
+
       </div>
     </section>
 
+    <!-- RIGHT PANE (40%): Retention Radar & Mistake Vault -->
+    <aside class="space-y-5">
+      
+      <!-- Retention Radar -->
+      <div class="bg-gray-900 border border-gray-800 rounded-3xl p-5 shadow-lg space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-sm font-bold text-white">Retention Index Cards</h3>
+            <span class="text-[11px] text-gray-400">Live ICAI standard recall decay</span>
+          </div>
+          <button onclick="recalculateQueue()" class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-all">
+            Recalculate
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <div class="p-3 rounded-xl bg-gray-800/80 border border-gray-700 space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="font-bold text-white">AS 10: PPE & Restoration</span>
+              <span class="font-mono font-bold text-rose-400">42% Retest needed</span>
+            </div>
+            <div class="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+              <div class="h-full bg-rose-500 rounded-full w-[42%]"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-gray-400">
+              <span>Weak in: Test-run deductions</span>
+              <span class="text-indigo-400 cursor-pointer hover:underline" onclick="loadCase(1)">Load Case</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-gray-800/80 border border-gray-700 space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="font-bold text-white">AS 16: Borrowing Costs</span>
+              <span class="font-mono font-bold text-emerald-400">76% Stable</span>
+            </div>
+            <div class="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full w-[76%]"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-gray-400">
+              <span>Strike suspension mastered</span>
+              <span class="text-indigo-400 cursor-pointer hover:underline" onclick="loadCase(0)">Load Case</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mistake Vault -->
+      <div class="bg-gray-900 border border-gray-800 rounded-3xl p-5 shadow-lg space-y-3.5">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-sm font-bold text-white">Mistake Vault</h3>
+            <span class="text-[11px] text-gray-400">Root-cause tagged errors (<span id="vaultCount">0</span>)</span>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-400">Persistent</span>
+        </div>
+
+        <div id="vaultList" class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
+          <!-- Dynamically populated mistake cards -->
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- POMODORO SETTINGS MODAL -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-gray-900 border border-gray-800 rounded-3xl p-5 text-white shadow-2xl">
+      <div class="flex justify-between items-center pb-2 border-b border-gray-800 mb-4">
+        <h4 class="font-bold text-sm">Pomodoro Interval Settings</h4>
+        <button onclick="toggleSettingsModal(false)" class="text-gray-400 hover:text-white">✕</button>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-400">Focus Block (Work)</span>
+            <span id="setWorkVal" class="font-mono text-indigo-400 font-bold">25 min</span>
+          </div>
+          <input id="workRange" type="range" min="5" max="90" step="5" value="25" oninput="updateSettingPreview()" class="w-full accent-indigo-500">
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-400">Short Break (Rest)</span>
+            <span id="setBreakVal" class="font-mono text-teal-400 font-bold">5 min</span>
+          </div>
+          <input id="breakRange" type="range" min="1" max="30" step="1" value="5" oninput="updateSettingPreview()" class="w-full accent-teal-400">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button onclick="toggleSettingsModal(false)" class="px-3 py-1.5 rounded-xl border border-gray-700 text-xs text-gray-400 hover:text-white">Cancel</button>
+        <button onclick="savePomodoroSettings()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white text-xs font-bold">Save Settings</button>
+      </div>
+    </div>
   </div>
 
-  <!-- ==================== BOTTOM DOCK NAVIGATION ==================== -->
-  <nav style="position:fixed; bottom:0; left:0; right:0; z-index:40; background:rgba(255,255,255,0.9); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid rgba(0,0,0,0.06); padding:10px 24px; box-shadow:0 -4px 20px rgba(0,0,0,0.04);">
-    <div style="max-width:500px; margin:auto; display:flex; justify-content:space-around; align-items:center;">
-      <button onclick="switchTab('command')" id="dock-btn-command" class="dock-btn active" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-family:'Poppins'; font-size:11px; font-weight:600; color:var(--mute);">
-        <i class="fa-solid fa-gauge-high" style="font-size:16px;"></i>
-        <span>Command</span>
-      </button>
-      <button onclick="switchTab('sanctum')" id="dock-btn-sanctum" class="dock-btn" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-family:'Poppins'; font-size:11px; font-weight:600; color:var(--mute);">
-        <i class="fa-solid fa-book-open" style="font-size:16px;"></i>
-        <span>Sanctum</span>
-      </button>
-      <button onclick="switchTab('analytics')" id="dock-btn-analytics" class="dock-btn" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-family:'Poppins'; font-size:11px; font-weight:600; color:var(--mute);">
-        <i class="fa-solid fa-chart-simple" style="font-size:16px;"></i>
-        <span>Ledger</span>
-      </button>
+  <!-- FLAG MISTAKE MODAL -->
+  <div id="mistakeModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-3xl p-6 text-white shadow-2xl space-y-4">
+      <h4 class="text-base font-bold text-rose-400 flex items-center gap-2">
+        ⚠️ Log Root-Cause to Mistake Vault
+      </h4>
+      <p class="text-xs text-gray-400">Select the examiner trap that caused this slip:</p>
+
+      <div class="space-y-2" id="tagOptions">
+        <button onclick="selectMistakeTag('Omitted Provision Citation')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
+          • Omitted Provision Citation
+        </button>
+        <button onclick="selectMistakeTag('ICAI Distinction / Concept Trap')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
+          • ICAI Distinction / Concept Trap
+        </button>
+        <button onclick="selectMistakeTag('Arithmetic / Clerical Slip')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
+          • Arithmetic / Clerical Slip
+        </button>
+        <button onclick="selectMistakeTag('Working Note Missing')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
+          • Working Note Missing
+        </button>
+      </div>
+
+      <textarea id="mistakeNotes" placeholder="Personal reflection or formula that was overlooked..." class="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 h-20 resize-none"></textarea>
+
+      <div class="flex justify-end gap-2">
+        <button onclick="closeMistakeModal()" class="px-4 py-2 rounded-xl border border-gray-700 text-xs text-gray-400 hover:text-white">Cancel</button>
+        <button onclick="commitMistake()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white text-xs font-bold">Record in Vault</button>
+      </div>
     </div>
-  </nav>
+  </div>
 
-  <!-- ==================== CONTROLLER SCRIPT ==================== -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.dock-btn').forEach(btn => btn.classList.remove('active'));
+    // --- 1. ICAI SCENARIOS DATA ---
+    const CASES = [
+      {
+        tag: 'AS 16',
+        topic: 'Borrowing Costs',
+        maxMarks: 5,
+        title: 'Qualifying Asset, Suspension Window & Capitalisation',
+        facts: 'Nova Infrastructure Ltd. obtained a specific loan of ₹50,00,000 at 12% p.a. on 1st April 2025 for constructing a manufacturing plant. Active construction was halted for 3 months due to an abnormal labour strike. Surplus loan funds yielded ₹65,000 in temporary treasury bills.',
+        question: 'Compute borrowing cost to be capitalised and amount charged to P&L under AS 16.',
+        steps: [
+          { id: 's1', label: 'Provision Citation (AS 16 para 17 Abnormal Delay Suspension)', marks: 1, ref: 'AS 16 para 17' },
+          { id: 's2', label: 'Exclusion of 3-Month Strike Interest (₹1,50,000 to P&L)', marks: 2, ref: 'Working Note 1' },
+          { id: 's3', label: 'Temporary Reinvestment Income Netting (₹65,000 Deduction)', marks: 1, ref: 'AS 16 para 10' },
+          { id: 's4', label: 'Final Capitalised Cost to Plant Asset (₹3,85,000)', marks: 1, ref: 'Balance Sheet Schedule' }
+        ],
+        solution: 'Under AS 16, interest during the 3-month abnormal strike (₹1,50,000) must be expensed in Profit & Loss. Net borrowing cost capitalised to plant is ₹4,50,000 - ₹65,000 = ₹3,85,000.',
+        trap: 'Students often capitalise full 12 months without strike deduction or miss crediting temporary treasury income.'
+      },
+      {
+        tag: 'AS 10',
+        topic: 'Property, Plant & Equipment',
+        maxMarks: 5,
+        title: 'Trial-Run Output Netting & Decommissioning Provision',
+        facts: 'Apex Power Ltd. imported a heavy turbine for ₹80,00,000 (Customs ₹8,00,000; GST with ITC ₹14,40,000). Installation cost ₹4,50,000. Testing cost ₹3,20,000; sample proceeds ₹1,80,000. PV of decommissioning is ₹12,00,000.',
+        question: 'Determine the initial carrying amount of the turbine to be capitalised under AS 10 (Revised).',
+        steps: [
+          { id: 's1', label: 'Exclusion of Refundable Taxes (GST Input Credit)', marks: 1, ref: 'AS 10.16(a)' },
+          { id: 's2', label: 'Net Test-Run Cost Capitalisation (₹1,40,000)', marks: 2, ref: 'AS 10.18(e)' },
+          { id: 's3', label: 'Inclusion of PV of Decommissioning Obligation (₹12,00,000)', marks: 1, ref: 'AS 10.16(c)' },
+          { id: 's4', label: 'Total Initial Cost Computation (₹1,05,90,000)', marks: 1, ref: 'Asset Schedule' }
+        ],
+        solution: 'Total capitalised cost of Turbine under AS 10 (Revised) = ₹1,05,90,000. GST ₹14,40,000 is excluded since ITC is available. Decommissioning PV is included on day one.',
+        trap: 'Capitalising GST despite ITC eligibility, or treating trial sales proceeds as P&L income.'
+      }
+    ];
 
-      document.getElementById('tab-' + tab).style.display = 'flex';
-      document.getElementById('dock-btn-' + tab).classList.add('active');
+    let currentCaseIndex = 0;
+    let checkedSteps = {};
+
+    function loadCase(idx) {
+      currentCaseIndex = idx;
+      checkedSteps = {};
+      const c = CASES[idx];
+      document.getElementById('caseTag').innerText = c.tag;
+      document.getElementById('caseTitle').innerText = c.topic;
+      document.getElementById('scenarioHeadline').innerText = c.title;
+      document.getElementById('scenarioFacts').innerText = c.facts;
+      document.getElementById('scenarioQuestion').innerText = 'Requirement: ' + c.question;
+      document.getElementById('maxScore').innerText = ' / ' + c.maxMarks + ' Marks';
+      document.getElementById('modelAnswerText').innerText = c.solution;
+      document.getElementById('trapWatch').innerText = 'Examiner Trap Watch: ' + c.trap;
+      document.getElementById('solutionBox').classList.add('hidden');
+      document.getElementById('solBtnText').innerText = 'View Model Answer';
+
+      // Render Steps
+      const container = document.getElementById('stepsContainer');
+      container.innerHTML = '';
+      c.steps.forEach(step => {
+        const div = document.createElement('div');
+        div.className = 'step-row p-3 rounded-xl border border-gray-700 bg-gray-800 hover:border-indigo-500/50 cursor-pointer flex justify-between items-center transition-all';
+        div.id = 'row-' + step.id;
+        div.onclick = () => toggleStep(step.id, step.marks);
+        div.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span id="check-${step.id}" class="text-base text-gray-500">⬜</span>
+            <div>
+              <span class="text-xs font-bold text-white block leading-snug">${step.label}</span>
+              <span class="text-[10px] font-mono text-teal-400">Ref: ${step.ref}</span>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-gray-900 border border-gray-700 text-gray-300">+${step.marks}M</span>
+        `;
+        container.appendChild(div);
+      });
+      updateScore();
     }
 
-    function handleLevelChange(level) {
-      const pill = document.getElementById('tier-pill');
-      if (level === 'inter') pill.textContent = 'CA Inter • Adv. Acc';
-      else if (level === 'foundation') pill.textContent = 'CA Foundation • Paper 1';
-      else if (level === 'final') pill.textContent = 'CA Final • AFR Module';
-    }
-
-    function toggleTask(el) {
-      el.classList.toggle('done');
-      const all = document.querySelectorAll('#tasks-container .task-item').length;
-      const done = document.querySelectorAll('#tasks-container .task-item.done').length;
-      const pct = Math.round((done / all) * 100);
-
-      document.getElementById('progress-bar-fill').style.width = pct + '%';
-      const badge = document.getElementById('completion-badge');
-      if (pct === 100) {
-        badge.textContent = 'Shabash Maitri! Sab complete 🎉';
-        triggerConfetti();
+    function toggleStep(id, marks) {
+      checkedSteps[id] = !checkedSteps[id];
+      const row = document.getElementById('row-' + id);
+      const icon = document.getElementById('check-' + id);
+      if (checkedSteps[id]) {
+        row.classList.add('border-emerald-500', 'bg-emerald-950/20');
+        icon.innerText = '✅';
       } else {
-        badge.textContent = `${done} / ${all} complete ✍️`;
+        row.classList.remove('border-emerald-500', 'bg-emerald-950/20');
+        icon.innerText = '⬜';
       }
+      updateScore();
     }
 
-    function triggerConfetti() {
-      const colors = ['#7A5CFF', '#FF7EB0', '#7EDCC4', '#FFC2A6', '#B7A6FF'];
-      for (let i = 0; i < 45; i++) {
+    function updateScore() {
+      const c = CASES[currentCaseIndex];
+      let score = 0;
+      c.steps.forEach(s => {
+        if (checkedSteps[s.id]) score += s.marks;
+      });
+      document.getElementById('scoreCounter').innerText = score;
+    }
+
+    function resetChecklist() {
+      checkedSteps = {};
+      loadCase(currentCaseIndex);
+    }
+
+    function toggleModelSolution() {
+      const box = document.getElementById('solutionBox');
+      const isHidden = box.classList.contains('hidden');
+      box.classList.toggle('hidden');
+      document.getElementById('solBtnText').innerText = isHidden ? 'Hide Model Answer' : 'View Model Answer';
+    }
+
+    function claimFullMarks() {
+      const c = CASES[currentCaseIndex];
+      c.steps.forEach(s => {
+        checkedSteps[s.id] = true;
+        const row = document.getElementById('row-' + s.id);
+        const icon = document.getElementById('check-' + s.id);
+        if (row && icon) {
+          row.classList.add('border-emerald-500', 'bg-emerald-950/20');
+          icon.innerText = '✅';
+        }
+      });
+      updateScore();
+      confetti({ particleCount: 80, spread: 70 });
+    }
+
+    // --- 2. MISTAKE VAULT ---
+    let mistakeList = JSON.parse(localStorage.getItem('dhity_mistakes') || '[]');
+    let selectedTag = 'Omitted Provision Citation';
+
+    function openMistakeModal() {
+      document.getElementById('mistakeModal').classList.remove('hidden');
+    }
+    function closeMistakeModal() {
+      document.getElementById('mistakeModal').classList.add('hidden');
+    }
+    function selectMistakeTag(tag) {
+      selectedTag = tag;
+      document.querySelectorAll('.tag-opt').forEach(btn => {
+        btn.classList.toggle('border-indigo-500', btn.innerText.includes(tag));
+        btn.classList.toggle('bg-indigo-950/30', btn.innerText.includes(tag));
+      });
+    }
+    function commitMistake() {
+      const notes = document.getElementById('mistakeNotes').value || 'Flagged during practical case study.';
+      const c = CASES[currentCaseIndex];
+      const entry = {
+        id: Date.now(),
+        code: c.tag,
+        title: c.title,
+        tag: selectedTag,
+        notes: notes,
+        time: 'Just now'
+      };
+      mistakeList.unshift(entry);
+      localStorage.setItem('dhity_mistakes', JSON.stringify(mistakeList));
+      renderMistakes();
+      closeMistakeModal();
+      document.getElementById('mistakeNotes').value = '';
+    }
+    function renderMistakes() {
+      document.getElementById('vaultCount').innerText = mistakeList.length;
+      const list = document.getElementById('vaultList');
+      list.innerHTML = '';
+      if (mistakeList.length === 0) {
+        list.innerHTML = '<div class="p-4 text-center text-xs text-gray-500">No mistakes logged yet.</div>';
+        return;
+      }
+      mistakeList.forEach(m => {
         const d = document.createElement('div');
-        d.className = 'confetti';
-        d.style.left = (Math.random() * 100) + 'vw';
-        d.style.background = colors[i % colors.length];
-        d.style.animationDelay = (Math.random() * 0.4) + 's';
-        document.body.appendChild(d);
-        setTimeout(() => d.remove(), 2200);
-      }
+        d.className = 'p-3 rounded-xl bg-gray-800/80 border border-gray-700 text-xs space-y-1';
+        d.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="font-mono font-bold text-indigo-400">${m.code}</span>
+            <span class="text-[10px] text-gray-400">${m.time}</span>
+          </div>
+          <div class="font-semibold text-white truncate">${m.title}</div>
+          <div class="inline-block px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 text-[10px] font-mono font-bold">
+            ${m.tag}
+          </div>
+          <p class="text-[11px] text-gray-400 italic">"${m.notes}"</p>
+        `;
+        list.appendChild(d);
+      });
     }
 
-    function checkLedgerAnswer() {
-      document.getElementById('ledger-paper-box').classList.add('checked');
-      document.getElementById('ledger-note').style.display = 'block';
-      triggerConfetti();
-    }
-    function resetLedgerAnswer() {
-      document.getElementById('ledger-paper-box').classList.remove('checked');
-      document.getElementById('ledger-note').style.display = 'none';
+    // --- 3. GLOBAL POMODORO TIMER ---
+    let pomoSettings = JSON.parse(localStorage.getItem('dhity_pomo_settings') || '{"work":25,"break":5}');
+    let pomoMode = 'work';
+    let pomoSeconds = pomoSettings.work * 60;
+    let isRunning = false;
+    let pomoTimerInterval = null;
+
+    function updatePomoDisplay() {
+      const m = Math.floor(pomoSeconds / 60);
+      const s = pomoSeconds % 60;
+      document.getElementById('pomoDisplay').innerText = 
+        String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+      
+      const total = (pomoMode === 'work' ? pomoSettings.work : pomoSettings.break) * 60;
+      const pct = Math.round(((total - pomoSeconds) / total) * 100);
+      document.getElementById('pomoProgress').style.width = pct + '%';
     }
 
-    let timerRunning = false;
-    let seconds = 0;
-    let timerInterval = null;
-
-    function toggleTimer() {
-      const btn = document.getElementById('btn-timer');
-      if (!timerRunning) {
-        timerRunning = true;
-        btn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause`;
-        btn.style.background = 'var(--red)';
-        timerInterval = setInterval(() => {
-          seconds++;
-          const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-          const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-          const secs = String(seconds % 60).padStart(2, '0');
-          document.getElementById('live-timer').textContent = `${hrs}:${mins}:${secs}`;
+    function togglePomodoro() {
+      isRunning = !isRunning;
+      document.getElementById('pomoToggleBtn').innerText = isRunning ? '⏸' : '▶';
+      if (isRunning) {
+        pomoTimerInterval = setInterval(() => {
+          if (pomoSeconds <= 1) {
+            clearInterval(pomoTimerInterval);
+            isRunning = false;
+            document.getElementById('pomoToggleBtn').innerText = '▶';
+            alert(pomoMode === 'work' ? '🎉 Focus session finished! Take a break.' : '🔔 Break over! Ready for next session?');
+            setPomodoroMode(pomoMode === 'work' ? 'break' : 'work');
+            return;
+          }
+          pomoSeconds--;
+          updatePomoDisplay();
         }, 1000);
       } else {
-        timerRunning = false;
-        clearInterval(timerInterval);
-        btn.innerHTML = `<i class="fa-solid fa-play"></i> Resume`;
-        btn.style.background = 'var(--primary-gradient)';
+        clearInterval(pomoTimerInterval);
       }
     }
 
-    function resetTimer() {
-      clearInterval(timerInterval);
-      timerRunning = false;
-      seconds = 0;
-      document.getElementById('live-timer').textContent = '00:00:00';
-      const btn = document.getElementById('btn-timer');
-      btn.innerHTML = `<i class="fa-solid fa-play"></i> Start Study`;
-      btn.style.background = 'var(--primary-gradient)';
+    function setPomodoroMode(mode) {
+      pomoMode = mode;
+      isRunning = false;
+      clearInterval(pomoTimerInterval);
+      document.getElementById('pomoToggleBtn').innerText = '▶';
+      pomoSeconds = (mode === 'work' ? pomoSettings.work : pomoSettings.break) * 60;
+      
+      const fBtn = document.getElementById('pomoFocusBtn');
+      const bBtn = document.getElementById('pomoBreakBtn');
+      if (mode === 'work') {
+        fBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-gray-900 text-white shadow-sm flex items-center gap-1';
+        bBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white flex items-center gap-1';
+      } else {
+        bBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-gray-900 text-teal-300 shadow-sm flex items-center gap-1';
+        fBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white flex items-center gap-1';
+      }
+      updatePomoDisplay();
     }
+
+    function resetPomodoro() {
+      setPomodoroMode(pomoMode);
+    }
+
+    function toggleSettingsModal(open) {
+      document.getElementById('settingsModal').classList.toggle('hidden', !open);
+      if (open) {
+        document.getElementById('workRange').value = pomoSettings.work;
+        document.getElementById('breakRange').value = pomoSettings.break;
+        updateSettingPreview();
+      }
+    }
+
+    function updateSettingPreview() {
+      document.getElementById('setWorkVal').innerText = document.getElementById('workRange').value + ' min';
+      document.getElementById('setBreakVal').innerText = document.getElementById('breakRange').value + ' min';
+    }
+
+    function savePomodoroSettings() {
+      pomoSettings.work = parseInt(document.getElementById('workRange').value, 10);
+      pomoSettings.break = parseInt(document.getElementById('breakRange').value, 10);
+      localStorage.setItem('dhity_pomo_settings', JSON.stringify(pomoSettings));
+      document.getElementById('focusMinLabel').innerText = `(${pomoSettings.work}m)`;
+      document.getElementById('breakMinLabel').innerText = `(${pomoSettings.break}m)`;
+      toggleSettingsModal(false);
+      resetPomodoro();
+    }
+
+    function recalculateQueue() {
+      alert('Adaptive revision queue recalculated based on recent error taxonomy!');
+    }
+
+    // INIT
+    loadCase(0);
+    renderMistakes();
+    updatePomoDisplay();
   </script>
 </body>
 </html>
