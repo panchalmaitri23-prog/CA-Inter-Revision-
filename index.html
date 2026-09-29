@@ -1,91 +1,169 @@
+# STRICT ARCHITECTURAL & UI LOCK INSTRUCTION FOR DHEETI
+
+DO NOT REDESIGN, RE-SKIN, OR REPLACE THIS INTERFACE.
+Preserve the exact "Aurora Hybrid" design language and component structure created for "Dheeti".
+
+### CORE CONSTITUTION & BOUNDARIES:
+1. BRAND NAME: Must ALWAYS be strictly spelled "Dheeti" (Capital D, clean typography, animated aurora gradient).
+2. LOGO: Must strictly be the bright luminous glowing gradient monogram [D] (violet #7A5CFF via #9F7AEA to pink #FF7EB0 with white border and soft blur glow). NEVER revert to a dark box, dark tile, or black square.
+3. COLOR THEME:
+   - Primary Background Light: #FBF9FF (pastel aurora ambient blobs: teal #7EDCC4, violet #B7A6FF, peach #FFC2A6).
+   - Primary Background Dark: #171327 with soft translucent glassmorphism (rgba(255,255,255,0.08)).
+   - Red Ink Accent: #E4572E (for strict examiner strikethroughs and Caveat cursive handwriting).
+   - Ledger Paper: #F6F0E4 with 8px solid #0F3B33 border, #E2D8C3 lined rules, and #1B2A26 text.
+4. KEY SECTIONS (MUST BE PRESERVED AS IS):
+   - Hero Section: "Padhai soft, checking strict" with floating phone widget (72% circular SVG progress ring, "Hi Maitri 👋", 12-day streak).
+   - Red Ink Check Answer Section: Interactive ICAI Ledger paper with live strikethrough, handwritten red ink corrections, score banner, and working notes. Must support Q1 and Q2 switching for Foundation, Intermediate, and Final.
+   - 3D Active Recall Flashcard: Flip card with preserve-3d animation showing Question on front and ICAI Suggested Model Provision on back.
+   - Four Feature Cards: "Home, Planner, Streak", "Flashcards", "Check Answer" (parchment), and "Dark Mode".
+   - Confetti Party Celebration: Canvas/DOM confetti trigger on successful check.
+
+DO NOT substitute this design with generic dashboards, bootstrap layouts, or alternate colors. Only extend functionality while maintaining this exact visual identity.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dheeti – Aurora Hybrid</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FBF9FF;--glass:rgba(255,255,255,.62);--text:#2A2340;--mute:#75708A;--line:rgba(255,255,255,.9);--paper:#F6F0E4;--pline:#E2D8C3;--ptext:#1B2A26;--red:#E4572E;--green:#0F3B33;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171327;--glass:rgba(255,255,255,.08);--text:#F1EDFF;--mute:#A9A3C4;--line:rgba(255,255,255,.15)}}
-:root[data-theme="dark"]{--bg:#171327;--glass:rgba(255,255,255,.08);--text:#F1EDFF;--mute:#A9A3C4;--line:rgba(255,255,255,.15)}
-html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+:root{
+  --bg:#FBF9FF;
+  --glass:rgba(255,255,255,.68);
+  --text:#2A2340;
+  --mute:#75708A;
+  --line:rgba(255,255,255,.9);
+  --paper:#F6F0E4;
+  --pline:#E2D8C3;
+  --ptext:#1B2A26;
+  --red:#E4572E;
+  --green:#0F3B33;
+}
+:root[data-theme="dark"]{
+  --bg:#171327;
+  --glass:rgba(255,255,255,.08);
+  --text:#F1EDFF;
+  --mute:#A9A3C4;
+  --line:rgba(255,255,255,.15);
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;line-height:1.5;padding-bottom:40px}
-h1,h2,h3{font-family:Poppins,sans-serif;margin:0}
-.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:float 14s ease-in-out infinite}
-.b1{width:360px;height:360px;background:#7EDCC4;top:-80px;left:-80px}
-.b2{width:400px;height:400px;background:#B7A6FF;top:140px;right:-120px;animation-delay:-4s}
-.b3{width:320px;height:320px;background:#FFC2A6;bottom:-100px;left:30%;animation-delay:-8s}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,sans-serif;
+  overflow-x:hidden;
+  line-height:1.5;
+  padding-bottom:50px;
+  transition:background .3s,color .3s;
+}
+h1,h2,h3,h4{font-family:Poppins,sans-serif;margin:0}
+.blob{position:fixed;border-radius:50%;filter:blur(75px);opacity:.5;z-index:0;animation:float 14s ease-in-out infinite;pointer-events:none}
+.b1{width:380px;height:380px;background:#7EDCC4;top:-80px;left:-80px}
+.b2{width:420px;height:420px;background:#B7A6FF;top:140px;right:-120px;animation-delay:-4s}
+.b3{width:340px;height:340px;background:#FFC2A6;bottom:-100px;left:30%;animation-delay:-8s}
 @keyframes float{50%{transform:translate(40px,-50px) scale(1.12)}}
-.wrap{position:relative;z-index:1;max-width:1050px;margin:auto;padding:0 20px}
-nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
-.logo{font-family:Poppins;font-weight:700;font-size:22px}
+
+.wrap{position:relative;z-index:1;max-width:1060px;margin:auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-tile{
+  position:relative;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#7A5CFF,#9F7AEA,#FF7EB0);
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font:800 22px Poppins,sans-serif;
+  box-shadow:0 8px 24px rgba(122,92,255,.4);
+  border:1.5px solid rgba(255,255,255,.6);
+}
 .grad{background:linear-gradient(90deg,#7A5CFF,#FF7EB0,#FFA06B);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200%;animation:bg 5s linear infinite}
 @keyframes bg{to{background-position:200%}}
 .glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;box-shadow:0 10px 30px rgba(122,92,255,.12)}
-.btn{position:relative;overflow:hidden;border:0;border-radius:14px;padding:14px 24px;font:600 15px Poppins,sans-serif;cursor:pointer;color:#fff;background:linear-gradient(120deg,#7A5CFF,#FF7EB0);box-shadow:0 8px 20px rgba(122,92,255,.35);transition:transform .2s}
-.btn:hover{transform:translateY(-3px)}.btn:active{transform:scale(.97)}
+.btn{position:relative;overflow:hidden;border:0;border-radius:14px;padding:13px 22px;font:600 14px Poppins,sans-serif;cursor:pointer;color:#fff;background:linear-gradient(120deg,#7A5CFF,#FF7EB0);box-shadow:0 8px 20px rgba(122,92,255,.35);transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(122,92,255,.45)}
+.btn:active{transform:scale(.97)}
 .btn::after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:shine 3s infinite}
 @keyframes shine{60%,100%{left:130%}}
 .btn.o{background:var(--glass);color:var(--text);box-shadow:none;border:1px solid var(--line)}.btn.o::after{display:none}
 .btn.red{background:var(--red);box-shadow:0 4px 0 #A83A18}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;padding:24px 0 30px}
-.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.1}
-.hero p{color:var(--mute);font-size:17px;max-width:470px}
-.tag{display:inline-block;padding:6px 14px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:14px}
-.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
-.phone{width:270px;margin:auto;padding:18px 15px;border-radius:36px}
+
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center;padding:24px 0 36px}
+.hero h1{font-size:clamp(34px,5vw,52px);line-height:1.12}
+.hero p{color:var(--mute);font-size:17px;max-width:480px;margin:16px 0}
+.tag{display:inline-block;padding:6px 16px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.phone{width:280px;margin:auto;padding:20px;border-radius:36px}
 .float{animation:bob 5s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-14px)}}
-.ring{position:relative;width:110px;height:110px;margin:8px auto}
+.ring{position:relative;width:110px;height:110px;margin:10px auto}
 .ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
 .ring .bgc{stroke:rgba(122,92,255,.15)}
 .ring .fg{stroke:url(#g);stroke-dasharray:314;stroke-dashoffset:314;animation:fill 2s .4s forwards}
 @keyframes fill{to{stroke-dashoffset:88}}
 .ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 22px Poppins}
-.mini{padding:10px 12px;border-radius:14px;margin-top:8px;font-size:12px;display:flex;justify-content:space-between}
+.mini{padding:10px 12px;border-radius:14px;margin-top:10px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
 .flame{display:inline-block;animation:flick 1s infinite alternate}
 @keyframes flick{to{transform:scale(1.25) rotate(-6deg)}}
-section{padding:30px 0}
-h2{font-size:27px;margin-bottom:6px}.sub{color:var(--mute);margin:0 0 20px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
-.paper{width:100%;max-width:340px;margin:auto;background:var(--paper);color:var(--ptext);border:8px solid var(--green);border-radius:30px;padding:16px;background-image:repeating-linear-gradient(transparent 0 25px,var(--pline) 25px 26px);box-shadow:0 20px 40px rgba(15,59,51,.2)}
+
+section{padding:36px 0;border-top:1px solid var(--line)}
+h2{font-size:28px;margin-bottom:6px}.sub{color:var(--mute);margin:0 0 20px;font-size:15px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+.paper{width:100%;max-width:440px;margin:auto;background:var(--paper);color:var(--ptext);border:8px solid var(--green);border-radius:30px;padding:20px;background-image:repeating-linear-gradient(transparent 0 25px,var(--pline) 25px 26px);box-shadow:0 20px 40px rgba(15,59,51,.22)}
 .paper h3{color:var(--green);font-size:16px}
-.q{font-size:12px;color:#5E6B66;margin:4px 0 8px}
+.q{font-size:12px;color:#5E6B66;margin:4px 0 10px}
 .ans{font-size:14px;line-height:26px;margin:0}
 .ans .w{position:relative;transition:all .5s}
-.ans .fix{display:none;font-family:Caveat,cursive;font-size:19px;color:var(--red);font-weight:600}
-.checked .w{color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}
+.ans .fix{display:none;font-family:Caveat,cursive;font-size:20px;color:var(--red);font-weight:700}
+.checked .w{color:var(--red);text-decoration:line-through;text-decoration-thickness:2.5px}
 .checked .fix{display:inline;animation:pop .5s both}
 @keyframes pop{from{opacity:0;transform:translateY(-6px) rotate(-6deg)}}
-.score{display:none;margin-top:10px;background:var(--green);color:#F6F0E4;border-radius:12px;padding:10px;font-size:13px;text-align:center}
-.checked+.score{display:block;animation:pop .5s .6s both}
+.score{display:none;margin-top:12px;background:var(--green);color:#F6F0E4;border-radius:12px;padding:10px 14px;font-size:13px;text-align:center;font-weight:600}
+.checked+.score{display:block;animation:pop .5s .4s both}
 .tick{color:#1c9a6b;font-weight:700}
-.note{font-family:Caveat,cursive;color:var(--red);font-size:18px;display:none}
+.note{font-family:Caveat,cursive;color:var(--red);font-size:19px;font-weight:600;display:none;margin-top:10px}
 .checked~.note{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.card{padding:20px;transition:transform .3s}.card:hover{transform:translateY(-8px)}
+
+/* 3D Flashcard */
+.card-scene{width:100%;max-width:620px;margin:auto;min-height:220px;cursor:pointer;perspective:1000px}
+.card-inner{position:relative;width:100%;height:100%;min-height:220px;transition:transform .7s;transform-style:preserve-3d}
+.card-scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;padding:24px;border-radius:28px;backface-visibility:hidden;display:flex;flex-col:column;justify-content:space-between;box-shadow:0 12px 30px rgba(122,92,255,.15)}
+.card-back{transform:rotateY(180deg);background:linear-gradient(135deg,rgba(240,236,252,.95),rgba(227,246,241,.95));border:1px solid rgba(122,92,255,.3);color:#1E1B2E}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.card{padding:22px;transition:transform .3s,box-shadow .3s}.card:hover{transform:translateY(-8px);box-shadow:0 16px 36px rgba(122,92,255,.18)}
 .card h3{font-size:16px;margin:8px 0 4px}.card p{margin:0;color:var(--mute);font-size:14px}
-.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:9;animation:fall 1.8s linear forwards;pointer-events:none}
+.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:9999;animation:fall 1.8s linear forwards;pointer-events:none}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
-.rv{opacity:0;transform:translateY(30px);transition:all .8s}.rv.in{opacity:1;transform:none}
-select.level-box{background:var(--glass);border:1px solid var(--line);padding:8px 14px;border-radius:12px;font:600 13px Poppins,sans-serif;color:var(--text);outline:none;cursor:pointer}
-footer{text-align:center;color:var(--mute);font-size:13px;padding:30px 0}
-@media(max-width:760px){.hero,.split{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ring .fg{stroke-dashoffset:88}}
+select.level-box{background:var(--glass);border:1px solid var(--line);padding:9px 14px;border-radius:12px;font:600 13px Poppins,sans-serif;color:var(--text);outline:none;cursor:pointer}
+footer{text-align:center;color:var(--mute);font-size:13px;padding:36px 0;border-top:1px solid var(--line)}
+@media(max-width:768px){.hero,.split{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 <div class="wrap">
 <nav>
-  <div class="logo"><span class="grad">Dheeti</span></div>
-  <select class="level-box" onchange="updateLevel(this.value)">
-    <option value="Foundation">CA Foundation</option>
-    <option value="Inter">CA Intermediate</option>
-    <option value="Final">CA Final</option>
-  </select>
+  <div class="brand">
+    <div class="logo-tile">D</div>
+    <div>
+      <span style="font:800 24px Poppins,sans-serif;letter-spacing:-0.5px;line-height:1;display:block"><span class="grad">Dheeti</span></span>
+      <span style="font-size:10px;font-weight:600;letter-spacing:1px;color:var(--mute);text-transform:uppercase;display:block;margin-top:2px">Aurora Hybrid Revision Studio</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="btn o" onclick="toggleTheme()" style="padding:8px 14px;font-size:12px" id="themeBtn">🌙 Dark</button>
+    <select class="level-box" onchange="updateLevel(this.value)">
+      <option value="Foundation">CA Foundation</option>
+      <option value="Inter">CA Intermediate</option>
+      <option value="Final">CA Final</option>
+    </select>
+  </div>
 </nav>
 
 <div class="hero">
@@ -96,11 +174,15 @@ footer{text-align:center;color:var(--mute);font-size:13px;padding:30px 0}
   <div class="row">
     <button class="btn" onclick="party()">Start Revision 🚀</button>
     <a href="#demo" style="text-decoration:none"><button class="btn o">Try Check Answer ↓</button></a>
+    <a href="#flashcards" style="text-decoration:none"><button class="btn o">🃏 Active Recall</button></a>
   </div>
  </div>
  <div class="phone glass float">
-  <small style="color:var(--mute)">Hi Maitri 👋</small>
-  <h3 style="font-size:16px" id="todayProgressTitle">Aaj ka progress</h3>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <small style="color:var(--mute)">Hi Maitri 👋</small>
+    <span style="font-size:10px;font-weight:700;color:#7A5CFF;background:rgba(122,92,255,.15);padding:2px 8px;border-radius:99px">Dheeti OS</span>
+  </div>
+  <h3 style="font-size:16px;margin:4px 0" id="todayProgressTitle">Aaj ka progress</h3>
   <div class="ring">
     <svg width="110" height="110">
       <defs><linearGradient id="g"><stop offset="0" stop-color="#7A5CFF"/><stop offset="1" stop-color="#FF7EB0"/></linearGradient></defs>
@@ -109,28 +191,77 @@ footer{text-align:center;color:var(--mute);font-size:13px;padding:30px 0}
     </svg>
     <b>72%</b>
   </div>
-  <div class="mini glass"><span id="task1">📘 Paper 1: Accounting Basics</span><b>✓</b></div>
-  <div class="mini glass" style="background:linear-gradient(120deg,rgba(255,194,166,.6),rgba(255,158,196,.5))"><span><span class="flame">🔥</span> 12 day streak</span><b>Keep going</b></div>
+  <div class="mini glass"><span id="task1">📘 Paper 1: Accounting Basics</span><b style="color:#1c9a6b">✓</b></div>
+  <div class="mini" style="background:linear-gradient(120deg,rgba(255,194,166,.65),rgba(255,158,196,.55));color:#2A2340;font-weight:600">
+    <span><span class="flame">🔥</span> 12 day streak</span><b>Keep going</b>
+  </div>
  </div>
 </div>
 
-<section id="demo" class="rv split">
+<section id="demo" class="split">
  <div>
+  <div style="font-size:11px;font-weight:700;color:#E4572E;text-transform:uppercase;margin-bottom:4px">Examiner Simulator</div>
   <h2>Red Ink <span class="grad">Check Answer</span></h2>
   <p class="sub">Yahan design Ledger style mein badal jaata hai: parchment paper, green border, red pen se correction. Button dabao aur dekho.</p>
+  <div style="display:flex;gap:8px;margin-bottom:16px" id="qBtns">
+    <button class="btn" style="padding:6px 14px;font-size:12px;background:#0F3B33;box-shadow:none" onclick="loadQ(0)">Q1</button>
+    <button class="btn o" style="padding:6px 14px;font-size:12px" onclick="loadQ(1)">Q2</button>
+  </div>
   <button class="btn red" id="cb" onclick="chk()">Check Answer ✍️</button>
   <button class="btn o" onclick="rst()" style="margin-left:6px">Reset</button>
  </div>
  <div class="paper">
-  <h3 id="paperQTitle">Practice · Q3</h3>
-  <div class="q" id="paperQSub">AS 10 · PPE cost · 4 marks</div>
-  <p class="ans" id="ans">Cost of PPE includes purchase price, <span class="w">selling expenses</span><span class="fix"> import duty</span>, and <span class="w">interest on loan always</span><span class="fix"> directly attributable costs</span><span class="tick"> ✓</span></p>
-  <div class="score">Score: 2 / 4 · Working notes zaroor likho!</div>
-  <div class="note">← "selling expenses" cost mein nahi aate</div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h3 id="paperQTitle">Practice · Q1</h3>
+    <span style="font-size:11px;font-weight:700;color:var(--green);background:rgba(15,59,51,.1);padding:2px 8px;border-radius:4px" id="paperQMarks">4 marks</span>
+  </div>
+  <div class="q" id="paperQSub">AS 10 / Depreciation · PPE Cost Principles</div>
+  <p class="ans" id="ans">Cost of PPE includes purchase price, <span class="w">selling expenses</span><span class="fix"> import duty & transit insurance</span>, and <span class="w">interest on loan always</span><span class="fix"> directly attributable erection costs</span><span class="tick"> ✓</span></p>
+  <div class="score" id="paperScore">Score: 2 / 4 · Working notes zaroor likho!</div>
+  <div class="note" id="paperNote">← "selling expenses" machine cost mein kabhi capitalise nahi hote!</div>
  </div>
 </section>
 
-<section class="rv">
+<section id="flashcards">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+  <div>
+    <h2>Active Recall <span class="grad">Flashcard</span></h2>
+    <p class="sub" style="margin:0">Tap card to test immediate active memory before looking at ICAI suggested answer.</p>
+  </div>
+  <span style="font-size:12px;font-weight:700;color:#7A5CFF;background:rgba(122,92,255,.1);padding:6px 14px;border-radius:99px">👆 Tap to Flip Card</span>
+ </div>
+ <div class="card-scene" onclick="this.classList.toggle('flipped')">
+  <div class="card-inner">
+    <div class="card-face glass" style="flex-direction:column">
+      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--mute)">
+        <span id="fcTopic">CA Foundation · Valuation Principle</span>
+        <span style="color:#7A5CFF;font-weight:700">Question Front</span>
+      </div>
+      <h4 style="font-size:17px;font-weight:700;margin:16px 0;line-height:1.5" id="fcQ">
+        Q: Finished goods are expected to sell at or above cost. Replacement cost of raw materials dropped. What is the valuation rule?
+      </h4>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mute)">
+        <span>Recall in your head, then tap to check!</span>
+        <span style="color:#7A5CFF;font-weight:700">Flip ➔</span>
+      </div>
+    </div>
+    <div class="card-face card-back" style="flex-direction:column">
+      <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#0F3B33;text-transform:uppercase">
+        <span>ICAI Suggested Model Provision</span>
+        <span style="color:#7A5CFF">Answer Back</span>
+      </div>
+      <p style="font-size:15px;font-weight:600;margin:12px 0;line-height:1.6" id="fcA">
+        Materials and other supplies are NOT written down below cost if the finished products in which they will be incorporated are expected to be sold at or above cost.
+      </p>
+      <div style="font-size:12px;font-weight:700;color:#7A5CFF" id="fcRule">
+        Key: Keep RM at cost, not replacement value!
+      </div>
+    </div>
+  </div>
+ </div>
+</section>
+
+<section>
  <h2>Kahan kya use hoga</h2>
  <p class="sub">Har jagah alag mood, ek hi app mein.</p>
  <div class="grid">
@@ -140,24 +271,86 @@ footer{text-align:center;color:var(--mute);font-size:13px;padding:30px 0}
   <div class="card glass"><div style="font-size:26px">🌙</div><h3>Dark Mode</h3><p>Raat ki padhai ke liye.</p></div>
  </div>
 </section>
+
 <footer>Design concept · Dheeti (Aurora Hybrid)</footer>
 </div>
+
 <script>
+var curLevel = 'Foundation';
+var curQ = 0;
+var isDark = false;
+
+var DATA = {
+  Foundation: [
+    { title: "Practice · Q1", marks: "4 marks", topic: "AS 10 / Depreciation · PPE Cost Principles", html: 'Cost of PPE includes purchase price, <span class="w">selling expenses</span><span class="fix"> import duty & transit insurance</span>, and <span class="w">interest on loan always</span><span class="fix"> directly attributable erection costs</span><span class="tick"> ✓</span>', score: "Score: 2 / 4 · Working notes zaroor likho!", note: '← "selling expenses" machine cost mein kabhi capitalise nahi hote!' },
+    { title: "Practice · Q2", marks: "5 marks", topic: "Accounting Process · BRS Adjustments", html: 'While reconciling passbook with bank column, direct credit by customer is <span class="w">ignored until month-end</span><span class="fix"> added to cash book</span>, while bank charges debited by bank must be <span class="w">added as receipt</span><span class="fix"> deducted from cash book balance</span> in cash book adjustment.<span class="tick"> ✓</span>', score: "Score: 3 / 5 · Timing diff vs error clear rakho!", note: '← Direct customer credit se bank balance badhta hai, cash book update karna mandatory hai!' }
+  ],
+  Inter: [
+    { title: "Practice · Q1", marks: "5 marks", topic: "AS 2 · Valuation of Inventories", html: 'Inventories should be valued at lower of cost and net realizable value. Materials are <span class="w">always written down to replacement value</span><span class="fix"> not written down below cost</span>, if finished products are expected to be sold at <span class="w">loss to clear inventory</span><span class="fix"> or above cost</span>.<span class="tick"> ✓</span>', score: "Score: 4 / 5 · Core provision quoted accurately!", note: '← AS 2 paragraph 24 exception: RM tab tak write-down nahi hoti jab tak FG loss par na biken!' },
+    { title: "Practice · Q2", marks: "5 marks", topic: "AS 16 · Borrowing Costs Capitalisation", html: 'Capitalisation of borrowing costs shall cease when <span class="w">final payment to contractor is settled</span><span class="fix"> substantially all activities are complete</span>, and temporary suspension of construction due to normal delay requires <span class="w">immediate cessation of capitalisation</span><span class="fix"> continuation of capitalisation</span>.<span class="tick"> ✓</span>', score: "Score: 3.5 / 5 · Good conceptual clarity!", note: '← Substantial completion par interest capitalisation ruk jaata hai, payment settlement date par nahi!' }
+  ],
+  Final: [
+    { title: "Practice · Q1", marks: "6 marks", topic: "Ind AS 115 · Revenue from Contracts with Customers", html: 'Under 5-step model, transaction price allocation to performance obligations is done based on <span class="w">historical negotiated discount rates</span><span class="fix"> relative standalone selling prices</span>, while variable consideration is estimated using <span class="w">management discretion at period end</span><span class="fix"> expected value or most likely amount method</span>.<span class="tick"> ✓</span>', score: "Score: 5 / 6 · Precise Ind AS terminology!", note: '← Standalone Selling Price (SSP) allocation Ind AS 115 ka cardinal rule hai!' },
+    { title: "Practice · Q2", marks: "6 marks", topic: "Ind AS 116 · Leases (Lessee Accounting)", html: 'At commencement date, lessee measures lease liability at present value of lease payments discounted using <span class="w">borrower current overdraft rate</span><span class="fix"> interest rate implicit in the lease (or IBR)</span>, and initial direct costs incurred are <span class="w">charged off to P&L immediately</span><span class="fix"> included in the initial cost of ROU asset</span>.<span class="tick"> ✓</span>', score: "Score: 4.5 / 6 · Excellent working note presentation!", note: '← Initial direct costs ROU asset mein add hote hain, expensed off nahi!' }
+  ]
+};
+
+var FLASH = {
+  Foundation: { topic: "CA Foundation · NRV Principle", q: "Finished goods are expected to sell at or above cost. Replacement cost of raw materials dropped. What is the valuation rule?", a: "Materials and other supplies are NOT written down below cost if the finished products in which they will be incorporated are expected to be sold at or above cost.", rule: "Key: Keep RM at cost, not replacement value!" },
+  Inter: { topic: "CA Inter · AS 10 Decommissioning", q: "Initial estimate of dismantling and removing the asset and restoring the site—should it be capitalised in PPE cost?", a: "YES. AS 10 mandates that the initial estimate of dismantling & site restoration obligation must be included in the cost of PPE as per AS 29.", rule: "Key: Dr. PPE, Cr. Provision for Decommissioning!" },
+  Final: { topic: "CA Final · Ind AS 109 ECL", q: "When does a financial asset transition from Stage 1 (12-month ECL) to Stage 2 (Lifetime ECL)?", a: "When there is a Significant Increase in Credit Risk (SICR) since initial recognition, even before default occurs (usually 30+ days past due).", rule: "Key: 12-month ECL shifts to Lifetime ECL on SICR!" }
+};
+
 function updateLevel(val){
+  curLevel = val;
+  curQ = 0;
+  rst();
   document.getElementById('levelTag').textContent = '✨ CA ' + val + ' Mode';
-  if(val === 'Foundation'){
-    document.getElementById('task1').textContent = '📘 Paper 1: Accounting Basics';
-  } else if(val === 'Inter'){
-    document.getElementById('task1').textContent = '📘 Adv. Accounting Ch 8';
-  } else {
-    document.getElementById('task1').textContent = '📘 Paper 1: Financial Reporting';
-  }
+  document.getElementById('task1').textContent = val === 'Foundation' ? '📘 Paper 1: Accounting Basics' : val === 'Inter' ? '📘 Adv. Accounting Ch 8' : '📘 Paper 1: Financial Reporting';
+  loadQ(0);
+  document.getElementById('fcTopic').textContent = FLASH[val].topic;
+  document.getElementById('fcQ').textContent = 'Q: ' + FLASH[val].q;
+  document.getElementById('fcA').textContent = FLASH[val].a;
+  document.getElementById('fcRule').textContent = FLASH[val].rule;
 }
+
+function loadQ(idx){
+  curQ = idx;
+  rst();
+  var item = DATA[curLevel][idx];
+  document.getElementById('paperQTitle').textContent = item.title;
+  document.getElementById('paperQMarks').textContent = item.marks;
+  document.getElementById('paperQSub').textContent = item.topic;
+  document.getElementById('ans').innerHTML = item.html;
+  document.getElementById('paperScore').textContent = item.score;
+  document.getElementById('paperNote').textContent = item.note;
+  var btns = document.getElementById('qBtns').children;
+  btns[0].className = idx === 0 ? 'btn' : 'btn o';
+  btns[0].style.background = idx === 0 ? '#0F3B33' : '';
+  btns[1].className = idx === 1 ? 'btn' : 'btn o';
+  btns[1].style.background = idx === 1 ? '#0F3B33' : '';
+}
+
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+}
+
 function chk(){document.getElementById('ans').classList.add('checked');party()}
 function rst(){document.getElementById('ans').classList.remove('checked')}
-function party(){var c=['#7A5CFF','#FF7EB0','#7EDCC4','#FFC2A6','#B7A6FF'];for(var i=0;i<40;i++){var d=document.createElement('div');d.className='conf';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(d);setTimeout(function(x){x.remove()},2600,d)}}
-var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in')})},{threshold:.15});
-document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+function party(){
+  var c=['#7A5CFF','#FF7EB0','#7EDCC4','#FFC2A6','#B7A6FF'];
+  for(var i=0;i<40;i++){
+    var d=document.createElement('div');
+    d.className='conf';
+    d.style.left=Math.random()*100+'vw';
+    d.style.background=c[i%5];
+    d.style.animationDelay=Math.random()*.5+'s';
+    document.body.appendChild(d);
+    setTimeout(function(x){x.remove()},2600,d);
+  }
+}
 </script>
 </body>
 </html>
