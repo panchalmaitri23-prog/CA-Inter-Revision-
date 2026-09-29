@@ -1,700 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-  <title>Dhity – Sovereign Active Recall & Revision Studio</title>
-  
-  <!-- High-End Luxury Monogram App Icon ("D" for Dhity) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='30' fill='%231E1B2E'/><circle cx='60' cy='60' r='48' stroke='%23C7D2FE' stroke-width='1.5' stroke-dasharray='4 3' opacity='0.4'/><path d='M42 34H62C76 34 85 45 85 60C85 75 76 86 62 86H42V34Z' fill='none' stroke='url(%23g)' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><path d='M42 34V86' stroke='%23FFF' stroke-width='7' stroke-linecap='round'/><defs><linearGradient id='g' x1='42' y1='34' x2='85' y2='86' gradientUnits='userSpaceOnUse'><stop stop-color='%23A78BFA'/><stop offset='1' stop-color='%23F472B6'/></linearGradient></defs></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='30' fill='%231E1B2E'/><circle cx='60' cy='60' r='48' stroke='%23C7D2FE' stroke-width='1.5' stroke-dasharray='4 3' opacity='0.4'/><path d='M42 34H62C76 34 85 45 85 60C85 75 76 86 62 86H42V34Z' fill='none' stroke='url(%23g)' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><path d='M42 34V86' stroke='%23FFF' stroke-width='7' stroke-linecap='round'/><defs><linearGradient id='g' x1='42' y1='34' x2='85' y2='86' gradientUnits='userSpaceOnUse'><stop stop-color='%23A78BFA'/><stop offset='1' stop-color='%23F472B6'/></linearGradient></defs></svg>">
-
-  <!-- Google Fonts & Font Awesome Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <style>
-    :root {
-      --bg: #FAF8F5;
-      --card-glass: rgba(255, 255, 255, 0.88);
-      --card-border: rgba(226, 219, 208, 0.7);
-      --text-main: #1E1B2E;
-      --text-muted: #6B667D;
-      --dhity-primary: #5A48DE;
-      --dhity-gradient: linear-gradient(135deg, #5A48DE 0%, #8757DF 50%, #D86B9E 100%);
-      --jade: #0D8267;
-      --jade-soft: #E6F6F2;
-      --parchment: #FCFAF6;
-      --parchment-line: #E8E0D2;
-      --red-ink: #C93322;
-      --card-shadow: 0 16px 36px -8px rgba(38, 27, 78, 0.08), 0 4px 12px -2px rgba(38, 27, 78, 0.03);
-    }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      overflow-x: hidden;
-      line-height: 1.5;
-      padding-bottom: 96px;
-    }
-
-    /* Ambient Background Glow */
-    .zen-blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(85px);
-      opacity: 0.45;
-      z-index: 0;
-      pointer-events: none;
-      animation: driftZen 16s ease-in-out infinite alternate;
-    }
-    .zb1 { width: 380px; height: 380px; background: #C5BAF7; top: -80px; left: -80px; }
-    .zb2 { width: 360px; height: 360px; background: #96E2D0; top: 220px; right: -90px; animation-delay: -5s; }
-    .zb3 { width: 320px; height: 320px; background: #FFD2BE; bottom: -80px; left: 20%; animation-delay: -9s; }
-    @keyframes driftZen {
-      50% { transform: translate(30px, -35px) scale(1.05); }
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 2;
-      max-width: 860px;
-      margin: auto;
-      padding: 0 18px;
-    }
-
-    .dhity-card {
-      background: var(--card-glass);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 24px;
-      box-shadow: var(--card-shadow);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .dhity-title { font-family: 'Playfair Display', Georgia, serif; }
-
-    .grad-dhity {
-      background: var(--dhity-gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    /* Tactile Buttons */
-    .dhity-btn {
-      position: relative;
-      overflow: hidden;
-      border: none;
-      border-radius: 14px;
-      padding: 12px 22px;
-      font: 700 13px 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-      color: #fff;
-      background: var(--dhity-gradient);
-      box-shadow: 0 8px 22px rgba(90, 72, 222, 0.32);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dhity-btn:active { transform: translateY(2px) scale(0.98); box-shadow: 0 4px 10px rgba(90, 72, 222, 0.22); }
-    .dhity-btn.sec {
-      background: rgba(255, 255, 255, 0.9);
-      color: var(--text-main);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
-
-    /* Mode Switcher Tabs */
-    .mode-tab-bar {
-      display: flex;
-      background: rgba(235, 230, 222, 0.7);
-      padding: 4px;
-      border-radius: 16px;
-      gap: 4px;
-      margin-bottom: 16px;
-    }
-    .mode-btn {
-      flex: 1;
-      padding: 9px 12px;
-      border: none;
-      background: none;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-    .mode-btn.active {
-      background: #FFFFFF;
-      color: var(--dhity-primary);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    /* 3D Flip Flashcards */
-    .flip-box {
-      perspective: 1000px;
-      width: 100%;
-      min-height: 200px;
-      cursor: pointer;
-    }
-    .flip-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-      transform-style: preserve-3d;
-    }
-    .flip-box.is-flipped .flip-inner { transform: rotateY(180deg); }
-    .card-face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      padding: 24px;
-      border-radius: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-shadow: var(--card-shadow);
-    }
-    .card-face.front {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid var(--card-border);
-    }
-    .card-face.back {
-      transform: rotateY(180deg);
-      background: linear-gradient(145deg, #F0ECFC 0%, #E3F6F1 100%);
-      border: 1px solid rgba(135, 87, 223, 0.3);
-    }
-
-    /* Parchment Red-Ink Evaluation Card */
-    .ledger-paper {
-      background: var(--parchment);
-      border: 4px solid var(--jade);
-      border-radius: 20px;
-      padding: 22px;
-      background-image: repeating-linear-gradient(transparent 0 27px, var(--parchment-line) 27px 28px);
-      box-shadow: 0 16px 36px rgba(13, 130, 103, 0.1);
-    }
-    .wrong-text { transition: all 0.3s; }
-    .red-correction {
-      display: none;
-      font-family: 'Caveat', cursive;
-      font-size: 21px;
-      color: var(--red-ink);
-      font-weight: 700;
-    }
-    .ledger-paper.checked .wrong-text {
-      color: var(--red-ink);
-      text-decoration: line-through;
-      text-decoration-thickness: 2.5px;
-    }
-    .ledger-paper.checked .red-correction {
-      display: inline;
-      animation: popRed 0.4s both;
-    }
-    @keyframes popRed { from { opacity: 0; transform: translateY(-4px) rotate(-4deg); } }
-
-    /* Interactive Checklist */
-    .zen-task {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid var(--card-border);
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-    .zen-check {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--dhity-primary);
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      font-size: 12px;
-      color: transparent;
-      transition: 0.2s;
-      flex-shrink: 0;
-    }
-    .zen-task.done .zen-check {
-      background: var(--dhity-primary);
-      color: #fff;
-      transform: scale(1.08);
-    }
-    .zen-task.done .task-txt {
-      text-decoration: line-through;
-      text-decoration-color: var(--red-ink);
-      color: var(--text-muted);
-    }
-
-    .zen-confetti {
-      position: fixed;
-      top: -20px;
-      width: 9px;
-      height: 13px;
-      z-index: 99;
-      animation: confettiFall 2s linear forwards;
-      pointer-events: none;
-    }
-    @keyframes confettiFall {
-      to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
-    }
-
-    .dock-tab.active {
-      color: var(--dhity-primary);
-      position: relative;
-    }
-    .dock-tab.active::after {
-      content: '';
-      position: absolute;
-      top: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      height: 3px;
-      background: var(--dhity-gradient);
-      border-radius: 99px;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dheeti – Aurora Hybrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF9FF;--glass:rgba(255,255,255,.62);--text:#2A2340;--mute:#75708A;--line:rgba(255,255,255,.9);--paper:#F6F0E4;--pline:#E2D8C3;--ptext:#1B2A26;--red:#E4572E;--green:#0F3B33;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171327;--glass:rgba(255,255,255,.08);--text:#F1EDFF;--mute:#A9A3C4;--line:rgba(255,255,255,.15)}}
+:root[data-theme="dark"]{--bg:#171327;--glass:rgba(255,255,255,.08);--text:#F1EDFF;--mute:#A9A3C4;--line:rgba(255,255,255,.15)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;line-height:1.5;padding-bottom:40px}
+h1,h2,h3{font-family:Poppins,sans-serif;margin:0}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:float 14s ease-in-out infinite}
+.b1{width:360px;height:360px;background:#7EDCC4;top:-80px;left:-80px}
+.b2{width:400px;height:400px;background:#B7A6FF;top:140px;right:-120px;animation-delay:-4s}
+.b3{width:320px;height:320px;background:#FFC2A6;bottom:-100px;left:30%;animation-delay:-8s}
+@keyframes float{50%{transform:translate(40px,-50px) scale(1.12)}}
+.wrap{position:relative;z-index:1;max-width:1050px;margin:auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{font-family:Poppins;font-weight:700;font-size:22px}
+.grad{background:linear-gradient(90deg,#7A5CFF,#FF7EB0,#FFA06B);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200%;animation:bg 5s linear infinite}
+@keyframes bg{to{background-position:200%}}
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;box-shadow:0 10px 30px rgba(122,92,255,.12)}
+.btn{position:relative;overflow:hidden;border:0;border-radius:14px;padding:14px 24px;font:600 15px Poppins,sans-serif;cursor:pointer;color:#fff;background:linear-gradient(120deg,#7A5CFF,#FF7EB0);box-shadow:0 8px 20px rgba(122,92,255,.35);transition:transform .2s}
+.btn:hover{transform:translateY(-3px)}.btn:active{transform:scale(.97)}
+.btn::after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:shine 3s infinite}
+@keyframes shine{60%,100%{left:130%}}
+.btn.o{background:var(--glass);color:var(--text);box-shadow:none;border:1px solid var(--line)}.btn.o::after{display:none}
+.btn.red{background:var(--red);box-shadow:0 4px 0 #A83A18}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;padding:24px 0 30px}
+.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.1}
+.hero p{color:var(--mute);font-size:17px;max-width:470px}
+.tag{display:inline-block;padding:6px 14px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.phone{width:270px;margin:auto;padding:18px 15px;border-radius:36px}
+.float{animation:bob 5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-14px)}}
+.ring{position:relative;width:110px;height:110px;margin:8px auto}
+.ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.ring .bgc{stroke:rgba(122,92,255,.15)}
+.ring .fg{stroke:url(#g);stroke-dasharray:314;stroke-dashoffset:314;animation:fill 2s .4s forwards}
+@keyframes fill{to{stroke-dashoffset:88}}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 22px Poppins}
+.mini{padding:10px 12px;border-radius:14px;margin-top:8px;font-size:12px;display:flex;justify-content:space-between}
+.flame{display:inline-block;animation:flick 1s infinite alternate}
+@keyframes flick{to{transform:scale(1.25) rotate(-6deg)}}
+section{padding:30px 0}
+h2{font-size:27px;margin-bottom:6px}.sub{color:var(--mute);margin:0 0 20px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
+.paper{width:100%;max-width:340px;margin:auto;background:var(--paper);color:var(--ptext);border:8px solid var(--green);border-radius:30px;padding:16px;background-image:repeating-linear-gradient(transparent 0 25px,var(--pline) 25px 26px);box-shadow:0 20px 40px rgba(15,59,51,.2)}
+.paper h3{color:var(--green);font-size:16px}
+.q{font-size:12px;color:#5E6B66;margin:4px 0 8px}
+.ans{font-size:14px;line-height:26px;margin:0}
+.ans .w{position:relative;transition:all .5s}
+.ans .fix{display:none;font-family:Caveat,cursive;font-size:19px;color:var(--red);font-weight:600}
+.checked .w{color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}
+.checked .fix{display:inline;animation:pop .5s both}
+@keyframes pop{from{opacity:0;transform:translateY(-6px) rotate(-6deg)}}
+.score{display:none;margin-top:10px;background:var(--green);color:#F6F0E4;border-radius:12px;padding:10px;font-size:13px;text-align:center}
+.checked+.score{display:block;animation:pop .5s .6s both}
+.tick{color:#1c9a6b;font-weight:700}
+.note{font-family:Caveat,cursive;color:var(--red);font-size:18px;display:none}
+.checked~.note{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.card{padding:20px;transition:transform .3s}.card:hover{transform:translateY(-8px)}
+.card h3{font-size:16px;margin:8px 0 4px}.card p{margin:0;color:var(--mute);font-size:14px}
+.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:9;animation:fall 1.8s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+.rv{opacity:0;transform:translateY(30px);transition:all .8s}.rv.in{opacity:1;transform:none}
+select.level-box{background:var(--glass);border:1px solid var(--line);padding:8px 14px;border-radius:12px;font:600 13px Poppins,sans-serif;color:var(--text);outline:none;cursor:pointer}
+footer{text-align:center;color:var(--mute);font-size:13px;padding:30px 0}
+@media(max-width:760px){.hero,.split{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ring .fg{stroke-dashoffset:88}}
+</style>
 </head>
 <body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="wrap">
+<nav>
+  <div class="logo"><span class="grad">Dheeti</span></div>
+  <select class="level-box" onchange="updateLevel(this.value)">
+    <option value="Foundation">CA Foundation</option>
+    <option value="Inter">CA Intermediate</option>
+    <option value="Final">CA Final</option>
+  </select>
+</nav>
 
-  <div class="zen-blob zb1"></div>
-  <div class="zen-blob zb2"></div>
-  <div class="zen-blob zb3"></div>
-
-  <div class="wrap">
-    
-    <!-- HEADER -->
-    <header style="display:flex; justify-content:space-between; align-items:center; padding:20px 0;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div style="width:42px; height:42px; border-radius:14px; background:#1E1B2E; display:grid; place-items:center; box-shadow:0 6px 18px rgba(30,27,46,0.25);">
-          <span style="font-family:'Playfair Display', serif; font-size:24px; font-weight:700; color:#F0ECFC; line-height:1;">D</span>
-        </div>
-        <div>
-          <div class="dhity-title" style="font-size:22px; font-weight:700; letter-spacing:-0.5px; line-height:1.1;">
-            Dhity
-          </div>
-          <span style="font-size:10px; color:var(--text-muted); font-weight:600; letter-spacing:1.2px; text-transform:uppercase;">
-            The Revision Sanctuary
-          </span>
-        </div>
-      </div>
-
-      <!-- Level & Scheme Selector (Ordered: Foundation -> Inter -> Final) -->
-      <select id="level-select" onchange="handleLevelChange(this.value)" style="background:rgba(255,255,255,0.95); border:1px solid var(--card-border); padding:8px 14px; border-radius:12px; font-family:'Plus Jakarta Sans'; font-size:12px; font-weight:600; color:var(--text-main); outline:none;">
-        <option value="foundation" selected>CA Foundation (New)</option>
-        <option value="inter">CA Inter (New Scheme)</option>
-        <option value="final">CA Final (New Scheme)</option>
-      </select>
-    </header>
-
-    <!-- ==================== TAB 1: MATRIX (COMMAND HUB) ==================== -->
-    <section id="pane-matrix" class="tab-pane" style="display:flex; flex-direction:column; gap:18px; margin-top:4px;">
-      
-      <!-- Focus Sanctuary Study Timer -->
-      <div class="dhity-card" style="padding:24px; text-align:center;">
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:600; color:var(--text-muted);">
-          <span style="letter-spacing:1px; text-transform:uppercase;">Unbroken Focus Interval</span>
-          <span id="tier-pill" style="background:var(--jade-soft); color:var(--jade); padding:4px 12px; border-radius:99px; font-weight:700;">CA Foundation • Paper 1</span>
-        </div>
-
-        <div style="margin:16px 0 12px;">
-          <div id="dhity-timer" style="font-family:'JetBrains Mono', monospace; font-size:52px; font-weight:700; letter-spacing:2px; color:var(--text-main);">
-            00:00:00
-          </div>
-          <p style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">Zero panic countdown • Complete mindful recall</p>
-        </div>
-
-        <div style="display:flex; justify-content:center; gap:10px;">
-          <button id="btn-timer" onclick="toggleTimer()" class="dhity-btn">
-            <i class="fa-solid fa-play"></i> Begin Session
-          </button>
-          <button onclick="resetTimer()" class="dhity-btn sec">Reset</button>
-        </div>
-      </div>
-
-      <!-- 2 MODES ARCHITECTURE SWITCHER -->
-      <div class="dhity-card" style="padding:20px;">
-        <div class="mode-tab-bar">
-          <button class="mode-btn active" id="btn-mode-curated" onclick="switchMatrixMode('curated')">
-            <i class="fa-solid fa-gem"></i> Dhity Curated Vault (ICAI Ready)
-          </button>
-          <button class="mode-btn" id="btn-mode-custom" onclick="switchMatrixMode('custom')">
-            <i class="fa-solid fa-sliders"></i> Flexible / Custom Planner
-          </button>
-        </div>
-
-        <!-- MODE A: DHITY CURATED VAULT -->
-        <div id="mode-curated-container">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <div>
-              <h4 style="font-size:14px; margin:0; font-weight:700;">Official ICAI High-Yield Tracker</h4>
-              <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">Filtered for New Scheme • RTP / MTP / PYQ Hotspots</p>
-            </div>
-            <span id="completion-badge-curated" style="font-family:'Caveat', cursive; font-size:17px; font-weight:700; color:var(--red-ink);">Tap item to finish ✍️</span>
-          </div>
-
-          <div style="height:8px; background:rgba(0,0,0,0.05); border-radius:99px; overflow:hidden; margin-bottom:14px;">
-            <div id="matrix-progress-curated" style="height:100%; width:33%; background:var(--dhity-gradient); transition:width 0.4s ease;"></div>
-          </div>
-
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            <div class="zen-task done" onclick="toggleCuratedTask(this)">
-              <div class="zen-check">✓</div>
-              <div style="flex:1;">
-                <span class="task-txt" style="font-size:13px; font-weight:600;">Paper 1: Accounting Process & BRS Adjustments</span>
-                <div style="font-size:11px; color:var(--text-muted);">Timing Differences vs Errors • RTP Model Question</div>
-              </div>
-              <span style="font-size:10px; font-weight:700; color:var(--red-ink); background:#FDF2F0; padding:3px 8px; border-radius:6px;">LDR Must</span>
-            </div>
-
-            <div class="zen-task" onclick="toggleCuratedTask(this)">
-              <div class="zen-check">✓</div>
-              <div style="flex:1;">
-                <span class="task-txt" style="font-size:13px; font-weight:600;">Paper 1: Depreciation & Inventory Valuation</span>
-                <div style="font-size:11px; color:var(--text-muted);">Change in Method & NRV Rules • MTP Standard</div>
-              </div>
-              <span style="font-size:10px; font-weight:700; color:var(--dhity-primary); background:#F4F1FD; padding:3px 8px; border-radius:6px;">High Yield</span>
-            </div>
-
-            <div class="zen-task" onclick="toggleCuratedTask(this)">
-              <div class="zen-check">✓</div>
-              <div style="flex:1;">
-                <span class="task-txt" style="font-size:13px; font-weight:600;">Paper 2: Indian Regulatory Framework & Companies Act</span>
-                <div style="font-size:11px; color:var(--text-muted);">New Syllabus Additions • Basic Definitions & Penalties</div>
-              </div>
-              <span style="font-size:10px; font-weight:700; color:var(--jade); background:var(--jade-soft); padding:3px 8px; border-radius:6px;">New Syllabus</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- MODE B: CUSTOM / FLEXIBLE PLANNER -->
-        <div id="mode-custom-container" style="display:none;">
-          <div style="background:rgba(255,255,255,0.7); border:1px dashed var(--card-border); padding:14px; border-radius:16px; margin-bottom:14px;">
-            <div style="font-size:12px; font-weight:700; margin-bottom:8px; color:var(--dhity-primary);">
-              🎯 Setup Your Target Attempt & Custom Goals
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
-              <div>
-                <label style="font-size:10px; font-weight:600; color:var(--text-muted);">Attempt Cycle</label>
-                <select id="user-attempt" onchange="saveCustomPlanner()" style="width:100%; padding:6px; font-size:11px; border-radius:8px; border:1px solid var(--card-border); outline:none;">
-                  <option value="May2026">May 2026 Attempt</option>
-                  <option value="Nov2026">Nov 2026 Attempt</option>
-                  <option value="Jan2027">Jan 2027 Cycle</option>
-                </select>
-              </div>
-              <div>
-                <label style="font-size:10px; font-weight:600; color:var(--text-muted);">Target Date</label>
-                <input type="date" id="user-target-date" onchange="saveCustomPlanner()" style="width:100%; padding:5px; font-size:11px; border-radius:8px; border:1px solid var(--card-border); outline:none;">
-              </div>
-            </div>
-
-            <!-- Add Custom Subject / Topic Input -->
-            <div style="display:flex; gap:6px;">
-              <input type="text" id="custom-task-input" placeholder="Type custom chapter/target (e.g. BRS, Bills of Exchange)..." style="flex:1; padding:8px 12px; font-size:11px; border-radius:10px; border:1px solid var(--card-border); outline:none;">
-              <button onclick="addCustomTask()" class="dhity-btn" style="padding:8px 14px; font-size:11px;">+ Add</button>
-            </div>
-          </div>
-
-          <div id="custom-tasks-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==================== TAB 2: SANCTUM (FLASHCARDS & RED INK CHECK) ==================== -->
-    <section id="pane-sanctum" class="tab-pane" style="display:none; flex-direction:column; gap:18px; margin-top:4px;">
-      
-      <!-- 3D Flip Flashcard Drill -->
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <h2 style="font-size:18px; font-weight:700;">Dhity 3D Flashcard</h2>
-          <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Immediate Active Recall • New Scheme ICAI Suggested</p>
-        </div>
-        <span style="background:var(--jade-soft); color:var(--jade); font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px;">100% ICAI Aligned</span>
-      </div>
-
-      <div class="flip-box" onclick="this.classList.toggle('is-flipped')">
-        <div class="flip-inner">
-          <div class="card-face front">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); font-weight:600;">
-              <span>Inventories · Valuation Rule</span>
-              <span style="color:var(--dhity-primary);">👆 Tap to Flip</span>
-            </div>
-            <h4 style="font-size:15px; margin:14px 0 8px; line-height:1.4;">Q: Finished goods are expected to sell at or above cost. Replacement cost of raw materials dropped. Valuation rule?</h4>
-            <p style="font-size:12px; color:var(--text-muted); margin:0;">Examine ICAI write-down restriction principle.</p>
-          </div>
-          <div class="card-face back">
-            <span style="font-size:11px; font-weight:700; color:var(--jade); text-transform:uppercase;">ICAI Model Provision</span>
-            <p style="font-size:13px; font-weight:600; color:var(--text-main); margin:8px 0; line-height:1.4;">
-              Materials are <strong>NOT written down below cost</strong> if the finished products in which they will be incorporated are expected to be sold at or above cost.
-            </p>
-            <span style="font-size:11px; font-weight:700; color:#5B21B6;">Exam Key: Keep inventory at cost ₹X, NOT at replacement value.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ledger Strict Red-Ink Check -->
-      <div>
-        <div style="margin-bottom:8px;">
-          <h2 style="font-size:18px; font-weight:700;">Ledger <span class="grad-dhity">Red-Ink Verification</span></h2>
-          <p style="font-size:12px; color:var(--text-muted); margin:2px 0 10px;">Simulate strict ICAI examiner corrections. Tap button to mark errors in red ink.</p>
-          <button class="dhity-btn" onclick="checkLedgerAnswer()" style="background:var(--red-ink); box-shadow:0 6px 18px rgba(201,51,34,0.3);">Check Answer ✍️</button>
-          <button class="dhity-btn sec" onclick="resetLedgerAnswer()" style="margin-left:6px;">Reset</button>
-        </div>
-
-        <div id="ledger-box" class="ledger-paper">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 style="color:var(--jade); font-size:15px;">Evaluator Ledger · Unit 3</h3>
-            <span style="font-size:11px; color:#5E6B66; font-weight:600;">Depreciation & Capital Expenditure</span>
-          </div>
-          <div style="font-size:11px; color:#5E6B66; margin:4px 0 10px;">Exam Trigger Evaluation • 4 Marks</div>
-          <p style="font-size:13px; line-height:28px; margin:0;">
-            Cost of machinery comprises purchase price, <span class="wrong-text">transit insurance & installation</span><span class="red-correction"> import duties & freight</span>, and <span class="wrong-text">administration overheads</span><span class="red-correction"> directly attributable erection cost</span>.
-          </p>
-          <div id="eval-note" style="display:none; font-family:'Caveat', cursive; color:var(--red-ink); font-size:18px; margin-top:8px;">
-            ← "admin overheads" machine cost me capitalised nahi hote!
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ==================== TAB 3: LEDGER ANALYTICS ==================== -->
-    <section id="pane-analytics" class="tab-pane" style="display:none; flex-direction:column; gap:16px; margin-top:4px;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div class="dhity-card" style="padding:18px; text-align:center;">
-          <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Yesterday</span>
-          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono'; margin:4px 0;">6.5 <span style="font-size:12px; font-weight:500;">hrs</span></div>
-          <span style="font-size:11px; color:var(--text-muted);">2 Rounds Mastered</span>
-        </div>
-        <div class="dhity-card" style="padding:18px; text-align:center; background:var(--jade-soft); border-color:rgba(13,130,103,0.25);">
-          <span style="font-size:10px; color:var(--jade); text-transform:uppercase; font-weight:700;">Today</span>
-          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono'; color:var(--jade); margin:4px 0;">7.8 <span style="font-size:12px; font-weight:500;">hrs</span></div>
-          <span style="font-size:11px; color:var(--jade); font-weight:600;">+1.3 hrs Expansion</span>
-        </div>
-      </div>
-
-      <div class="dhity-card" style="padding:20px;">
-        <h4 style="font-size:14px; font-weight:700; margin-bottom:12px;">Weekly Subject Distribution</h4>
-        <div style="display:flex; flex-direction:column; gap:12px; font-size:12px; font-weight:600;">
-          <div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <span>Accounting (Paper 1)</span>
-              <span style="color:var(--dhity-primary);">45%</span>
-            </div>
-            <div style="height:8px; background:rgba(0,0,0,0.05); border-radius:99px; overflow:hidden;">
-              <div style="width:45%; height:100%; background:var(--dhity-gradient); border-radius:99px;"></div>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <span>Business Laws (Paper 2)</span>
-              <span style="color:var(--jade);">35%</span>
-            </div>
-            <div style="height:8px; background:rgba(0,0,0,0.05); border-radius:99px; overflow:hidden;">
-              <div style="width:35%; height:100%; background:var(--jade); border-radius:99px;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+<div class="hero">
+ <div>
+  <span class="tag glass" id="levelTag">✨ CA Foundation Mode</span>
+  <h1>Padhai <span class="grad">soft</span>, checking <span style="color:var(--red)">strict</span>.</h1>
+  <p>Home aur planner fresh pastel look mein. Answer check karte waqt ICAI-style ledger paper aur red ink correction.</p>
+  <div class="row">
+    <button class="btn" onclick="party()">Start Revision 🚀</button>
+    <a href="#demo" style="text-decoration:none"><button class="btn o">Try Check Answer ↓</button></a>
   </div>
+ </div>
+ <div class="phone glass float">
+  <small style="color:var(--mute)">Hi Maitri 👋</small>
+  <h3 style="font-size:16px" id="todayProgressTitle">Aaj ka progress</h3>
+  <div class="ring">
+    <svg width="110" height="110">
+      <defs><linearGradient id="g"><stop offset="0" stop-color="#7A5CFF"/><stop offset="1" stop-color="#FF7EB0"/></linearGradient></defs>
+      <circle class="bgc" cx="55" cy="55" r="50"/>
+      <circle class="fg" cx="55" cy="55" r="50"/>
+    </svg>
+    <b>72%</b>
+  </div>
+  <div class="mini glass"><span id="task1">📘 Paper 1: Accounting Basics</span><b>✓</b></div>
+  <div class="mini glass" style="background:linear-gradient(120deg,rgba(255,194,166,.6),rgba(255,158,196,.5))"><span><span class="flame">🔥</span> 12 day streak</span><b>Keep going</b></div>
+ </div>
+</div>
 
-  <!-- SIGNATURE BOTTOM DOCK -->
-  <nav style="position:fixed; bottom:0; left:0; right:0; z-index:40; background:rgba(255,255,255,0.92); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-top:1px solid var(--card-border); padding:10px 24px; box-shadow:0 -4px 24px rgba(0,0,0,0.04);">
-    <div style="max-width:480px; margin:auto; display:flex; justify-content:space-around; align-items:center;">
-      <button onclick="switchTab('matrix')" id="dock-matrix" class="dock-tab active" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-family:'Plus Jakarta Sans'; font-size:11px; font-weight:700; color:var(--text-muted);">
-        <i class="fa-solid fa-compass" style="font-size:16px;"></i>
-        <span>Matrix</span>
-      </button>
-      <button onclick="switchTab('sanctum')" id="dock-sanctum" class="dock-tab" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-family:'Plus Jakarta Sans'; font-size:11px; font-weight:700; color:var(--text-muted);">
-        <i class="fa-solid fa-bolt-lightning" style="font-size:16px;"></i>
-        <span>Sanctum</span>
-      </button>
-      <button onclick="switchTab('analytics')" id="dock-analytics" class="dock-tab" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-family:'Plus Jakarta Sans'; font-size:11px; font-weight:700; color:var(--text-muted);">
-        <i class="fa-solid fa-chart-pie" style="font-size:16px;"></i>
-        <span>Ledger</span>
-      </button>
-    </div>
-  </nav>
+<section id="demo" class="rv split">
+ <div>
+  <h2>Red Ink <span class="grad">Check Answer</span></h2>
+  <p class="sub">Yahan design Ledger style mein badal jaata hai: parchment paper, green border, red pen se correction. Button dabao aur dekho.</p>
+  <button class="btn red" id="cb" onclick="chk()">Check Answer ✍️</button>
+  <button class="btn o" onclick="rst()" style="margin-left:6px">Reset</button>
+ </div>
+ <div class="paper">
+  <h3 id="paperQTitle">Practice · Q3</h3>
+  <div class="q" id="paperQSub">AS 10 · PPE cost · 4 marks</div>
+  <p class="ans" id="ans">Cost of PPE includes purchase price, <span class="w">selling expenses</span><span class="fix"> import duty</span>, and <span class="w">interest on loan always</span><span class="fix"> directly attributable costs</span><span class="tick"> ✓</span></p>
+  <div class="score">Score: 2 / 4 · Working notes zaroor likho!</div>
+  <div class="note">← "selling expenses" cost mein nahi aate</div>
+ </div>
+</section>
 
-  <!-- JAVASCRIPT LOGIC -->
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.dock-tab').forEach(b => b.classList.remove('active'));
-
-      document.getElementById('pane-' + tabId).style.display = 'flex';
-      document.getElementById('dock-' + tabId).classList.add('active');
-    }
-
-    function switchMatrixMode(mode) {
-      document.getElementById('btn-mode-curated').classList.remove('active');
-      document.getElementById('btn-mode-custom').classList.remove('active');
-      
-      if(mode === 'curated') {
-        document.getElementById('btn-mode-curated').classList.add('active');
-        document.getElementById('mode-curated-container').style.display = 'block';
-        document.getElementById('mode-custom-container').style.display = 'none';
-      } else {
-        document.getElementById('btn-mode-custom').classList.add('active');
-        document.getElementById('mode-curated-container').style.display = 'none';
-        document.getElementById('mode-custom-container').style.display = 'block';
-        renderCustomTasks();
-      }
-    }
-
-    function handleLevelChange(level) {
-      const pill = document.getElementById('tier-pill');
-      if (level === 'foundation') pill.textContent = 'CA Foundation • Paper 1';
-      else if (level === 'inter') pill.textContent = 'CA Inter • Adv. Accounting';
-      else if (level === 'final') pill.textContent = 'CA Final • AFR Module';
-    }
-
-    function toggleCuratedTask(el) {
-      el.classList.toggle('done');
-      const all = document.querySelectorAll('#mode-curated-container .zen-task').length;
-      const done = document.querySelectorAll('#mode-curated-container .zen-task.done').length;
-      const pct = Math.round((done / all) * 100);
-
-      document.getElementById('matrix-progress-curated').style.width = pct + '%';
-      const badge = document.getElementById('completion-badge-curated');
-      if (pct === 100) {
-        badge.textContent = 'Shabash Maitri! Vault Finished 🎉';
-        triggerConfetti();
-      } else {
-        badge.textContent = `${done} / ${all} complete ✍️`;
-      }
-    }
-
-    let customTasks = JSON.parse(localStorage.getItem('dhity_custom_tasks') || '[]');
-    
-    function addCustomTask() {
-      const input = document.getElementById('custom-task-input');
-      const val = input.value.trim();
-      if(!val) return;
-      customTasks.push({ text: val, done: false });
-      localStorage.setItem('dhity_custom_tasks', JSON.stringify(customTasks));
-      input.value = '';
-      renderCustomTasks();
-    }
-
-    function toggleCustomTask(idx) {
-      customTasks[idx].done = !customTasks[idx].done;
-      localStorage.setItem('dhity_custom_tasks', JSON.stringify(customTasks));
-      renderCustomTasks();
-    }
-
-    function deleteCustomTask(idx, e) {
-      e.stopPropagation();
-      customTasks.splice(idx, 1);
-      localStorage.setItem('dhity_custom_tasks', JSON.stringify(customTasks));
-      renderCustomTasks();
-    }
-
-    function renderCustomTasks() {
-      const container = document.getElementById('custom-tasks-list');
-      if(!container) return;
-      if(customTasks.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:16px; font-size:12px; color:var(--text-muted);">No custom targets yet. Add your first revision target above!</div>`;
-        return;
-      }
-      container.innerHTML = customTasks.map((t, idx) => `
-        <div class="zen-task ${t.done ? 'done' : ''}" onclick="toggleCustomTask(${idx})">
-          <div class="zen-check">${t.done ? '✓' : ''}</div>
-          <span class="task-txt" style="flex:1; font-size:13px; font-weight:600;">${t.text}</span>
-          <button onclick="deleteCustomTask(${idx}, event)" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px;">✕</button>
-        </div>
-      `).join('');
-    }
-
-    function saveCustomPlanner() {
-      const attempt = document.getElementById('user-attempt').value;
-      const targetDate = document.getElementById('user-target-date').value;
-      localStorage.setItem('dhity_planner_meta', JSON.stringify({ attempt, targetDate }));
-    }
-
-    function triggerConfetti() {
-      const colors = ['#5A48DE', '#8757DF', '#0D8267', '#D86B9E', '#FFB89A'];
-      for (let i = 0; i < 45; i++) {
-        const conf = document.createElement('div');
-        conf.className = 'zen-confetti';
-        conf.style.left = (Math.random() * 100) + 'vw';
-        conf.style.background = colors[i % colors.length];
-        conf.style.animationDelay = (Math.random() * 0.4) + 's';
-        document.body.appendChild(conf);
-        setTimeout(() => conf.remove(), 2200);
-      }
-    }
-
-    function checkLedgerAnswer() {
-      document.getElementById('ledger-box').classList.add('checked');
-      document.getElementById('eval-note').style.display = 'block';
-      triggerConfetti();
-    }
-    function resetLedgerAnswer() {
-      document.getElementById('ledger-box').classList.remove('checked');
-      document.getElementById('eval-note').style.display = 'none';
-    }
-
-    let timerRunning = false;
-    let seconds = 0;
-    let timerInterval = null;
-
-    function toggleTimer() {
-      const btn = document.getElementById('btn-timer');
-      if (!timerRunning) {
-        timerRunning = true;
-        btn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause Session`;
-        btn.style.background = 'var(--red-ink)';
-        timerInterval = setInterval(() => {
-          seconds++;
-          const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-          const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-          const secs = String(seconds % 60).padStart(2, '0');
-          document.getElementById('dhity-timer').textContent = `${hrs}:${mins}:${secs}`;
-        }, 1000);
-      } else {
-        timerRunning = false;
-        clearInterval(timerInterval);
-        btn.innerHTML = `<i class="fa-solid fa-play"></i> Resume`;
-        btn.style.background = 'var(--dhity-gradient)';
-      }
-    }
-
-    function resetTimer() {
-      clearInterval(timerInterval);
-      timerRunning = false;
-      seconds = 0;
-      document.getElementById('dhity-timer').textContent = '00:00:00';
-      const btn = document.getElementById('btn-timer');
-      btn.innerHTML = `<i class="fa-solid fa-play"></i> Begin Session`;
-      btn.style.background = 'var(--dhity-gradient)';
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedMeta = JSON.parse(localStorage.getItem('dhity_planner_meta') || '{}');
-      if(savedMeta.attempt) document.getElementById('user-attempt').value = savedMeta.attempt;
-      if(savedMeta.targetDate) document.getElementById('user-target-date').value = savedMeta.targetDate;
-      renderCustomTasks();
-    });
-  </script>
+<section class="rv">
+ <h2>Kahan kya use hoga</h2>
+ <p class="sub">Har jagah alag mood, ek hi app mein.</p>
+ <div class="grid">
+  <div class="card glass"><div style="font-size:26px">🏠</div><h3>Home, Planner, Streak</h3><p>Aurora pastel glass look.</p></div>
+  <div class="card glass"><div style="font-size:26px">🃏</div><h3>Flashcards</h3><p>Aurora soft colors, flip effect.</p></div>
+  <div class="card glass" style="background:#F6F0E4;color:#1B2A26"><div style="font-size:26px">📒</div><h3 style="color:#0F3B33">Check Answer</h3><p style="color:#5E6B66">Ledger paper aur red ink.</p></div>
+  <div class="card glass"><div style="font-size:26px">🌙</div><h3>Dark Mode</h3><p>Raat ki padhai ke liye.</p></div>
+ </div>
+</section>
+<footer>Design concept · Dheeti (Aurora Hybrid)</footer>
+</div>
+<script>
+function updateLevel(val){
+  document.getElementById('levelTag').textContent = '✨ CA ' + val + ' Mode';
+  if(val === 'Foundation'){
+    document.getElementById('task1').textContent = '📘 Paper 1: Accounting Basics';
+  } else if(val === 'Inter'){
+    document.getElementById('task1').textContent = '📘 Adv. Accounting Ch 8';
+  } else {
+    document.getElementById('task1').textContent = '📘 Paper 1: Financial Reporting';
+  }
+}
+function chk(){document.getElementById('ans').classList.add('checked');party()}
+function rst(){document.getElementById('ans').classList.remove('checked')}
+function party(){var c=['#7A5CFF','#FF7EB0','#7EDCC4','#FFC2A6','#B7A6FF'];for(var i=0;i<40;i++){var d=document.createElement('div');d.className='conf';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(d);setTimeout(function(x){x.remove()},2600,d)}}
+var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in')})},{threshold:.15});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+</script>
 </body>
 </html>
