@@ -4,16 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dhity</title>
-  <meta name="description" content="Dhity - CA Practical Case Arena, Spaced Recall Engine & Global Pomodoro Timer" />
+  <meta name="description" content="Dhity - ICAI Revision Intelligence, Case Study Arena, Mistake Vault & Pomodoro Engine" />
 
-  <!-- Tailwind CSS CDN -->
+  <!-- React 18 & Babel Standalone (Bina kisi install ke seedha browser me React chalane ke liye) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Canvas Confetti CDN -->
+  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -33,301 +37,44 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    input[type="range"]::-webkit-slider-thumb {
-      background: var(--violet);
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(17, 24, 39, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
+  <div id="root"></div>
 
-  <!-- TOP HEADER & PERSISTENT POMODORO -->
-  <header class="sticky top-0 z-40 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 px-4 lg:px-8 py-3.5">
-    <div class="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-4">
-      
-      <!-- Brand Lockup -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8b7cff] to-[#4de1d0] grid place-items-center font-black text-xl text-white shadow-lg shadow-[#8b7cff]/20">
-          D
-        </div>
-        <div>
-          <h1 class="font-extrabold text-lg tracking-tight leading-none text-white">Dhity</h1>
-          <span class="text-[9px] font-mono font-bold tracking-widest text-gray-400 uppercase mt-1 block">INTELLIGENCE</span>
-        </div>
-      </div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
 
-      <!-- GLOBAL POMODORO TIMER BAR -->
-      <div class="flex items-center gap-2 p-1.5 rounded-2xl border border-gray-700 bg-gray-900 shadow-md">
-        <!-- Mode Badges -->
-        <div class="flex items-center bg-gray-800 rounded-xl p-0.5 border border-gray-700/60">
-          <button id="pomoFocusBtn" onclick="setPomodoroMode('work')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-gray-900 text-white shadow-sm flex items-center gap-1">
-            <span>⚡ Focus</span>
-            <span id="focusMinLabel" class="text-[10px] text-gray-400 font-mono">(25m)</span>
-          </button>
-          <button id="pomoBreakBtn" onclick="setPomodoroMode('break')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white flex items-center gap-1">
-            <span>☕ Rest</span>
-            <span id="breakMinLabel" class="text-[10px] text-gray-400 font-mono">(5m)</span>
-          </button>
-        </div>
-
-        <!-- Digital Timer -->
-        <div class="flex flex-col min-w-[62px] px-2 text-center">
-          <span id="pomoDisplay" class="font-mono font-extrabold text-base text-white tabular-nums tracking-tight">25:00</span>
-          <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden mt-0.5">
-            <div id="pomoProgress" class="h-full bg-gradient-to-r from-[#8b7cff] to-[#4de1d0] w-0 transition-all duration-300"></div>
-          </div>
-        </div>
-
-        <!-- Timer Controls -->
-        <button id="pomoToggleBtn" onclick="togglePomodoro()" class="w-8 h-8 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white flex items-center justify-center font-bold hover:brightness-110 active:scale-95 transition-all" title="Start/Pause">
-          ▶
-        </button>
-        <button onclick="resetPomodoro()" class="w-8 h-8 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 flex items-center justify-center transition-colors" title="Reset">
-          ↺
-        </button>
-        <button onclick="toggleSettingsModal(true)" class="w-8 h-8 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 flex items-center justify-center transition-colors" title="Settings">
-          ⚙
-        </button>
-      </div>
-
-      <!-- Session Streak Badge -->
-      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gray-800/80 border border-gray-700 text-xs">
-        <span class="text-amber-400">🔥 Streak:</span>
-        <strong class="font-mono font-bold text-white">14 Days</strong>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- MAIN EDITORIAL CONTENT -->
-  <main class="max-w-[1400px] w-full mx-auto p-4 lg:p-6 flex-1 grid grid-cols-1 lg:grid-cols-[1.45fr_0.95fr] gap-6 items-start">
-    
-    <!-- LEFT PANE (60%): Interactive Practical Case Execution -->
-    <section class="space-y-4">
-      <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-xl">
-        
-        <!-- Case Meta Header -->
-        <div class="flex flex-wrap items-center justify-between pb-4 border-b border-gray-800 gap-2 mb-4">
-          <div class="flex items-center gap-2">
-            <span id="caseTag" class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-              AS 16
-            </span>
-            <span id="caseTitle" class="text-sm font-bold text-white">Borrowing Costs</span>
-          </div>
-          
-          <!-- Dynamic Score Counter -->
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-400 font-mono">ICAI Score:</span>
-            <div class="px-3 py-1 rounded-xl bg-gray-800 border border-gray-700 font-mono font-bold text-sm">
-              <span id="scoreCounter" class="text-emerald-400">0</span>
-              <span id="maxScore" class="text-gray-400"> / 5 Marks</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Case Facts -->
-        <div class="space-y-3 mb-6">
-          <h2 id="scenarioHeadline" class="text-xl font-bold text-white tracking-tight">
-            Qualifying Asset, Suspension Window & Capitalisation
-          </h2>
-          <div class="p-4 rounded-2xl bg-gray-800/60 border border-gray-700 text-xs leading-relaxed text-gray-200 space-y-2">
-            <p id="scenarioFacts">
-              Nova Infrastructure Ltd. obtained a specific loan of ₹50,00,000 at 12% p.a. on 1st April 2025 for constructing a manufacturing plant. The active construction was halted for 3 months due to an abnormal labour strike. Surplus loan funds yielded ₹65,000 in temporary treasury bills.
-            </p>
-            <div id="scenarioQuestion" class="pt-2 border-t border-gray-700 font-semibold text-indigo-400">
-              Requirement: Compute borrowing cost to be capitalised and amount charged to P&L under AS 16.
-            </div>
-          </div>
-        </div>
-
-        <!-- Step-Marking Checklists -->
-        <div class="space-y-3 mb-6">
-          <div class="flex justify-between items-center">
-            <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">
-              ICAI Step-Marking Matrix
-            </h3>
-            <span class="text-[11px] text-gray-400 font-mono">Check achieved working steps</span>
-          </div>
-
-          <div id="stepsContainer" class="space-y-2.5">
-            <!-- Dynamically populated steps -->
-          </div>
-        </div>
-
-        <!-- Action Bar -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-800">
-          <div class="flex items-center gap-2">
-            <button onclick="toggleModelSolution()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs font-semibold text-white transition-all">
-              📖 <span id="solBtnText">View Model Answer</span>
-            </button>
-            <button onclick="resetChecklist()" class="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-400 hover:text-white transition-all" title="Reset Steps">
-              ↺
-            </button>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button onclick="openMistakeModal()" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition-all">
-              ⚠️ Flag Mistake
-            </button>
-            <button onclick="claimFullMarks()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white text-xs font-bold hover:brightness-110 shadow-md transition-all">
-              ✨ Full Marks Check
-            </button>
-          </div>
-        </div>
-
-        <!-- Model Answer Box -->
-        <div id="solutionBox" class="hidden mt-5 p-4 rounded-2xl bg-gray-800 border border-indigo-500/40 space-y-2">
-          <div class="text-xs font-mono font-bold text-emerald-400">OFFICIAL ICAI SUGGESTED SOLUTION</div>
-          <p id="modelAnswerText" class="text-xs text-gray-200 leading-relaxed"></p>
-          <div id="trapWatch" class="pt-2 border-t border-gray-700 text-[11px] text-rose-400 font-mono"></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- RIGHT PANE (40%): Retention Radar & Mistake Vault -->
-    <aside class="space-y-5">
-      
-      <!-- Retention Radar -->
-      <div class="bg-gray-900 border border-gray-800 rounded-3xl p-5 shadow-lg space-y-4">
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="text-sm font-bold text-white">Retention Index Cards</h3>
-            <span class="text-[11px] text-gray-400">Live ICAI standard recall decay</span>
-          </div>
-          <button onclick="recalculateQueue()" class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-all">
-            Recalculate
-          </button>
-        </div>
-
-        <div class="space-y-3">
-          <div class="p-3 rounded-xl bg-gray-800/80 border border-gray-700 space-y-1.5">
-            <div class="flex justify-between text-xs">
-              <span class="font-bold text-white">AS 10: PPE & Restoration</span>
-              <span class="font-mono font-bold text-rose-400">42% Retest needed</span>
-            </div>
-            <div class="h-1.5 bg-gray-700 rounded-full overflow-hidden">
-              <div class="h-full bg-rose-500 rounded-full w-[42%]"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-gray-400">
-              <span>Weak in: Test-run deductions</span>
-              <span class="text-indigo-400 cursor-pointer hover:underline" onclick="loadCase(1)">Load Case</span>
-            </div>
-          </div>
-
-          <div class="p-3 rounded-xl bg-gray-800/80 border border-gray-700 space-y-1.5">
-            <div class="flex justify-between text-xs">
-              <span class="font-bold text-white">AS 16: Borrowing Costs</span>
-              <span class="font-mono font-bold text-emerald-400">76% Stable</span>
-            </div>
-            <div class="h-1.5 bg-gray-700 rounded-full overflow-hidden">
-              <div class="h-full bg-emerald-500 rounded-full w-[76%]"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-gray-400">
-              <span>Strike suspension mastered</span>
-              <span class="text-indigo-400 cursor-pointer hover:underline" onclick="loadCase(0)">Load Case</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mistake Vault -->
-      <div class="bg-gray-900 border border-gray-800 rounded-3xl p-5 shadow-lg space-y-3.5">
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="text-sm font-bold text-white">Mistake Vault</h3>
-            <span class="text-[11px] text-gray-400">Root-cause tagged errors (<span id="vaultCount">0</span>)</span>
-          </div>
-          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-400">Persistent</span>
-        </div>
-
-        <div id="vaultList" class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
-          <!-- Dynamically populated mistake cards -->
-        </div>
-      </div>
-
-    </aside>
-  </main>
-
-  <!-- POMODORO SETTINGS MODAL -->
-  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-sm bg-gray-900 border border-gray-800 rounded-3xl p-5 text-white shadow-2xl">
-      <div class="flex justify-between items-center pb-2 border-b border-gray-800 mb-4">
-        <h4 class="font-bold text-sm">Pomodoro Interval Settings</h4>
-        <button onclick="toggleSettingsModal(false)" class="text-gray-400 hover:text-white">✕</button>
-      </div>
-      
-      <div class="space-y-4">
-        <div>
-          <div class="flex justify-between text-xs mb-1">
-            <span class="text-gray-400">Focus Block (Work)</span>
-            <span id="setWorkVal" class="font-mono text-indigo-400 font-bold">25 min</span>
-          </div>
-          <input id="workRange" type="range" min="5" max="90" step="5" value="25" oninput="updateSettingPreview()" class="w-full accent-indigo-500">
-        </div>
-
-        <div>
-          <div class="flex justify-between text-xs mb-1">
-            <span class="text-gray-400">Short Break (Rest)</span>
-            <span id="setBreakVal" class="font-mono text-teal-400 font-bold">5 min</span>
-          </div>
-          <input id="breakRange" type="range" min="1" max="30" step="1" value="5" oninput="updateSettingPreview()" class="w-full accent-teal-400">
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-2 mt-6">
-        <button onclick="toggleSettingsModal(false)" class="px-3 py-1.5 rounded-xl border border-gray-700 text-xs text-gray-400 hover:text-white">Cancel</button>
-        <button onclick="savePomodoroSettings()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white text-xs font-bold">Save Settings</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FLAG MISTAKE MODAL -->
-  <div id="mistakeModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-3xl p-6 text-white shadow-2xl space-y-4">
-      <h4 class="text-base font-bold text-rose-400 flex items-center gap-2">
-        ⚠️ Log Root-Cause to Mistake Vault
-      </h4>
-      <p class="text-xs text-gray-400">Select the examiner trap that caused this slip:</p>
-
-      <div class="space-y-2" id="tagOptions">
-        <button onclick="selectMistakeTag('Omitted Provision Citation')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
-          • Omitted Provision Citation
-        </button>
-        <button onclick="selectMistakeTag('ICAI Distinction / Concept Trap')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
-          • ICAI Distinction / Concept Trap
-        </button>
-        <button onclick="selectMistakeTag('Arithmetic / Clerical Slip')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
-          • Arithmetic / Clerical Slip
-        </button>
-        <button onclick="selectMistakeTag('Working Note Missing')" class="tag-opt w-full text-left p-3 rounded-xl border border-gray-700 bg-gray-800 text-xs hover:border-indigo-500">
-          • Working Note Missing
-        </button>
-      </div>
-
-      <textarea id="mistakeNotes" placeholder="Personal reflection or formula that was overlooked..." class="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 h-20 resize-none"></textarea>
-
-      <div class="flex justify-end gap-2">
-        <button onclick="closeMistakeModal()" class="px-4 py-2 rounded-xl border border-gray-700 text-xs text-gray-400 hover:text-white">Cancel</button>
-        <button onclick="commitMistake()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white text-xs font-bold">Record in Vault</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT LOGIC -->
-  <script>
-    // --- 1. ICAI SCENARIOS DATA ---
-    const CASES = [
+    // --- INITIAL DATA & ICAI CASE STUDIES ---
+    const INITIAL_CASES = [
       {
+        id: 'case-as16',
         tag: 'AS 16',
         topic: 'Borrowing Costs',
-        maxMarks: 5,
         title: 'Qualifying Asset, Suspension Window & Capitalisation',
         facts: 'Nova Infrastructure Ltd. obtained a specific loan of ₹50,00,000 at 12% p.a. on 1st April 2025 for constructing a manufacturing plant. Active construction was halted for 3 months due to an abnormal labour strike. Surplus loan funds yielded ₹65,000 in temporary treasury bills.',
         question: 'Compute borrowing cost to be capitalised and amount charged to P&L under AS 16.',
+        maxMarks: 5,
         steps: [
           { id: 's1', label: 'Provision Citation (AS 16 para 17 Abnormal Delay Suspension)', marks: 1, ref: 'AS 16 para 17' },
           { id: 's2', label: 'Exclusion of 3-Month Strike Interest (₹1,50,000 to P&L)', marks: 2, ref: 'Working Note 1' },
@@ -338,12 +85,13 @@
         trap: 'Students often capitalise full 12 months without strike deduction or miss crediting temporary treasury income.'
       },
       {
+        id: 'case-as10',
         tag: 'AS 10',
         topic: 'Property, Plant & Equipment',
-        maxMarks: 5,
         title: 'Trial-Run Output Netting & Decommissioning Provision',
-        facts: 'Apex Power Ltd. imported a heavy turbine for ₹80,00,000 (Customs ₹8,00,000; GST with ITC ₹14,40,000). Installation cost ₹4,50,000. Testing cost ₹3,20,000; sample proceeds ₹1,80,000. PV of decommissioning is ₹12,00,000.',
+        facts: 'Apex Power Ltd. imported a heavy turbine for ₹80,00,000 (Customs ₹8,00,000; GST with ITC ₹14,40,000). Installation cost ₹4,50,000. Testing cost ₹3,20,000; sample proceeds ₹1,80,000. PV of decommissioning obligation is ₹12,00,000.',
         question: 'Determine the initial carrying amount of the turbine to be capitalised under AS 10 (Revised).',
+        maxMarks: 5,
         steps: [
           { id: 's1', label: 'Exclusion of Refundable Taxes (GST Input Credit)', marks: 1, ref: 'AS 10.16(a)' },
           { id: 's2', label: 'Net Test-Run Cost Capitalisation (₹1,40,000)', marks: 2, ref: 'AS 10.18(e)' },
@@ -352,254 +100,658 @@
         ],
         solution: 'Total capitalised cost of Turbine under AS 10 (Revised) = ₹1,05,90,000. GST ₹14,40,000 is excluded since ITC is available. Decommissioning PV is included on day one.',
         trap: 'Capitalising GST despite ITC eligibility, or treating trial sales proceeds as P&L income.'
+      },
+      {
+        id: 'case-sa505',
+        tag: 'SA 505',
+        topic: 'External Confirmations',
+        title: 'Negative Confirmation Ineffectiveness & Non-Response',
+        facts: 'During audit of Stellar Trade Ltd., auditor sent negative confirmation requests to 150 debtors. Only 4 responded with disputes. Auditor concluded remaining 146 accounts are correct without performing alternative testing.',
+        question: 'Evaluate whether auditor complied with SA 505 & SA 330.',
+        maxMarks: 4,
+        steps: [
+          { id: 's1', label: 'Analysis of Negative Confirmation Conditions (SA 505 Para 15)', marks: 1, ref: 'SA 505' },
+          { id: 's2', label: 'Persuasive Evidence Standard (Negative gives less audit evidence)', marks: 1, ref: 'SA 330 / SA 505' },
+          { id: 's3', label: 'Mandatory Alternative Audit Procedures (Subsequent clearance testing)', marks: 2, ref: 'SA 505 Para 12' }
+        ],
+        solution: 'Auditor’s conclusion is flawed. Negative confirmations provide substantially less persuasive audit evidence. Unless all four stringent conditions of SA 505 are strictly satisfied, alternative testing on non-responses is mandatory.',
+        trap: 'Assuming no reply means 100% agreement by debtor without evaluating risk profile.'
       }
     ];
 
-    let currentCaseIndex = 0;
-    let checkedSteps = {};
+    const INITIAL_TOPICS = [
+      { id: '1', code: 'AS 16', name: 'Borrowing Costs', priority: 'High', stability: 78, decayHours: 18, lastRevised: 'Yesterday', trapTaxonomy: 'Abnormal delay interest expensing' },
+      { id: '2', code: 'AS 10', name: 'PPE & Restoration Asset', priority: 'Critical', stability: 44, decayHours: 6, lastRevised: '4 days ago', trapTaxonomy: 'Netting test-run proceeds' },
+      { id: '3', code: 'SA 505', name: 'External Confirmations', priority: 'Medium', stability: 82, decayHours: 32, lastRevised: '2 days ago', trapTaxonomy: 'Negative confirmation validity' },
+      { id: '4', code: 'AS 22', name: 'Taxes on Income (DTA/DTL)', priority: 'Critical', stability: 38, decayHours: 4, lastRevised: '5 days ago', trapTaxonomy: 'Virtual certainty vs reasonable certainty' },
+      { id: '5', code: 'SA 240', name: 'Auditor Responsibility for Fraud', priority: 'High', stability: 65, decayHours: 14, lastRevised: 'Today', trapTaxonomy: 'Management override of controls' }
+    ];
 
-    function loadCase(idx) {
-      currentCaseIndex = idx;
-      checkedSteps = {};
-      const c = CASES[idx];
-      document.getElementById('caseTag').innerText = c.tag;
-      document.getElementById('caseTitle').innerText = c.topic;
-      document.getElementById('scenarioHeadline').innerText = c.title;
-      document.getElementById('scenarioFacts').innerText = c.facts;
-      document.getElementById('scenarioQuestion').innerText = 'Requirement: ' + c.question;
-      document.getElementById('maxScore').innerText = ' / ' + c.maxMarks + ' Marks';
-      document.getElementById('modelAnswerText').innerText = c.solution;
-      document.getElementById('trapWatch').innerText = 'Examiner Trap Watch: ' + c.trap;
-      document.getElementById('solutionBox').classList.add('hidden');
-      document.getElementById('solBtnText').innerText = 'View Model Answer';
+    function App() {
+      const [activeTab, setActiveTab] = useState('command-center');
+      const [topics, setTopics] = useState(INITIAL_TOPICS);
+      const [cases, setCases] = useState(INITIAL_CASES);
+      const [activeCaseIdx, setActiveCaseIdx] = useState(0);
+      const [checkedSteps, setCheckedSteps] = useState({});
+      const [showSolution, setShowSolution] = useState(false);
+      const [toastMsg, setToastMsg] = useState(null);
 
-      // Render Steps
-      const container = document.getElementById('stepsContainer');
-      container.innerHTML = '';
-      c.steps.forEach(step => {
-        const div = document.createElement('div');
-        div.className = 'step-row p-3 rounded-xl border border-gray-700 bg-gray-800 hover:border-indigo-500/50 cursor-pointer flex justify-between items-center transition-all';
-        div.id = 'row-' + step.id;
-        div.onclick = () => toggleStep(step.id, step.marks);
-        div.innerHTML = `
-          <div class="flex items-center gap-2.5">
-            <span id="check-${step.id}" class="text-base text-gray-500">⬜</span>
-            <div>
-              <span class="text-xs font-bold text-white block leading-snug">${step.label}</span>
-              <span class="text-[10px] font-mono text-teal-400">Ref: ${step.ref}</span>
-            </div>
-          </div>
-          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-gray-900 border border-gray-700 text-gray-300">+${step.marks}M</span>
-        `;
-        container.appendChild(div);
+      // --- MISTAKE VAULT STATE ---
+      const [mistakes, setMistakes] = useState(() => {
+        const saved = localStorage.getItem('dhity_mistakes_vault');
+        return saved ? JSON.parse(saved) : [
+          { id: 1, code: 'AS 16', title: 'Abnormal Strike Period Capitalised', tag: 'Concept Trap', notes: 'Forgot that abnormal stoppage cannot be capitalised under para 17.', date: 'Today' },
+          { id: 2, code: 'AS 10', title: 'Test-Run Scrap Proceeds in P&L', tag: 'ICAI Format Slip', notes: 'Deducted directly from PPE cost instead of credit to P&L.', date: 'Yesterday' }
+        ];
       });
-      updateScore();
-    }
+      const [isMistakeModalOpen, setIsMistakeModalOpen] = useState(false);
+      const [selectedMistakeTag, setSelectedMistakeTag] = useState('Omitted Provision Citation');
+      const [mistakeNoteInput, setMistakeNoteInput] = useState('');
 
-    function toggleStep(id, marks) {
-      checkedSteps[id] = !checkedSteps[id];
-      const row = document.getElementById('row-' + id);
-      const icon = document.getElementById('check-' + id);
-      if (checkedSteps[id]) {
-        row.classList.add('border-emerald-500', 'bg-emerald-950/20');
-        icon.innerText = '✅';
-      } else {
-        row.classList.remove('border-emerald-500', 'bg-emerald-950/20');
-        icon.innerText = '⬜';
-      }
-      updateScore();
-    }
+      useEffect(() => {
+        localStorage.setItem('dhity_mistakes_vault', JSON.stringify(mistakes));
+      }, [mistakes]);
 
-    function updateScore() {
-      const c = CASES[currentCaseIndex];
-      let score = 0;
-      c.steps.forEach(s => {
-        if (checkedSteps[s.id]) score += s.marks;
+      // --- GLOBAL POMODORO TIMER STATE ---
+      const [pomoSettings, setPomoSettings] = useState(() => {
+        const saved = localStorage.getItem('dhity_pomodoro_cfg');
+        return saved ? JSON.parse(saved) : { work: 25, rest: 5 };
       });
-      document.getElementById('scoreCounter').innerText = score;
-    }
+      const [pomoMode, setPomoMode] = useState('work'); // 'work' | 'rest'
+      const [pomoSeconds, setPomoSeconds] = useState(25 * 60);
+      const [isPomoRunning, setIsPomoRunning] = useState(false);
+      const [isPomoSettingsOpen, setIsPomoSettingsOpen] = useState(false);
+      const [tempWork, setTempWork] = useState(pomoSettings.work);
+      const [tempRest, setTempRest] = useState(pomoSettings.rest);
 
-    function resetChecklist() {
-      checkedSteps = {};
-      loadCase(currentCaseIndex);
-    }
-
-    function toggleModelSolution() {
-      const box = document.getElementById('solutionBox');
-      const isHidden = box.classList.contains('hidden');
-      box.classList.toggle('hidden');
-      document.getElementById('solBtnText').innerText = isHidden ? 'Hide Model Answer' : 'View Model Answer';
-    }
-
-    function claimFullMarks() {
-      const c = CASES[currentCaseIndex];
-      c.steps.forEach(s => {
-        checkedSteps[s.id] = true;
-        const row = document.getElementById('row-' + s.id);
-        const icon = document.getElementById('check-' + s.id);
-        if (row && icon) {
-          row.classList.add('border-emerald-500', 'bg-emerald-950/20');
-          icon.innerText = '✅';
+      // Pomodoro Runner
+      useEffect(() => {
+        let interval = null;
+        if (isPomoRunning) {
+          interval = setInterval(() => {
+            setPomoSeconds((prev) => {
+              if (prev <= 1) {
+                if (pomoMode === 'work') {
+                  triggerConfetti();
+                  showToast('🎉 Focus block completed! Take a 5m breather.');
+                  setPomoMode('rest');
+                  return pomoSettings.rest * 60;
+                } else {
+                  showToast('🔔 Break over! Ready for next focus block.');
+                  setPomoMode('work');
+                  return pomoSettings.work * 60;
+                }
+              }
+              return prev - 1;
+            });
+          }, 1000);
         }
-      });
-      updateScore();
-      confetti({ particleCount: 80, spread: 70 });
-    }
+        return () => clearInterval(interval);
+      }, [isPomoRunning, pomoMode, pomoSettings]);
 
-    // --- 2. MISTAKE VAULT ---
-    let mistakeList = JSON.parse(localStorage.getItem('dhity_mistakes') || '[]');
-    let selectedTag = 'Omitted Provision Citation';
-
-    function openMistakeModal() {
-      document.getElementById('mistakeModal').classList.remove('hidden');
-    }
-    function closeMistakeModal() {
-      document.getElementById('mistakeModal').classList.add('hidden');
-    }
-    function selectMistakeTag(tag) {
-      selectedTag = tag;
-      document.querySelectorAll('.tag-opt').forEach(btn => {
-        btn.classList.toggle('border-indigo-500', btn.innerText.includes(tag));
-        btn.classList.toggle('bg-indigo-950/30', btn.innerText.includes(tag));
-      });
-    }
-    function commitMistake() {
-      const notes = document.getElementById('mistakeNotes').value || 'Flagged during practical case study.';
-      const c = CASES[currentCaseIndex];
-      const entry = {
-        id: Date.now(),
-        code: c.tag,
-        title: c.title,
-        tag: selectedTag,
-        notes: notes,
-        time: 'Just now'
+      const formatPomoTime = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
       };
-      mistakeList.unshift(entry);
-      localStorage.setItem('dhity_mistakes', JSON.stringify(mistakeList));
-      renderMistakes();
-      closeMistakeModal();
-      document.getElementById('mistakeNotes').value = '';
-    }
-    function renderMistakes() {
-      document.getElementById('vaultCount').innerText = mistakeList.length;
-      const list = document.getElementById('vaultList');
-      list.innerHTML = '';
-      if (mistakeList.length === 0) {
-        list.innerHTML = '<div class="p-4 text-center text-xs text-gray-500">No mistakes logged yet.</div>';
-        return;
-      }
-      mistakeList.forEach(m => {
-        const d = document.createElement('div');
-        d.className = 'p-3 rounded-xl bg-gray-800/80 border border-gray-700 text-xs space-y-1';
-        d.innerHTML = `
-          <div class="flex justify-between items-center">
-            <span class="font-mono font-bold text-indigo-400">${m.code}</span>
-            <span class="text-[10px] text-gray-400">${m.time}</span>
-          </div>
-          <div class="font-semibold text-white truncate">${m.title}</div>
-          <div class="inline-block px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 text-[10px] font-mono font-bold">
-            ${m.tag}
-          </div>
-          <p class="text-[11px] text-gray-400 italic">"${m.notes}"</p>
-        `;
-        list.appendChild(d);
-      });
+
+      const showToast = (msg) => {
+        setToastMsg(msg);
+        setTimeout(() => setToastMsg(null), 3200);
+      };
+
+      const triggerConfetti = () => {
+        if (window.confetti) window.confetti({ particleCount: 75, spread: 65 });
+      };
+
+      // Case Study Calculations
+      const activeCase = cases[activeCaseIdx];
+      const currentScore = useMemo(() => {
+        let sc = 0;
+        activeCase.steps.forEach(st => {
+          if (checkedSteps[st.id]) sc += st.marks;
+        });
+        return sc;
+      }, [checkedSteps, activeCase]);
+
+      const toggleStep = (id) => {
+        setCheckedSteps(prev => ({ ...prev, [id]: !prev[id] }));
+      };
+
+      const handleClaimFullMarks = () => {
+        const full = {};
+        activeCase.steps.forEach(st => full[st.id] = true);
+        setCheckedSteps(full);
+        triggerConfetti();
+        showToast('🎯 Perfect 5/5 Step Marking Achieved!');
+      };
+
+      const logMistakeInVault = () => {
+        if (!mistakeNoteInput.trim()) {
+          showToast('Please enter an observation note');
+          return;
+        }
+        const newEntry = {
+          id: Date.now(),
+          code: activeCase.tag,
+          title: activeCase.title,
+          tag: selectedMistakeTag,
+          notes: mistakeNoteInput,
+          date: 'Just now'
+        };
+        setMistakes([newEntry, ...mistakes]);
+        setIsMistakeModalOpen(false);
+        setMistakeNoteInput('');
+        showToast('⚠️ Mistake logged in diagnostic vault');
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col bg-[#0b0f19] text-[#f9fafb]">
+          
+          {/* TOAST NOTIFICATION */}
+          {toastMsg && (
+            <div className="fixed bottom-6 right-6 z-50 bg-[#1f2937] border border-[#8b7cff] text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2 text-xs font-semibold animate-bounce">
+              <span>⚡</span> {toastMsg}
+            </div>
+          )}
+
+          {/* TOP GLOBAL BAR */}
+          <header className="sticky top-0 z-40 bg-[#111827]/95 backdrop-blur-md border-b border-[#374151] px-4 lg:px-8 py-3.5">
+            <div className="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-4">
+              
+              {/* Brand Lockup */}
+              <div 
+                className="flex items-center gap-3 cursor-pointer group"
+                onClick={() => setActiveTab('command-center')}
+              >
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8b7cff] to-[#4de1d0] grid place-items-center font-black text-xl text-white shadow-lg shadow-[#8b7cff]/20 group-hover:scale-105 transition-transform">
+                  D
+                </div>
+                <div>
+                  <h1 className="font-extrabold text-lg tracking-tight leading-none text-white">Dhity</h1>
+                  <span className="text-[9px] font-mono font-bold tracking-widest text-gray-400 uppercase mt-1 block">INTELLIGENCE</span>
+                </div>
+              </div>
+
+              {/* NAVIGATION TABS */}
+              <nav className="flex items-center bg-[#1f2937] rounded-2xl p-1 border border-[#374151]">
+                <button
+                  onClick={() => setActiveTab('command-center')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'command-center' ? 'bg-[#111827] text-white shadow-sm' : 'text-gray-400 hover:text-white'}`}
+                >
+                  ◈ Command Center
+                </button>
+                <button
+                  onClick={() => setActiveTab('case-arena')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'case-arena' ? 'bg-[#111827] text-white shadow-sm' : 'text-gray-400 hover:text-white'}`}
+                >
+                  ⚖ Case Arena
+                </button>
+                <button
+                  onClick={() => setActiveTab('mistake-vault')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'mistake-vault' ? 'bg-[#111827] text-white shadow-sm' : 'text-gray-400 hover:text-white'}`}
+                >
+                  ◌ Mistake Vault ({mistakes.length})
+                </button>
+              </nav>
+
+              {/* GLOBAL PERSISTENT POMODORO TIMER */}
+              <div className="flex items-center gap-1.5 p-1 rounded-2xl border border-[#374151] bg-[#111827] shadow-sm">
+                
+                {/* Mode Selector */}
+                <div className="flex items-center bg-[#1f2937] rounded-xl p-0.5 border border-[#374151]/50">
+                  <button
+                    onClick={() => { setPomoMode('work'); setIsPomoRunning(false); setPomoSeconds(pomoSettings.work * 60); }}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${pomoMode === 'work' ? 'bg-[#111827] text-white shadow-xs' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    <span>⚡ Focus</span>
+                    <span className="font-mono text-[10px] text-gray-400">({pomoSettings.work}m)</span>
+                  </button>
+                  <button
+                    onClick={() => { setPomoMode('rest'); setIsPomoRunning(false); setPomoSeconds(pomoSettings.rest * 60); }}
+                    className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold transition-all ${pomoMode === 'rest' ? 'bg-[#111827] text-[#4de1d0] shadow-xs' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    <span>☕ Rest</span>
+                    <span className="font-mono text-[10px] text-gray-400">({pomoSettings.rest}m)</span>
+                  </button>
+                </div>
+
+                {/* Live Digital Display & Progress */}
+                <div className="flex flex-col items-start px-2 py-0.5 min-w-[62px]">
+                  <span className="text-sm font-mono font-extrabold text-white leading-none tabular-nums tracking-tight">
+                    {formatPomoTime(pomoSeconds)}
+                  </span>
+                  <div className="w-full h-1 bg-[#374151] rounded-full overflow-hidden mt-1">
+                    <div
+                      className="h-full bg-gradient-to-r from-[#8b7cff] to-[#4de1d0] transition-all duration-300"
+                      style={{ width: `${Math.round((( (pomoMode === 'work' ? pomoSettings.work : pomoSettings.rest) * 60 - pomoSeconds) / ((pomoMode === 'work' ? pomoSettings.work : pomoSettings.rest) * 60)) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Play/Pause */}
+                <button
+                  onClick={() => setIsPomoRunning(!isPomoRunning)}
+                  className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold transition-all ${isPomoRunning ? 'bg-amber-500/20 text-amber-400' : 'bg-gradient-to-r from-indigo-500 to-teal-400 text-white shadow-sm'}`}
+                  title={isPomoRunning ? 'Pause' : 'Start'}
+                >
+                  {isPomoRunning ? '⏸' : '▶'}
+                </button>
+
+                {/* Reset */}
+                <button
+                  onClick={() => { setIsPomoRunning(false); setPomoSeconds((pomoMode === 'work' ? pomoSettings.work : pomoSettings.rest) * 60); }}
+                  className="w-7 h-7 rounded-xl text-gray-400 hover:text-white hover:bg-[#1f2937] flex items-center justify-center transition-colors"
+                  title="Reset"
+                >
+                  ↺
+                </button>
+
+                {/* Settings Toggle */}
+                <button
+                  onClick={() => { setTempWork(pomoSettings.work); setTempRest(pomoSettings.rest); setIsPomoSettingsOpen(true); }}
+                  className="w-7 h-7 rounded-xl text-gray-400 hover:text-white hover:bg-[#1f2937] flex items-center justify-center transition-colors"
+                  title="Interval Settings"
+                >
+                  ⚙
+                </button>
+              </div>
+
+            </div>
+          </header>
+
+          {/* VIEW: COMMAND CENTER */}
+          {activeTab === 'command-center' && (
+            <main className="max-w-[1400px] w-full mx-auto p-4 lg:p-8 space-y-6">
+              
+              {/* Hero Banner */}
+              <div className="bg-[#111827] border border-[#374151] rounded-3xl p-6 lg:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-xl">
+                <div>
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#8b7cff] font-bold mb-2">
+                    <span>◈ ICAI EXAM SURVIVAL ENGINE</span>
+                    <span>•</span>
+                    <span className="text-emerald-400">Target: 70+ in Paper 1 & 5</span>
+                  </div>
+                  <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight">
+                    Active Recall & Step-Marking Hub
+                  </h2>
+                  <p className="text-sm text-gray-400 max-w-2xl mt-1">
+                    Practice structured questions with official ICAI marking guidelines, track recall decay intervals, and catalog red-ink exam traps.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setActiveTab('case-arena')}
+                    className="px-5 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white font-bold text-xs hover:brightness-110 shadow-lg shadow-indigo-500/25 transition-all"
+                  >
+                    ⚖ Launch Case Arena
+                  </button>
+                </div>
+              </div>
+
+              {/* Priority Topic Queue Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="bg-[#111827] border border-[#374151] rounded-3xl p-5 space-y-3">
+                  <div className="flex justify-between items-center text-xs font-bold text-gray-400">
+                    <span>CRITICAL DECAY QUEUE</span>
+                    <span className="text-rose-400 font-mono">Retest &lt; 24h</span>
+                  </div>
+                  <div className="space-y-2">
+                    {topics.filter(t => t.stability < 60).map(t => (
+                      <div key={t.id} className="p-3 rounded-2xl bg-[#1f2937] border border-[#374151] flex justify-between items-center">
+                        <div>
+                          <div className="text-xs font-bold text-white">{t.code}: {t.name}</div>
+                          <div className="text-[10px] text-rose-400 font-mono">Decays in {t.decayHours}h • Trap: {t.trapTaxonomy}</div>
+                        </div>
+                        <span className="text-xs font-mono font-bold text-rose-400">{t.stability}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-[#111827] border border-[#374151] rounded-3xl p-5 space-y-3">
+                  <div className="flex justify-between items-center text-xs font-bold text-gray-400">
+                    <span>MISTAKE VAULT METRICS</span>
+                    <span className="text-amber-400 font-mono">{mistakes.length} Flags</span>
+                  </div>
+                  <div className="space-y-2">
+                    {mistakes.slice(0, 3).map(m => (
+                      <div key={m.id} className="p-3 rounded-2xl bg-[#1f2937] border border-[#374151]">
+                        <div className="flex justify-between text-[11px] font-bold">
+                          <span className="text-indigo-400">{m.code}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400">{m.tag}</span>
+                        </div>
+                        <div className="text-xs text-white truncate mt-1">{m.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-[#111827] border border-[#374151] rounded-3xl p-5 space-y-3">
+                  <div className="flex justify-between items-center text-xs font-bold text-gray-400">
+                    <span>ACTIVE STUDY METRICS</span>
+                    <span className="text-emerald-400 font-mono">Phase 2 Target</span>
+                  </div>
+                  <div className="space-y-3 pt-2">
+                    <div>
+                      <div className="flex justify-between text-xs text-gray-300 mb-1">
+                        <span>Syllabus Recalled</span>
+                        <span className="font-mono font-bold text-white">68%</span>
+                      </div>
+                      <div className="h-2 bg-[#1f2937] rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-[#8b7cff] to-[#4de1d0] w-[68%]" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-xs text-gray-300 mb-1">
+                        <span>ICAI Working Notes Mastery</span>
+                        <span className="font-mono font-bold text-emerald-400">82%</span>
+                      </div>
+                      <div className="h-2 bg-[#1f2937] rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-500 w-[82%]" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </main>
+          )}
+
+          {/* VIEW: CASE STUDY ARENA */}
+          {activeTab === 'case-arena' && (
+            <main className="max-w-[1400px] w-full mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-[1.45fr_0.95fr] gap-6 items-start">
+              
+              {/* Left Pane: Interactive Case Study & Matrix */}
+              <section className="bg-[#111827] border border-[#374151] rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl">
+                
+                {/* Case Scenario Selector & Live Score */}
+                <div className="flex flex-wrap items-center justify-between pb-4 border-b border-[#374151] gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                      {activeCase.tag}
+                    </span>
+                    <select
+                      value={activeCaseIdx}
+                      onChange={(e) => { setActiveCaseIdx(Number(e.target.value)); setCheckedSteps({}); setShowSolution(false); }}
+                      className="bg-[#1f2937] border border-[#374151] rounded-xl px-3 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-[#8b7cff]"
+                    >
+                      {cases.map((c, i) => (
+                        <option key={c.id} value={i}>{c.tag}: {c.topic}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 font-mono">ICAI Score:</span>
+                    <div className="px-3.5 py-1.5 rounded-xl bg-[#1f2937] border border-[#374151] font-mono font-bold text-sm">
+                      <span className="text-emerald-400">{currentScore}</span>
+                      <span className="text-gray-400"> / {activeCase.maxMarks} Marks</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Case Facts Card */}
+                <div className="space-y-3">
+                  <h2 className="text-xl font-black text-white tracking-tight leading-snug">
+                    {activeCase.title}
+                  </h2>
+                  <div className="p-5 rounded-2xl bg-[#1f2937]/70 border border-[#374151] text-xs leading-relaxed text-gray-200 space-y-3">
+                    <p>{activeCase.facts}</p>
+                    <div className="pt-2 border-t border-[#374151] font-semibold text-[#8b7cff]">
+                      {activeCase.question}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ICAI Step-Marking Matrix */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider">
+                      ICAI Working Notes & Marking Steps
+                    </h3>
+                    <span className="text-[11px] text-gray-400 font-mono">Click to evaluate your working</span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {activeCase.steps.map(step => (
+                      <div
+                        key={step.id}
+                        onClick={() => toggleStep(step.id)}
+                        className={`p-3.5 rounded-2xl border cursor-pointer flex justify-between items-center transition-all ${checkedSteps[step.id] ? 'border-emerald-500/70 bg-emerald-950/20' : 'border-[#374151] bg-[#1f2937] hover:border-[#8b7cff]/40'}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-base">{checkedSteps[step.id] ? '✅' : '⬜'}</span>
+                          <div>
+                            <span className="text-xs font-bold text-white block leading-snug">{step.label}</span>
+                            <span className="text-[10px] font-mono text-[#4de1d0]">Ref: {step.ref}</span>
+                          </div>
+                        </div>
+                        <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#111827] border border-[#374151] text-gray-300">
+                          +{step.marks}M
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Arena Actions */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#374151]">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setShowSolution(!showSolution)}
+                      className="px-4 py-2 rounded-xl bg-[#1f2937] hover:bg-[#374151] border border-[#374151] text-xs font-semibold text-white transition-all"
+                    >
+                      📖 {showSolution ? 'Hide Model Answer' : 'View Model Answer'}
+                    </button>
+                    <button
+                      onClick={() => setCheckedSteps({})}
+                      className="p-2 rounded-xl bg-[#1f2937] hover:bg-[#374151] border border-[#374151] text-gray-400 hover:text-white transition-all"
+                      title="Reset Steps"
+                    >
+                      ↺
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsMistakeModalOpen(true)}
+                      className="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition-all"
+                    >
+                      ⚠️ Flag Mistake
+                    </button>
+                    <button
+                      onClick={handleClaimFullMarks}
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white text-xs font-bold hover:brightness-110 shadow-md transition-all"
+                    >
+                      ✨ Full Marks Check
+                    </button>
+                  </div>
+                </div>
+
+                {/* Model Answer Drawer */}
+                {showSolution && (
+                  <div className="p-4 rounded-2xl bg-[#1f2937] border border-indigo-500/40 space-y-2">
+                    <div className="text-xs font-mono font-bold text-emerald-400">OFFICIAL ICAI SUGGESTED SOLUTION</div>
+                    <p className="text-xs text-gray-200 leading-relaxed">{activeCase.solution}</p>
+                    <div className="pt-2 border-t border-[#374151] text-[11px] text-rose-400 font-mono">
+                      Examiner Trap Watch: {activeCase.trap}
+                    </div>
+                  </div>
+                )}
+
+              </section>
+
+              {/* Right Pane: Mistake Vault Summary */}
+              <aside className="space-y-5">
+                <div className="bg-[#111827] border border-[#374151] rounded-3xl p-5 shadow-lg space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-bold text-white">Diagnostic Error Ledger</h3>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1f2937] text-gray-400">Recent</span>
+                  </div>
+
+                  <div className="space-y-2.5 max-h-[460px] overflow-y-auto">
+                    {mistakes.map(m => (
+                      <div key={m.id} className="p-3.5 rounded-2xl bg-[#1f2937] border border-[#374151] space-y-1">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-mono font-bold text-indigo-400">{m.code}</span>
+                          <span className="text-[10px] text-gray-400">{m.date}</span>
+                        </div>
+                        <div className="font-bold text-white text-xs">{m.title}</div>
+                        <span className="inline-block px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 text-[10px] font-mono font-bold">
+                          {m.tag}
+                        </span>
+                        <p className="text-[11px] text-gray-400 italic">"{m.notes}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </aside>
+
+            </main>
+          )}
+
+          {/* VIEW: MISTAKE VAULT FULL */}
+          {activeTab === 'mistake-vault' && (
+            <main className="max-w-[1400px] w-full mx-auto p-4 lg:p-8 space-y-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-black text-white">Red-Ink Mistake Vault</h2>
+                  <p className="text-xs text-gray-400">Classified taxonomy of personal exam slips and provision misquotations.</p>
+                </div>
+                <button
+                  onClick={() => setIsMistakeModalOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white text-xs font-bold"
+                >
+                  + Add Custom Mistake
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {mistakes.map(m => (
+                  <div key={m.id} className="p-4 rounded-3xl bg-[#111827] border border-[#374151] space-y-2 shadow-md">
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono font-bold text-indigo-400 text-xs">{m.code}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 font-mono font-bold">{m.tag}</span>
+                    </div>
+                    <h3 className="font-bold text-sm text-white">{m.title}</h3>
+                    <p className="text-xs text-gray-400 leading-relaxed italic">"{m.notes}"</p>
+                    <div className="pt-2 border-t border-[#374151] flex justify-between text-[10px] text-gray-500 font-mono">
+                      <span>Logged: {m.date}</span>
+                      <button
+                        onClick={() => setMistakes(mistakes.filter(x => x.id !== m.id))}
+                        className="text-rose-400 hover:underline"
+                      >
+                        Resolve / Archive
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </main>
+          )}
+
+          {/* MODAL: POMODORO INTERVAL SETTINGS */}
+          {isPomoSettingsOpen && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="w-full max-w-sm bg-[#111827] border border-[#374151] rounded-3xl p-6 text-white shadow-2xl space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-[#374151]">
+                  <b className="text-sm font-bold">Pomodoro Interval Settings</b>
+                  <button onClick={() => setIsPomoSettingsOpen(false)} className="text-gray-400 hover:text-white">✕</button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-gray-400">Focus Block (Work)</span>
+                      <span className="font-mono text-[#8b7cff] font-bold">{tempWork} mins</span>
+                    </div>
+                    <input
+                      type="range" min="5" max="90" step="5" value={tempWork}
+                      onChange={(e) => setTempWork(Number(e.target.value))}
+                      className="w-full accent-[#8b7cff]"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-gray-400">Short Rest (Break)</span>
+                      <span className="font-mono text-[#4de1d0] font-bold">{tempRest} mins</span>
+                    </div>
+                    <input
+                      type="range" min="1" max="30" step="1" value={tempRest}
+                      onChange={(e) => setTempRest(Number(e.target.value))}
+                      className="w-full accent-[#4de1d0]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button onClick={() => setIsPomoSettingsOpen(false)} className="px-3 py-1.5 rounded-xl border border-[#374151] text-xs text-gray-400">Cancel</button>
+                  <button
+                    onClick={() => {
+                      const cfg = { work: tempWork, rest: tempRest };
+                      setPomoSettings(cfg);
+                      localStorage.setItem('dhity_pomodoro_cfg', JSON.stringify(cfg));
+                      setPomoSeconds(cfg.work * 60);
+                      setIsPomoSettingsOpen(false);
+                      showToast('Pomodoro intervals saved');
+                    }}
+                    className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-400 text-white text-xs font-bold"
+                  >
+                    Save & Apply
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MODAL: FLAG MISTAKE */}
+          {isMistakeModalOpen && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="w-full max-w-md bg-[#111827] border border-[#374151] rounded-3xl p-6 text-white shadow-2xl space-y-4">
+                <h4 className="text-base font-bold text-rose-400 flex items-center gap-2">
+                  ⚠️ Log Root-Cause to Mistake Vault
+                </h4>
+                <p className="text-xs text-gray-400">Select the examiner trap that caused this slip:</p>
+
+                <div className="space-y-2">
+                  {[
+                    'Omitted Provision Citation',
+                    'ICAI Distinction / Concept Trap',
+                    'Arithmetic / Clerical Slip',
+                    'Working Note Missing'
+                  ].map(tg => (
+                    <button
+                      key={tg}
+                      onClick={() => setSelectedMistakeTag(tg)}
+                      className={`w-full text-left p-3 rounded-xl border text-xs transition-all ${selectedMistakeTag === tg ? 'border-indigo-500 bg-indigo-950/40 text-white' : 'border-[#374151] bg-[#1f2937] text-gray-300'}`}
+                    >
+                      • {tg}
+                    </button>
+                  ))}
+                </div>
+
+                <textarea
+                  value={mistakeNoteInput}
+                  onChange={(e) => setMistakeNoteInput(e.target.value)}
+                  placeholder="Personal reflection or formula that was overlooked..."
+                  className="w-full bg-[#1f2937] border border-[#374151] rounded-xl p-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 h-20 resize-none"
+                />
+
+                <div className="flex justify-end gap-2">
+                  <button onClick={() => setIsMistakeModalOpen(false)} className="px-4 py-2 rounded-xl border border-[#374151] text-xs text-gray-400">Cancel</button>
+                  <button onClick={logMistakeInVault} className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white text-xs font-bold">Record in Vault</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
     }
 
-    // --- 3. GLOBAL POMODORO TIMER ---
-    let pomoSettings = JSON.parse(localStorage.getItem('dhity_pomo_settings') || '{"work":25,"break":5}');
-    let pomoMode = 'work';
-    let pomoSeconds = pomoSettings.work * 60;
-    let isRunning = false;
-    let pomoTimerInterval = null;
-
-    function updatePomoDisplay() {
-      const m = Math.floor(pomoSeconds / 60);
-      const s = pomoSeconds % 60;
-      document.getElementById('pomoDisplay').innerText = 
-        String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-      
-      const total = (pomoMode === 'work' ? pomoSettings.work : pomoSettings.break) * 60;
-      const pct = Math.round(((total - pomoSeconds) / total) * 100);
-      document.getElementById('pomoProgress').style.width = pct + '%';
-    }
-
-    function togglePomodoro() {
-      isRunning = !isRunning;
-      document.getElementById('pomoToggleBtn').innerText = isRunning ? '⏸' : '▶';
-      if (isRunning) {
-        pomoTimerInterval = setInterval(() => {
-          if (pomoSeconds <= 1) {
-            clearInterval(pomoTimerInterval);
-            isRunning = false;
-            document.getElementById('pomoToggleBtn').innerText = '▶';
-            alert(pomoMode === 'work' ? '🎉 Focus session finished! Take a break.' : '🔔 Break over! Ready for next session?');
-            setPomodoroMode(pomoMode === 'work' ? 'break' : 'work');
-            return;
-          }
-          pomoSeconds--;
-          updatePomoDisplay();
-        }, 1000);
-      } else {
-        clearInterval(pomoTimerInterval);
-      }
-    }
-
-    function setPomodoroMode(mode) {
-      pomoMode = mode;
-      isRunning = false;
-      clearInterval(pomoTimerInterval);
-      document.getElementById('pomoToggleBtn').innerText = '▶';
-      pomoSeconds = (mode === 'work' ? pomoSettings.work : pomoSettings.break) * 60;
-      
-      const fBtn = document.getElementById('pomoFocusBtn');
-      const bBtn = document.getElementById('pomoBreakBtn');
-      if (mode === 'work') {
-        fBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-gray-900 text-white shadow-sm flex items-center gap-1';
-        bBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white flex items-center gap-1';
-      } else {
-        bBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-gray-900 text-teal-300 shadow-sm flex items-center gap-1';
-        fBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white flex items-center gap-1';
-      }
-      updatePomoDisplay();
-    }
-
-    function resetPomodoro() {
-      setPomodoroMode(pomoMode);
-    }
-
-    function toggleSettingsModal(open) {
-      document.getElementById('settingsModal').classList.toggle('hidden', !open);
-      if (open) {
-        document.getElementById('workRange').value = pomoSettings.work;
-        document.getElementById('breakRange').value = pomoSettings.break;
-        updateSettingPreview();
-      }
-    }
-
-    function updateSettingPreview() {
-      document.getElementById('setWorkVal').innerText = document.getElementById('workRange').value + ' min';
-      document.getElementById('setBreakVal').innerText = document.getElementById('breakRange').value + ' min';
-    }
-
-    function savePomodoroSettings() {
-      pomoSettings.work = parseInt(document.getElementById('workRange').value, 10);
-      pomoSettings.break = parseInt(document.getElementById('breakRange').value, 10);
-      localStorage.setItem('dhity_pomo_settings', JSON.stringify(pomoSettings));
-      document.getElementById('focusMinLabel').innerText = `(${pomoSettings.work}m)`;
-      document.getElementById('breakMinLabel').innerText = `(${pomoSettings.break}m)`;
-      toggleSettingsModal(false);
-      resetPomodoro();
-    }
-
-    function recalculateQueue() {
-      alert('Adaptive revision queue recalculated based on recent error taxonomy!');
-    }
-
-    // INIT
-    loadCase(0);
-    renderMistakes();
-    updatePomoDisplay();
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
 </html>
