@@ -1,334 +1,871 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dheeti – Aurora Hybrid</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#FBF9FF;
-  --glass:rgba(255,255,255,.68);
-  --text:#2A2340;
-  --mute:#75708A;
-  --line:rgba(255,255,255,.9);
-  --paper:#F6F0E4;
-  --pline:#E2D8C3;
-  --ptext:#1B2A26;
-  --red:#E4572E;
-  --green:#0F3B33;
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { RevisionProvider, useRevision } from './context/RevisionContext';
+import { ActiveTab } from './types';
+import { CommandCenter } from './components/CommandCenter';
+import { RevisionEngineView } from './components/RevisionEngineView';
+import { ActiveRecallView } from './components/ActiveRecallView';
+import { ExamSimulatorView } from './components/ExamSimulatorView';
+import { MistakeVaultView } from './components/MistakeVaultView';
+import { AnalyticsView } from './components/AnalyticsView';
+import { CAInteractiveArena } from './components/CAInteractiveArena';
+import { FocusZenLayout } from './components/FocusZenLayout';
+import { AdaptiveSessionModal } from './components/AdaptiveSessionModal';
+import { CycleSwitcherModal } from './components/CycleSwitcherModal';
+import { DesignStudioDrawer } from './components/DesignStudioDrawer';
+import { LaunchReadyModal } from './components/LaunchReadyModal';
+import { SovereignSanctuaryView } from './components/SovereignSanctuaryView';
+import { AuroraHybridView } from './components/AuroraHybridView';
+import { RtpMtpPyqVault } from './components/RtpMtpPyqVault';
+import { DheetiLogo } from './components/DheetiLogo';
+import { GlobalPomodoroWidget } from './components/GlobalPomodoroWidget';
+import { PWAInstallButton } from './components/PWAInstallButton';
+import {
+  Menu,
+  X,
+  Sparkles,
+  CheckCircle2,
+  Palette,
+  Rocket,
+  Sun,
+  Moon,
+  LayoutDashboard,
+  BrainCircuit,
+  Zap,
+  BookOpenCheck,
+  Flame,
+  LineChart,
+  ChevronRight,
+  RotateCcw,
+  Sliders,
+  Calendar,
+  Library,
+  RefreshCw,
+  Play,
+  Smartphone,
+} from 'lucide-react';
+
+/* =========================================================================
+   1. UNIFIED TOPNAV COMPONENT (Full-Width SaaS TopBar Header)
+   ========================================================================= */
+interface HeaderActionProps {
+  onOpenCycleModal: () => void;
+  onOpenDesignDrawer: () => void;
+  onOpenLaunchModal: () => void;
 }
-:root[data-theme="dark"]{
-  --bg:#171327;
-  --glass:rgba(255,255,255,.08);
-  --text:#F1EDFF;
-  --mute:#A9A3C4;
-  --line:rgba(255,255,255,.15);
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,system-ui,sans-serif;
-  overflow-x:hidden;
-  line-height:1.5;
-  padding-bottom:50px;
-  transition:background .3s,color .3s;
-}
-h1,h2,h3,h4{font-family:Poppins,sans-serif;margin:0}
-.blob{position:fixed;border-radius:50%;filter:blur(75px);opacity:.5;z-index:0;animation:float 14s ease-in-out infinite;pointer-events:none}
-.b1{width:380px;height:380px;background:#7EDCC4;top:-80px;left:-80px}
-.b2{width:420px;height:420px;background:#B7A6FF;top:140px;right:-120px;animation-delay:-4s}
-.b3{width:340px;height:340px;background:#FFC2A6;bottom:-100px;left:30%;animation-delay:-8s}
-@keyframes float{50%{transform:translate(40px,-50px) scale(1.12)}}
 
-.wrap{position:relative;z-index:1;max-width:1060px;margin:auto;padding:0 20px}
-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-.logo-tile{
-  position:relative;
-  width:44px;
-  height:44px;
-  border-radius:14px;
-  background:linear-gradient(135deg,#7A5CFF,#9F7AEA,#FF7EB0);
-  display:grid;
-  place-items:center;
-  color:#fff;
-  font:800 22px Poppins,sans-serif;
-  box-shadow:0 8px 24px rgba(122,92,255,.4);
-  border:1.5px solid rgba(255,255,255,.6);
-}
-.grad{background:linear-gradient(90deg,#7A5CFF,#FF7EB0,#FFA06B);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200%;animation:bg 5s linear infinite}
-@keyframes bg{to{background-position:200%}}
-.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;box-shadow:0 10px 30px rgba(122,92,255,.12)}
-.btn{position:relative;overflow:hidden;border:0;border-radius:14px;padding:13px 22px;font:600 14px Poppins,sans-serif;cursor:pointer;color:#fff;background:linear-gradient(120deg,#7A5CFF,#FF7EB0);box-shadow:0 8px 20px rgba(122,92,255,.35);transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.btn:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(122,92,255,.45)}
-.btn:active{transform:scale(.97)}
-.btn::after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:shine 3s infinite}
-@keyframes shine{60%,100%{left:130%}}
-.btn.o{background:var(--glass);color:var(--text);box-shadow:none;border:1px solid var(--line)}.btn.o::after{display:none}
-.btn.red{background:var(--red);box-shadow:0 4px 0 #A83A18}
+const AppTopNav: React.FC<HeaderActionProps> = ({
+  onOpenCycleModal,
+  onOpenDesignDrawer,
+  onOpenLaunchModal,
+}) => {
+  const { activeTab, setActiveTab, activeCycle, openExamModal, focusStreakDays, showToast, themeMode, setThemeMode } = useRevision();
 
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center;padding:24px 0 36px}
-.hero h1{font-size:clamp(34px,5vw,52px);line-height:1.12}
-.hero p{color:var(--mute);font-size:17px;max-width:480px;margin:16px 0}
-.tag{display:inline-block;padding:6px 16px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:14px}
-.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-.phone{width:280px;margin:auto;padding:20px;border-radius:36px}
-.float{animation:bob 5s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(-14px)}}
-.ring{position:relative;width:110px;height:110px;margin:10px auto}
-.ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
-.ring .bgc{stroke:rgba(122,92,255,.15)}
-.ring .fg{stroke:url(#g);stroke-dasharray:314;stroke-dashoffset:314;animation:fill 2s .4s forwards}
-@keyframes fill{to{stroke-dashoffset:88}}
-.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 22px Poppins}
-.mini{padding:10px 12px;border-radius:14px;margin-top:10px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
-.flame{display:inline-block;animation:flick 1s infinite alternate}
-@keyframes flick{to{transform:scale(1.25) rotate(-6deg)}}
+  const navItems: { id: ActiveTab; label: string; symbol: string }[] = [
+    { id: 'aurora-hybrid', label: 'Aurora Hybrid', symbol: '✨' },
+    { id: 'sanctuary-studio', label: 'Dheeti Sanctuary', symbol: '💎' },
+    { id: 'command-center', label: 'Command Center', symbol: '⌂' },
+    { id: 'rtp-mtp-pyq', label: 'RTP · MTP · PYQ', symbol: '📚' },
+    { id: 'ca-interactive-arena', label: 'Case Arena', symbol: '⚖' },
+    { id: 'revision-engine', label: 'Revision Engine', symbol: '◈' },
+    { id: 'active-recall', label: 'Active Recall', symbol: '⚡' },
+    { id: 'exam-simulator', label: 'Exam Simulator', symbol: '◫' },
+    { id: 'mistake-vault', label: 'Mistake Vault', symbol: '◌' },
+    { id: 'analytics', label: 'Analytics', symbol: '◉' },
+  ];
 
-section{padding:36px 0;border-top:1px solid var(--line)}
-h2{font-size:28px;margin-bottom:6px}.sub{color:var(--mute);margin:0 0 20px;font-size:15px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
-.paper{width:100%;max-width:440px;margin:auto;background:var(--paper);color:var(--ptext);border:8px solid var(--green);border-radius:30px;padding:20px;background-image:repeating-linear-gradient(transparent 0 25px,var(--pline) 25px 26px);box-shadow:0 20px 40px rgba(15,59,51,.22)}
-.paper h3{color:var(--green);font-size:16px}
-.q{font-size:12px;color:#5E6B66;margin:4px 0 10px}
-.ans{font-size:14px;line-height:26px;margin:0}
-.ans .w{position:relative;transition:all .5s}
-.ans .fix{display:none;font-family:Caveat,cursive;font-size:20px;color:var(--red);font-weight:700}
-.checked .w{color:var(--red);text-decoration:line-through;text-decoration-thickness:2.5px}
-.checked .fix{display:inline;animation:pop .5s both}
-@keyframes pop{from{opacity:0;transform:translateY(-6px) rotate(-6deg)}}
-.score{display:none;margin-top:12px;background:var(--green);color:#F6F0E4;border-radius:12px;padding:10px 14px;font-size:13px;text-align:center;font-weight:600}
-.checked+.score{display:block;animation:pop .5s .4s both}
-.tick{color:#1c9a6b;font-weight:700}
-.note{font-family:Caveat,cursive;color:var(--red);font-size:19px;font-weight:600;display:none;margin-top:10px}
-.checked~.note{display:block}
+  return (
+    <header className="sticky top-0 z-40 bg-[var(--panel)]/95 backdrop-blur-md border-b-2 border-[var(--line)] px-4 lg:px-8 py-2.5 transition-colors mb-6 shadow-xs">
+      <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+        {/* Left: Brand Lockup & Active Cycle Badge */}
+        <div className="flex items-center gap-3.5 shrink-0">
+          <div
+            onClick={() => setActiveTab('command-center')}
+            className="flex items-center gap-2.5 cursor-pointer group select-none"
+            title="Dheeti Command Center"
+          >
+            <DheetiLogo size={36} withGlow={true} />
+            <div className="flex flex-col justify-center">
+              {/* Row 1: Brand Name & Sanskrit Badge */}
+              <div className="flex items-center gap-1.5 leading-none">
+                <span className="font-extrabold text-[17px] text-[var(--text)] tracking-tight leading-none">
+                  Dheeti
+                </span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#8b7cff]/20 text-[#a594ff] border border-[#8b7cff]/30 leading-none">
+                  धीति
+                </span>
+              </div>
+              {/* Row 2: Clean Subline on next line, perfectly aligned */}
+              <span className="block text-[8.5px] font-mono font-bold text-[var(--muted)] tracking-[1.4px] uppercase mt-1 leading-none">
+                WISDOM &amp; REVISION OS
+              </span>
+            </div>
+          </div>
 
-/* 3D Flashcard */
-.card-scene{width:100%;max-width:620px;margin:auto;min-height:220px;cursor:pointer;perspective:1000px}
-.card-inner{position:relative;width:100%;height:100%;min-height:220px;transition:transform .7s;transform-style:preserve-3d}
-.card-scene.flipped .card-inner{transform:rotateY(180deg)}
-.card-face{position:absolute;inset:0;padding:24px;border-radius:28px;backface-visibility:hidden;display:flex;flex-col:column;justify-content:space-between;box-shadow:0 12px 30px rgba(122,92,255,.15)}
-.card-back{transform:rotateY(180deg);background:linear-gradient(135deg,rgba(240,236,252,.95),rgba(227,246,241,.95));border:1px solid rgba(122,92,255,.3);color:#1E1B2E}
+          {/* Active CA Cycle Badge */}
+          <button
+            onClick={onOpenCycleModal}
+            className="hidden sm:flex items-center gap-1.5 h-8.5 px-3 rounded-full border border-[var(--line)] bg-[var(--panel2)] hover:border-[var(--violet)] text-xs text-[var(--text)] ml-1 transition-colors shadow-xs cursor-pointer"
+            title="Change Active Study Cycle"
+          >
+            <span className="w-2 h-2 rounded-full bg-[var(--cyan)]" />
+            <span className="font-bold text-[var(--violet)]">{activeCycle.level}</span>
+            <span className="text-[var(--muted)]">·</span>
+            <span className="text-xs truncate max-w-[120px]">{activeCycle.name}</span>
+          </button>
+        </div>
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
-.card{padding:22px;transition:transform .3s,box-shadow .3s}.card:hover{transform:translateY(-8px);box-shadow:0 16px 36px rgba(122,92,255,.18)}
-.card h3{font-size:16px;margin:8px 0 4px}.card p{margin:0;color:var(--mute);font-size:14px}
-.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:9999;animation:fall 1.8s linear forwards;pointer-events:none}
-@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
-select.level-box{background:var(--glass);border:1px solid var(--line);padding:9px 14px;border-radius:12px;font:600 13px Poppins,sans-serif;color:var(--text);outline:none;cursor:pointer}
-footer{text-align:center;color:var(--mute);font-size:13px;padding:36px 0;border-top:1px solid var(--line)}
-@media(max-width:768px){.hero,.split{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-<div class="wrap">
-<nav>
-  <div class="brand">
-    <div class="logo-tile">D</div>
-    <div>
-      <span style="font:800 24px Poppins,sans-serif;letter-spacing:-0.5px;line-height:1;display:block"><span class="grad">Dheeti</span></span>
-      <span style="font-size:10px;font-weight:600;letter-spacing:1px;color:var(--mute);text-transform:uppercase;display:block;margin-top:2px">Aurora Hybrid Revision Studio</span>
-    </div>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <button class="btn o" onclick="toggleTheme()" style="padding:8px 14px;font-size:12px" id="themeBtn">🌙 Dark</button>
-    <select class="level-box" onchange="updateLevel(this.value)">
-      <option value="Foundation">CA Foundation</option>
-      <option value="Inter">CA Intermediate</option>
-      <option value="Final">CA Final</option>
-    </select>
-  </div>
-</nav>
+        {/* Center: Navigation Tabs */}
+        <nav className="hidden lg:flex items-center gap-1 bg-[var(--panel2)] p-1 rounded-xl border border-[var(--line)] shadow-xs">
+          {navItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`h-7.5 px-3 rounded-lg text-xs font-semibold flex items-center transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-[var(--panel)] text-[var(--text)] shadow-xs font-bold border border-[var(--line)]/50'
+                    : 'text-[var(--muted)] hover:text-[var(--text)]'
+                }`}
+              >
+                <span className="mr-1 text-[var(--violet)]">{item.symbol}</span>
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
 
-<div class="hero">
- <div>
-  <span class="tag glass" id="levelTag">✨ CA Foundation Mode</span>
-  <h1>Padhai <span class="grad">soft</span>, checking <span style="color:var(--red)">strict</span>.</h1>
-  <p>Home aur planner fresh pastel look mein. Answer check karte waqt ICAI-style ledger paper aur red ink correction.</p>
-  <div class="row">
-    <button class="btn" onclick="party()">Start Revision 🚀</button>
-    <a href="#demo" style="text-decoration:none"><button class="btn o">Try Check Answer ↓</button></a>
-    <a href="#flashcards" style="text-decoration:none"><button class="btn o">🃏 Active Recall</button></a>
-  </div>
- </div>
- <div class="phone glass float">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <small style="color:var(--mute)">Hi Maitri 👋</small>
-    <span style="font-size:10px;font-weight:700;color:#7A5CFF;background:rgba(122,92,255,.15);padding:2px 8px;border-radius:99px">Dheeti OS</span>
-  </div>
-  <h3 style="font-size:16px;margin:4px 0" id="todayProgressTitle">Aaj ka progress</h3>
-  <div class="ring">
-    <svg width="110" height="110">
-      <defs><linearGradient id="g"><stop offset="0" stop-color="#7A5CFF"/><stop offset="1" stop-color="#FF7EB0"/></linearGradient></defs>
-      <circle class="bgc" cx="55" cy="55" r="50"/>
-      <circle class="fg" cx="55" cy="55" r="50"/>
-    </svg>
-    <b>72%</b>
-  </div>
-  <div class="mini glass"><span id="task1">📘 Paper 1: Accounting Basics</span><b style="color:#1c9a6b">✓</b></div>
-  <div class="mini" style="background:linear-gradient(120deg,rgba(255,194,166,.65),rgba(255,158,196,.55));color:#2A2340;font-weight:600">
-    <span><span class="flame">🔥</span> 12 day streak</span><b>Keep going</b>
-  </div>
- </div>
-</div>
+        {/* Right: Action Tools - Properly aligned with unified optical height */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Revision Streak Counter Pill */}
+          <div
+            onClick={() => showToast(`🔥 ${focusStreakDays}-day Revision Streak active! Consistency is your ultimate competitive edge.`)}
+            className="h-8.5 flex items-center gap-1.5 px-3 rounded-xl border-2 border-amber-500 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-black cursor-pointer transition-all shadow-md shadow-amber-500/25 select-none hover:brightness-110 active:scale-95 ring-2 ring-amber-400/40"
+            title={`${focusStreakDays} Consecutive Days of Revision · Tap for discipline quote`}
+          >
+            <Flame className="w-4 h-4 text-white fill-amber-200 animate-pulse drop-shadow-sm" />
+            <span className="font-mono text-sm font-black text-white">{focusStreakDays}</span>
+            <span className="text-[10px] uppercase font-black tracking-wider text-amber-100 hidden xl:inline">Streak</span>
+          </div>
 
-<section id="demo" class="split">
- <div>
-  <div style="font-size:11px;font-weight:700;color:#E4572E;text-transform:uppercase;margin-bottom:4px">Examiner Simulator</div>
-  <h2>Red Ink <span class="grad">Check Answer</span></h2>
-  <p class="sub">Yahan design Ledger style mein badal jaata hai: parchment paper, green border, red pen se correction. Button dabao aur dekho.</p>
-  <div style="display:flex;gap:8px;margin-bottom:16px" id="qBtns">
-    <button class="btn" style="padding:6px 14px;font-size:12px;background:#0F3B33;box-shadow:none" onclick="loadQ(0)">Q1</button>
-    <button class="btn o" style="padding:6px 14px;font-size:12px" onclick="loadQ(1)">Q2</button>
-  </div>
-  <button class="btn red" id="cb" onclick="chk()">Check Answer ✍️</button>
-  <button class="btn o" onclick="rst()" style="margin-left:6px">Reset</button>
- </div>
- <div class="paper">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h3 id="paperQTitle">Practice · Q1</h3>
-    <span style="font-size:11px;font-weight:700;color:var(--green);background:rgba(15,59,51,.1);padding:2px 8px;border-radius:4px" id="paperQMarks">4 marks</span>
-  </div>
-  <div class="q" id="paperQSub">AS 10 / Depreciation · PPE Cost Principles</div>
-  <p class="ans" id="ans">Cost of PPE includes purchase price, <span class="w">selling expenses</span><span class="fix"> import duty & transit insurance</span>, and <span class="w">interest on loan always</span><span class="fix"> directly attributable erection costs</span><span class="tick"> ✓</span></p>
-  <div class="score" id="paperScore">Score: 2 / 4 · Working notes zaroor likho!</div>
-  <div class="note" id="paperNote">← "selling expenses" machine cost mein kabhi capitalise nahi hote!</div>
- </div>
-</section>
+          {/* Global Pomodoro Widget */}
+          <div className="hidden md:flex items-center h-8.5">
+            <GlobalPomodoroWidget />
+          </div>
 
-<section id="flashcards">
- <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px">
-  <div>
-    <h2>Active Recall <span class="grad">Flashcard</span></h2>
-    <p class="sub" style="margin:0">Tap card to test immediate active memory before looking at ICAI suggested answer.</p>
-  </div>
-  <span style="font-size:12px;font-weight:700;color:#7A5CFF;background:rgba(122,92,255,.1);padding:6px 14px;border-radius:99px">👆 Tap to Flip Card</span>
- </div>
- <div class="card-scene" onclick="this.classList.toggle('flipped')">
-  <div class="card-inner">
-    <div class="card-face glass" style="flex-direction:column">
-      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--mute)">
-        <span id="fcTopic">CA Foundation · Valuation Principle</span>
-        <span style="color:#7A5CFF;font-weight:700">Question Front</span>
+          {/* Direct Dark / Light Mode Switcher - Clean Modern Icon */}
+          <button
+            onClick={() => {
+              const nextTheme = themeMode === 'clean-light' ? 'neon-cyber' : 'clean-light';
+              setThemeMode(nextTheme);
+            }}
+            className={`w-8.5 h-8.5 rounded-xl border-2 flex items-center justify-center transition-all duration-200 cursor-pointer select-none active:scale-90 shadow-sm ${
+              themeMode === 'clean-light'
+                ? 'border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md'
+                : 'border-[var(--line)] bg-[var(--panel)] text-amber-300 hover:border-amber-400/60 hover:bg-[var(--panel2)] hover:shadow-md'
+            }`}
+            title={`Switch to ${themeMode === 'clean-light' ? 'Dark Mode' : 'Light Mode'}`}
+            aria-label="Toggle Light and Dark Mode"
+          >
+            {themeMode === 'clean-light' ? (
+              <Moon className="w-4 h-4 text-slate-800 fill-slate-800 transition-transform duration-300 hover:-rotate-12" />
+            ) : (
+              <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20 transition-transform duration-300 hover:rotate-45" />
+            )}
+          </button>
+
+          {/* Quick Previews & Customizer Button */}
+          <button
+            onClick={onOpenDesignDrawer}
+            className="h-8.5 flex items-center gap-1.5 px-3 rounded-xl border border-[var(--line)] bg-[var(--panel2)] hover:border-[var(--violet)] text-xs text-[var(--text)] font-semibold transition-all shadow-xs cursor-pointer"
+            title="Open Colors, Themes & Layouts Preview Drawer"
+          >
+            <Palette className="w-3.5 h-3.5 text-[var(--violet)]" />
+            <span className="hidden xl:inline">Themes</span>
+          </button>
+
+          {/* Quick Adaptive Burst */}
+          <button
+            onClick={() => openExamModal()}
+            className="h-8.5 flex items-center gap-1.5 px-3.5 rounded-xl bg-gradient-to-r from-[#7668ff] to-[#a05fff] text-white text-xs font-semibold hover:brightness-110 active:scale-95 transition-all shadow-md shadow-[#7668ff]/20 cursor-pointer"
+          >
+            <span>Quick Burst</span>
+          </button>
+
+          {/* Launch Modal */}
+          <button
+            onClick={onOpenLaunchModal}
+            className="h-8.5 flex items-center gap-1.5 px-3.5 rounded-xl bg-gradient-to-r from-[#6366f1] via-[#8b7cff] to-[#4de1d0] text-white text-xs font-bold shadow-md shadow-[#6366f1]/25 hover:brightness-110 active:scale-95 transition-all uppercase tracking-wide cursor-pointer"
+            title="Verify & Launch Live"
+          >
+            <Rocket className="w-3.5 h-3.5" />
+            <span className="hidden md:inline">Launch</span>
+          </button>
+        </div>
       </div>
-      <h4 style="font-size:17px;font-weight:700;margin:16px 0;line-height:1.5" id="fcQ">
-        Q: Finished goods are expected to sell at or above cost. Replacement cost of raw materials dropped. What is the valuation rule?
-      </h4>
-      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mute)">
-        <span>Recall in your head, then tap to check!</span>
-        <span style="color:#7A5CFF;font-weight:700">Flip ➔</span>
-      </div>
-    </div>
-    <div class="card-face card-back" style="flex-direction:column">
-      <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#0F3B33;text-transform:uppercase">
-        <span>ICAI Suggested Model Provision</span>
-        <span style="color:#7A5CFF">Answer Back</span>
-      </div>
-      <p style="font-size:15px;font-weight:600;margin:12px 0;line-height:1.6" id="fcA">
-        Materials and other supplies are NOT written down below cost if the finished products in which they will be incorporated are expected to be sold at or above cost.
-      </p>
-      <div style="font-size:12px;font-weight:700;color:#7A5CFF" id="fcRule">
-        Key: Keep RM at cost, not replacement value!
-      </div>
-    </div>
-  </div>
- </div>
-</section>
-
-<section>
- <h2>Kahan kya use hoga</h2>
- <p class="sub">Har jagah alag mood, ek hi app mein.</p>
- <div class="grid">
-  <div class="card glass"><div style="font-size:26px">🏠</div><h3>Home, Planner, Streak</h3><p>Aurora pastel glass look.</p></div>
-  <div class="card glass"><div style="font-size:26px">🃏</div><h3>Flashcards</h3><p>Aurora soft colors, flip effect.</p></div>
-  <div class="card glass" style="background:#F6F0E4;color:#1B2A26"><div style="font-size:26px">📒</div><h3 style="color:#0F3B33">Check Answer</h3><p style="color:#5E6B66">Ledger paper aur red ink.</p></div>
-  <div class="card glass"><div style="font-size:26px">🌙</div><h3>Dark Mode</h3><p>Raat ki padhai ke liye.</p></div>
- </div>
-</section>
-
-<footer>Design concept · Dheeti (Aurora Hybrid)</footer>
-</div>
-
-<script>
-var curLevel = 'Foundation';
-var curQ = 0;
-var isDark = false;
-
-var DATA = {
-  Foundation: [
-    { title: "Practice · Q1", marks: "4 marks", topic: "AS 10 / Depreciation · PPE Cost Principles", html: 'Cost of PPE includes purchase price, <span class="w">selling expenses</span><span class="fix"> import duty & transit insurance</span>, and <span class="w">interest on loan always</span><span class="fix"> directly attributable erection costs</span><span class="tick"> ✓</span>', score: "Score: 2 / 4 · Working notes zaroor likho!", note: '← "selling expenses" machine cost mein kabhi capitalise nahi hote!' },
-    { title: "Practice · Q2", marks: "5 marks", topic: "Accounting Process · BRS Adjustments", html: 'While reconciling passbook with bank column, direct credit by customer is <span class="w">ignored until month-end</span><span class="fix"> added to cash book</span>, while bank charges debited by bank must be <span class="w">added as receipt</span><span class="fix"> deducted from cash book balance</span> in cash book adjustment.<span class="tick"> ✓</span>', score: "Score: 3 / 5 · Timing diff vs error clear rakho!", note: '← Direct customer credit se bank balance badhta hai, cash book update karna mandatory hai!' }
-  ],
-  Inter: [
-    { title: "Practice · Q1", marks: "5 marks", topic: "AS 2 · Valuation of Inventories", html: 'Inventories should be valued at lower of cost and net realizable value. Materials are <span class="w">always written down to replacement value</span><span class="fix"> not written down below cost</span>, if finished products are expected to be sold at <span class="w">loss to clear inventory</span><span class="fix"> or above cost</span>.<span class="tick"> ✓</span>', score: "Score: 4 / 5 · Core provision quoted accurately!", note: '← AS 2 paragraph 24 exception: RM tab tak write-down nahi hoti jab tak FG loss par na biken!' },
-    { title: "Practice · Q2", marks: "5 marks", topic: "AS 16 · Borrowing Costs Capitalisation", html: 'Capitalisation of borrowing costs shall cease when <span class="w">final payment to contractor is settled</span><span class="fix"> substantially all activities are complete</span>, and temporary suspension of construction due to normal delay requires <span class="w">immediate cessation of capitalisation</span><span class="fix"> continuation of capitalisation</span>.<span class="tick"> ✓</span>', score: "Score: 3.5 / 5 · Good conceptual clarity!", note: '← Substantial completion par interest capitalisation ruk jaata hai, payment settlement date par nahi!' }
-  ],
-  Final: [
-    { title: "Practice · Q1", marks: "6 marks", topic: "Ind AS 115 · Revenue from Contracts with Customers", html: 'Under 5-step model, transaction price allocation to performance obligations is done based on <span class="w">historical negotiated discount rates</span><span class="fix"> relative standalone selling prices</span>, while variable consideration is estimated using <span class="w">management discretion at period end</span><span class="fix"> expected value or most likely amount method</span>.<span class="tick"> ✓</span>', score: "Score: 5 / 6 · Precise Ind AS terminology!", note: '← Standalone Selling Price (SSP) allocation Ind AS 115 ka cardinal rule hai!' },
-    { title: "Practice · Q2", marks: "6 marks", topic: "Ind AS 116 · Leases (Lessee Accounting)", html: 'At commencement date, lessee measures lease liability at present value of lease payments discounted using <span class="w">borrower current overdraft rate</span><span class="fix"> interest rate implicit in the lease (or IBR)</span>, and initial direct costs incurred are <span class="w">charged off to P&L immediately</span><span class="fix"> included in the initial cost of ROU asset</span>.<span class="tick"> ✓</span>', score: "Score: 4.5 / 6 · Excellent working note presentation!", note: '← Initial direct costs ROU asset mein add hote hain, expensed off nahi!' }
-  ]
+    </header>
+  );
 };
 
-var FLASH = {
-  Foundation: { topic: "CA Foundation · NRV Principle", q: "Finished goods are expected to sell at or above cost. Replacement cost of raw materials dropped. What is the valuation rule?", a: "Materials and other supplies are NOT written down below cost if the finished products in which they will be incorporated are expected to be sold at or above cost.", rule: "Key: Keep RM at cost, not replacement value!" },
-  Inter: { topic: "CA Inter · AS 10 Decommissioning", q: "Initial estimate of dismantling and removing the asset and restoring the site—should it be capitalised in PPE cost?", a: "YES. AS 10 mandates that the initial estimate of dismantling & site restoration obligation must be included in the cost of PPE as per AS 29.", rule: "Key: Dr. PPE, Cr. Provision for Decommissioning!" },
-  Final: { topic: "CA Final · Ind AS 109 ECL", q: "When does a financial asset transition from Stage 1 (12-month ECL) to Stage 2 (Lifetime ECL)?", a: "When there is a Significant Increase in Credit Risk (SICR) since initial recognition, even before default occurs (usually 30+ days past due).", rule: "Key: 12-month ECL shifts to Lifetime ECL on SICR!" }
+/* =========================================================================
+   2. UNIFIED TOPHEADER COMPONENT (Workspace Title & Aligned Header Bar)
+   ========================================================================= */
+const AppTopHeader: React.FC<HeaderActionProps> = ({
+  onOpenCycleModal,
+  onOpenDesignDrawer,
+  onOpenLaunchModal,
+}) => {
+  const { activeTab, activeCycle, themeMode, setThemeMode, recalculatePlan, openExamModal, showToast, focusStreakDays } = useRevision();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === 'accepted') {
+        showToast('🎉 dheeti app added to your home screen!');
+      }
+      setDeferredPrompt(null);
+    } else {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        showToast('📱 Tap browser menu (⋮ or Share) ➔ "Add to Home screen" to install dheeti!');
+      } else {
+        showToast('💻 In Chrome/Edge: click the Install icon (⊕) in address bar to install dheeti!');
+      }
+    }
+  };
+
+  const getTitleAndSub = () => {
+    switch (activeTab) {
+      case 'aurora-hybrid':
+        return {
+          title: 'Dheeti – Aurora Hybrid',
+          subtitle: 'Padhai soft, checking strict: Pastel glass planner + ICAI ledger paper & red ink.',
+        };
+      case 'sanctuary-studio':
+        return {
+          title: 'Dheeti Sovereign Studio',
+          subtitle: 'Active Recall Sanctuary: Focus Interval, Curated Vault, 3D Flashcard, and Ledger Corrections.',
+        };
+      case 'command-center':
+        return {
+          title: 'Command Center',
+          subtitle: `Adaptive revision schedule dynamically tuned for ${activeCycle.level} actual recall performance.`,
+        };
+      case 'ca-interactive-arena':
+        return {
+          title: 'Case Study Arena',
+          subtitle: 'ICAI step-marking matrix, working note checklists, and live mistake taxonomy.',
+        };
+      case 'revision-engine':
+        return {
+          title: 'Revision Engine',
+          subtitle: `Priority matrix & decay velocity calibrated for ${activeCycle.level}.`,
+        };
+      case 'active-recall':
+        return {
+          title: 'Active Recall Burst',
+          subtitle: 'High-frequency concept interrogation with immediate ICAI standard feedback.',
+        };
+      case 'exam-simulator':
+        return {
+          title: 'Exam Simulator',
+          subtitle: `Timed mock examination with integrated ${activeCycle.level} standard marking scheme.`,
+        };
+      case 'mistake-vault':
+        return {
+          title: 'Mistake Vault (Red-Ink)',
+          subtitle: 'Persistent archive of concept failures, traps, and remediated rules.',
+        };
+      case 'analytics':
+        return {
+          title: 'Recall Analytics',
+          subtitle: 'Forgetting curves, retention velocity, and mastery trajectory.',
+        };
+      default:
+        return {
+          title: 'Dheeti OS',
+          subtitle: 'Chartered Accountancy Cognitive Revision Operating System.',
+        };
+    }
+  };
+
+  const { title, subtitle } = getTitleAndSub();
+
+  return (
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-2 transition-colors">
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-[var(--violet)]/15 text-[var(--violet)]">
+            {activeCycle.level}
+          </span>
+          <span className="text-xs text-[var(--muted)]">· {activeCycle.cycleCode}</span>
+        </div>
+        <h1 className="text-2xl font-bold text-[var(--text)] tracking-tight">{title}</h1>
+        <p className="text-sm text-[var(--muted)] mt-0.5">{subtitle}</p>
+      </div>
+
+      <div className="flex items-center gap-2.5 flex-wrap">
+        {/* Revision Streak Counter Pill */}
+        <div
+          onClick={() => showToast(`🔥 ${focusStreakDays}-day Revision Streak active! Consistency is your ultimate competitive edge.`)}
+          className="h-9 flex items-center gap-1.5 px-3.5 rounded-xl border-2 border-amber-500 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-black cursor-pointer transition-all shadow-md shadow-amber-500/25 select-none hover:brightness-110 active:scale-95 ring-2 ring-amber-400/40"
+          title={`${focusStreakDays} Consecutive Days of Revision · Tap for discipline quote`}
+        >
+          <Flame className="w-4 h-4 text-white fill-amber-200 animate-pulse drop-shadow-sm" />
+          <span className="font-mono text-sm font-black text-white">{focusStreakDays}</span>
+          <span className="text-[10px] uppercase font-black tracking-wider text-amber-100 hidden sm:inline">Streak</span>
+        </div>
+
+        {/* Global Persistent Pomodoro Timer */}
+        <div className="flex items-center h-9">
+          <GlobalPomodoroWidget />
+        </div>
+
+        {/* Direct Dark / Light Mode Switcher - Icon Only (Clean & Modern) */}
+        <button
+          onClick={() => {
+            const nextTheme = themeMode === 'clean-light' ? 'neon-cyber' : 'clean-light';
+            setThemeMode(nextTheme);
+          }}
+          className={`w-9 h-9 rounded-xl border-2 flex items-center justify-center transition-all duration-200 cursor-pointer select-none active:scale-90 shadow-sm ${
+            themeMode === 'clean-light'
+              ? 'border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md'
+              : 'border-[var(--line)] bg-[var(--panel)] text-amber-300 hover:border-amber-400/60 hover:bg-[var(--panel2)] hover:shadow-md'
+          }`}
+          title={`Switch to ${themeMode === 'clean-light' ? 'Dark Mode' : 'Light Mode'}`}
+          aria-label="Toggle Light and Dark Mode"
+        >
+          {themeMode === 'clean-light' ? (
+            <Moon className="w-4 h-4 text-slate-800 fill-slate-800 transition-transform duration-300 hover:-rotate-12" />
+          ) : (
+            <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20 transition-transform duration-300 hover:rotate-45" />
+          )}
+        </button>
+
+        {/* 1-Tap PWA Install Button */}
+        <PWAInstallButton />
+
+        {/* Design Previews Button */}
+        <button
+          onClick={onOpenDesignDrawer}
+          className="h-9 flex items-center gap-1.5 px-3 rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)] text-xs font-semibold hover:border-[var(--violet)] hover:text-[var(--violet)] transition-colors shadow-sm cursor-pointer"
+          title="Switch Themes and Layouts"
+        >
+          <Palette className="w-3.5 h-3.5 text-[var(--violet)]" />
+          <span>Themes</span>
+        </button>
+
+        {/* Study Cycle Picker */}
+        <button
+          onClick={onOpenCycleModal}
+          className="h-9 flex items-center gap-1.5 px-3 rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)] text-xs hover:border-[var(--violet)]/50 transition-colors shadow-sm cursor-pointer"
+        >
+          <Calendar className="w-3.5 h-3.5 text-[var(--amber)]" />
+          <span className="font-semibold">{activeCycle.level}</span>
+        </button>
+
+        {/* Recalculate */}
+        <button
+          onClick={recalculatePlan}
+          className="h-9 flex items-center gap-1.5 px-3 rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)] text-xs hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors shadow-sm cursor-pointer"
+          title="Recalculate study queue from latest mistake log and recall scores"
+        >
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Recalculate Queue</span>
+        </button>
+
+        {/* Quick Burst */}
+        <button
+          onClick={() => openExamModal()}
+          className="h-9 flex items-center gap-1.5 px-3.5 rounded-xl bg-gradient-to-r from-[#7668ff] to-[#a05fff] text-white text-xs font-semibold shadow-md shadow-[#7668ff]/20 hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+        >
+          <Play className="w-3.5 h-3.5 fill-current" />
+          <span>Quick Burst</span>
+        </button>
+
+        {/* Install / Add to Home Screen App Shortcut Button */}
+        <button
+          onClick={handleInstallClick}
+          className="h-9 flex items-center gap-1.5 px-3 rounded-xl border border-[var(--cyan)]/40 bg-[var(--cyan)]/10 text-[var(--cyan)] text-xs font-bold hover:bg-[var(--cyan)]/20 transition-all shadow-sm cursor-pointer"
+          title="Add dheeti to Phone/Desktop Home Screen as an App"
+        >
+          <Smartphone className="w-3.5 h-3.5" />
+          <span>App Shortcut</span>
+        </button>
+
+        {/* Final Launch Button */}
+        <button
+          onClick={onOpenLaunchModal}
+          className="h-9 flex items-center gap-1.5 px-3.5 rounded-xl bg-gradient-to-r from-[#6366f1] via-[#8b7cff] to-[#4de1d0] text-white text-xs font-bold shadow-md shadow-[#6366f1]/25 hover:brightness-110 active:scale-95 transition-all uppercase tracking-wide cursor-pointer"
+        >
+          <Rocket className="w-3.5 h-3.5" />
+          <span>Launch Ready</span>
+        </button>
+      </div>
+    </header>
+  );
 };
 
-function updateLevel(val){
-  curLevel = val;
-  curQ = 0;
-  rst();
-  document.getElementById('levelTag').textContent = '✨ CA ' + val + ' Mode';
-  document.getElementById('task1').textContent = val === 'Foundation' ? '📘 Paper 1: Accounting Basics' : val === 'Inter' ? '📘 Adv. Accounting Ch 8' : '📘 Paper 1: Financial Reporting';
-  loadQ(0);
-  document.getElementById('fcTopic').textContent = FLASH[val].topic;
-  document.getElementById('fcQ').textContent = 'Q: ' + FLASH[val].q;
-  document.getElementById('fcA').textContent = FLASH[val].a;
-  document.getElementById('fcRule').textContent = FLASH[val].rule;
-}
+/* =========================================================================
+   3. UNIFIED SIDEBAR COMPONENT (Desktop & Mobile Drawer Dock)
+   ========================================================================= */
+const AppSidebar: React.FC<HeaderActionProps> = ({
+  onOpenCycleModal,
+  onOpenDesignDrawer,
+}) => {
+  const { activeTab, setActiveTab, activeCycle, resetToDefaults, themeMode, setThemeMode } = useRevision();
 
-function loadQ(idx){
-  curQ = idx;
-  rst();
-  var item = DATA[curLevel][idx];
-  document.getElementById('paperQTitle').textContent = item.title;
-  document.getElementById('paperQMarks').textContent = item.marks;
-  document.getElementById('paperQSub').textContent = item.topic;
-  document.getElementById('ans').innerHTML = item.html;
-  document.getElementById('paperScore').textContent = item.score;
-  document.getElementById('paperNote').textContent = item.note;
-  var btns = document.getElementById('qBtns').children;
-  btns[0].className = idx === 0 ? 'btn' : 'btn o';
-  btns[0].style.background = idx === 0 ? '#0F3B33' : '';
-  btns[1].className = idx === 1 ? 'btn' : 'btn o';
-  btns[1].style.background = idx === 1 ? '#0F3B33' : '';
-}
+  const primaryRevisionTracks: {
+    id: ActiveTab;
+    label: string;
+    sublabel: string;
+    symbol: string;
+    icon: React.ReactNode;
+  }[] = [
+    {
+      id: 'aurora-hybrid',
+      label: 'Aurora Hybrid',
+      sublabel: 'Padhai soft, checking strict',
+      symbol: '✨',
+      icon: <Sparkles className="w-4 h-4 text-[#FF7EB0]" />,
+    },
+    {
+      id: 'sanctuary-studio',
+      label: 'Dheeti Sanctuary',
+      sublabel: 'Matrix • Sanctum • Ledger',
+      symbol: '✨',
+      icon: <Sparkles className="w-4 h-4 text-[#8b7cff]" />,
+    },
+    {
+      id: 'command-center',
+      label: 'Command Center',
+      sublabel: 'Adaptive overview & debt',
+      symbol: '⌂',
+      icon: <LayoutDashboard className="w-4 h-4" />,
+    },
+    {
+      id: 'rtp-mtp-pyq',
+      label: 'RTP · MTP · PYQ Vault',
+      sublabel: '2018–2026 ICAI + Mix + Own',
+      symbol: '📚',
+      icon: <Library className="w-4 h-4 text-[#7A5CFF]" />,
+    },
+    {
+      id: 'ca-interactive-arena',
+      label: 'Case Study Arena',
+      sublabel: 'Step-marking & mistake vault',
+      symbol: '⚖',
+      icon: <BookOpenCheck className="w-4 h-4" />,
+    },
+    {
+      id: 'revision-engine',
+      label: 'Revision Engine',
+      sublabel: 'Algorithmic priority queue',
+      symbol: '◈',
+      icon: <BrainCircuit className="w-4 h-4" />,
+    },
+    {
+      id: 'active-recall',
+      label: 'Active Recall',
+      sublabel: 'Concept retrieval drills',
+      symbol: '⚡',
+      icon: <Zap className="w-4 h-4" />,
+    },
+    {
+      id: 'exam-simulator',
+      label: 'Exam Simulator',
+      sublabel: 'Timed ICAI diagnostic mock',
+      symbol: '◫',
+      icon: <BookOpenCheck className="w-4 h-4" />,
+    },
+    {
+      id: 'mistake-vault',
+      label: 'Mistake Vault',
+      sublabel: 'Red-ink error ledger',
+      symbol: '◌',
+      icon: <Flame className="w-4 h-4" />,
+    },
+    {
+      id: 'analytics',
+      label: 'Recall Analytics',
+      sublabel: 'Retention decay velocity',
+      symbol: '◉',
+      icon: <LineChart className="w-4 h-4" />,
+    },
+  ];
 
-function toggleTheme(){
-  isDark = !isDark;
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  document.getElementById('themeBtn').textContent = isDark ? '☀️ Light' : '🌙 Dark';
-}
+  return (
+    <aside className="w-[245px] shrink-0 border-r border-[var(--line)] bg-[var(--panel)]/95 backdrop-blur-md p-4 flex flex-col justify-between sticky top-0 h-screen overflow-y-auto transition-colors">
+      <div>
+        {/* Clean Application Brand Lockup */}
+        <div
+          className="flex items-center gap-3 mb-6 cursor-pointer group select-none"
+          onClick={() => setActiveTab('command-center')}
+          title="Dheeti Command Center"
+        >
+          <DheetiLogo size={40} withGlow={true} />
+          <div className="flex flex-col justify-center">
+            <div className="flex items-center gap-1.5 leading-none">
+              <div className="font-extrabold text-[18px] text-[var(--text)] tracking-tight leading-none">
+                Dheeti
+              </div>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#8b7cff]/20 text-[#a594ff] border border-[#8b7cff]/30 leading-none">
+                धीति
+              </span>
+            </div>
+            <span className="block text-[8.5px] font-mono font-bold text-[var(--muted)] tracking-[1.4px] uppercase mt-1 leading-none">
+              WISDOM &amp; REVISION OS
+            </span>
+          </div>
+        </div>
 
-function chk(){document.getElementById('ans').classList.add('checked');party()}
-function rst(){document.getElementById('ans').classList.remove('checked')}
-function party(){
-  var c=['#7A5CFF','#FF7EB0','#7EDCC4','#FFC2A6','#B7A6FF'];
-  for(var i=0;i<40;i++){
-    var d=document.createElement('div');
-    d.className='conf';
-    d.style.left=Math.random()*100+'vw';
-    d.style.background=c[i%5];
-    d.style.animationDelay=Math.random()*.5+'s';
-    document.body.appendChild(d);
-    setTimeout(function(x){x.remove()},2600,d);
-  }
+        {/* Primary Track Settings Pill */}
+        <div className="mb-4">
+          <button
+            onClick={onOpenCycleModal}
+            className="w-full flex items-center justify-between p-2.5 rounded-xl border border-[var(--line)] bg-[var(--panel2)] hover:border-[var(--violet)] text-xs text-[var(--text)] font-semibold transition-all group cursor-pointer"
+            title="Configure Active Revision Track"
+          >
+            <div className="flex items-center gap-2">
+              <Sliders className="w-3.5 h-3.5 text-[var(--violet)]" />
+              <span>Track: {activeCycle.level}</span>
+            </div>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--violet)]/15 text-[var(--violet)] font-mono">
+              Change
+            </span>
+          </button>
+        </div>
+
+        {/* Navigation Track Items */}
+        <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--muted)] px-1 mb-2 font-semibold">
+          Revision Tracks
+        </div>
+
+        <nav className="grid gap-1.5">
+          {primaryRevisionTracks.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center justify-between text-left px-3 py-2.5 rounded-xl transition-all duration-150 cursor-pointer ${
+                  isActive
+                    ? 'bg-[var(--panel2)] border border-[var(--line)] text-[var(--text)] font-semibold shadow-sm ring-1 ring-[var(--violet)]/30'
+                    : 'border border-transparent text-[var(--muted)] hover:bg-[var(--panel2)] hover:text-[var(--text)]'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className={`text-[13px] ${isActive ? 'text-[var(--violet)]' : 'text-[var(--muted)]'}`}>
+                    {item.symbol}
+                  </span>
+                  <div>
+                    <span className="text-xs font-semibold block leading-tight text-[var(--text)]">
+                      {item.label}
+                    </span>
+                    <span className="text-[10px] text-[var(--muted)] block leading-tight mt-0.5">
+                      {item.sublabel}
+                    </span>
+                  </div>
+                </div>
+                {isActive && <ChevronRight className="w-3.5 h-3.5 text-[var(--violet)] shrink-0 ml-1" />}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Revision Track Setting Card & Workspace Control */}
+      <div className="pt-4 border-t border-[var(--line)] space-y-3">
+        {/* Active Track Settings Summary Card */}
+        <div
+          onClick={onOpenCycleModal}
+          className="p-3 border border-[var(--line)] rounded-[15px] bg-[var(--panel2)] hover:border-[var(--violet)]/50 transition-colors cursor-pointer group"
+        >
+          <div className="flex items-center justify-between text-[11px] text-[var(--muted)] mb-1">
+            <span className="font-medium">Active Track</span>
+            <span className="text-[10px] text-[var(--violet)] group-hover:underline">Settings</span>
+          </div>
+
+          <div className="font-bold text-xs text-[var(--text)] leading-snug">
+            {activeCycle.level}
+          </div>
+          <div className="text-[11px] text-[var(--muted)] truncate">
+            {activeCycle.name}
+          </div>
+
+          <div className="h-[6px] bg-[var(--line)] rounded-full overflow-hidden mt-2 mb-1.5">
+            <div
+              className="h-full bg-gradient-to-r from-[var(--violet)] to-[var(--cyan)] rounded-full transition-all duration-500"
+              style={{ width: `${activeCycle.progressPercent}%` }}
+            />
+          </div>
+          <div className="flex items-center justify-between text-[10px] text-[var(--muted)]">
+            <span>{activeCycle.progressPercent}% coverage</span>
+            <span className="text-[var(--cyan)] font-mono">{activeCycle.cycleCode}</span>
+          </div>
+        </div>
+
+        {/* Direct Light / Dark Mode Switcher */}
+        <div className="p-1 rounded-xl border-2 border-[var(--line)] bg-[var(--panel2)] flex items-center gap-1 shadow-sm">
+          <button
+            onClick={() => setThemeMode('clean-light')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-black transition-all cursor-pointer ${
+              themeMode === 'clean-light'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md border border-amber-400 ring-1 ring-amber-300/40'
+                : 'text-[var(--muted)] hover:text-[var(--text)]'
+            }`}
+            title="Switch to Clean Light Day Mode"
+          >
+            <Sun className={`w-3.5 h-3.5 ${themeMode === 'clean-light' ? 'text-white fill-white' : 'text-amber-500 fill-amber-400'}`} />
+            <span>Light ☀️</span>
+          </button>
+          <button
+            onClick={() => setThemeMode(themeMode === 'clean-light' ? 'neon-cyber' : themeMode)}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-black transition-all cursor-pointer ${
+              themeMode !== 'clean-light'
+                ? 'bg-[var(--violet)] text-white shadow-md border border-violet-400 ring-1 ring-violet-300/40'
+                : 'text-[var(--text)] hover:text-[var(--violet)]'
+            }`}
+            title="Switch to Dark / Night Mode"
+          >
+            <Moon className={`w-3.5 h-3.5 ${themeMode !== 'clean-light' ? 'text-white fill-white' : 'text-amber-500 fill-amber-400'}`} />
+            <span>Dark 🌙</span>
+          </button>
+        </div>
+
+        {/* Visual Settings Drawer Trigger */}
+        <button
+          onClick={onOpenDesignDrawer}
+          className="w-full flex items-center justify-between p-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] hover:border-[var(--violet)] text-xs text-[var(--muted)] hover:text-[var(--text)] transition-all font-medium cursor-pointer"
+        >
+          <div className="flex items-center gap-2">
+            <Palette className="w-3.5 h-3.5 text-[var(--violet)]" />
+            <span>Theme &amp; Layout</span>
+          </div>
+          <ChevronRight className="w-3 h-3 text-[var(--muted)]" />
+        </button>
+
+        {/* Clean Workspace Reset Action */}
+        <div className="flex items-center justify-between px-1 text-[11px] text-[var(--muted)] pt-1">
+          <button
+            onClick={resetToDefaults}
+            className="flex items-center gap-1.5 hover:text-[var(--text)] transition-colors py-0.5 cursor-pointer"
+            title="Reset workspace demo state"
+          >
+            <RotateCcw className="w-3 h-3" />
+            <span>Reset Demo</span>
+          </button>
+          <span className="text-[10px] font-mono text-[var(--green)]">CA Track Active</span>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+/* =========================================================================
+   4. MAIN MASTER LAYOUT CONTAINER (With Framer Motion Tab Transitions)
+   ========================================================================= */
+const MainLayout: React.FC = () => {
+  const { activeTab, layoutMode, toastMessage, themeMode, setThemeMode } = useRevision();
+  const [isCycleModalOpen, setIsCycleModalOpen] = useState(false);
+  const [isDesignDrawerOpen, setIsDesignDrawerOpen] = useState(false);
+  const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isTopNavLayout = layoutMode === 'top-nav';
+  const isZenLayout = layoutMode === 'focus-zen';
+
+  return (
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors duration-200">
+      {/* Top Navigation Mode */}
+      {isTopNavLayout && (
+        <AppTopNav
+          onOpenCycleModal={() => setIsCycleModalOpen(true)}
+          onOpenDesignDrawer={() => setIsDesignDrawerOpen(true)}
+          onOpenLaunchModal={() => setIsLaunchModalOpen(true)}
+        />
+      )}
+
+      <div className="flex flex-col md:flex-row relative">
+        {/* Mobile Top Bar (only when sidebar is active on desktop) */}
+        {!isTopNavLayout && (
+          <div className="md:hidden flex items-center justify-between p-4 bg-[var(--panel)] border-b-2 border-[var(--line)] sticky top-0 z-40">
+            <div className="flex items-center gap-2.5">
+              <DheetiLogo size={32} withGlow={true} />
+              <div className="flex flex-col">
+                <span className="font-extrabold text-sm tracking-tight text-[var(--text)] leading-none">Dheeti</span>
+                <span className="text-[8px] font-mono font-bold text-[var(--muted)] tracking-wider uppercase mt-0.5 leading-none">WISDOM &amp; REVISION OS</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Direct Light / Dark Mode Toggle Button for Mobile - Clean Icon Only */}
+              <button
+                onClick={() => {
+                  const nextTheme = themeMode === 'clean-light' ? 'neon-cyber' : 'clean-light';
+                  setThemeMode(nextTheme);
+                }}
+                className={`w-9 h-9 rounded-xl border-2 flex items-center justify-center transition-all duration-200 cursor-pointer select-none active:scale-90 shadow-sm ${
+                  themeMode === 'clean-light'
+                    ? 'border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md'
+                    : 'border-[var(--line)] bg-[var(--panel)] text-amber-300 hover:border-amber-400/60 hover:bg-[var(--panel2)] hover:shadow-md'
+                }`}
+                title={`Switch to ${themeMode === 'clean-light' ? 'Dark Mode' : 'Light Mode'}`}
+                aria-label="Toggle Light and Dark Mode"
+              >
+                {themeMode === 'clean-light' ? (
+                  <Moon className="w-4 h-4 text-slate-800 fill-slate-800 transition-transform duration-300 hover:-rotate-12" />
+                ) : (
+                  <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20 transition-transform duration-300 hover:rotate-45" />
+                )}
+              </button>
+              <button
+                onClick={() => setIsDesignDrawerOpen(true)}
+                className="p-1.5 text-[var(--muted)] hover:text-[var(--text)] cursor-pointer"
+                title="Design Previews"
+              >
+                <Palette className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-1.5 text-[var(--muted)] hover:text-[var(--text)] cursor-pointer"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Sidebar for Desktop (Classic Dock & Zen Modes) */}
+        {!isTopNavLayout && (
+          <div className="hidden md:block">
+            <AppSidebar
+              onOpenCycleModal={() => setIsCycleModalOpen(true)}
+              onOpenDesignDrawer={() => setIsDesignDrawerOpen(true)}
+              onOpenLaunchModal={() => setIsLaunchModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {/* Mobile Sidebar Drawer */}
+        {!isTopNavLayout && isMobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex">
+            <div className="w-[260px] bg-[var(--panel)] h-full shadow-2xl relative">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="absolute top-4 right-4 text-[var(--muted)] cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div onClick={() => setIsMobileMenuOpen(false)}>
+                <AppSidebar
+                  onOpenCycleModal={() => setIsCycleModalOpen(true)}
+                  onOpenDesignDrawer={() => setIsDesignDrawerOpen(true)}
+                  onOpenLaunchModal={() => setIsLaunchModalOpen(true)}
+                />
+              </div>
+            </div>
+            <div className="flex-1" onClick={() => setIsMobileMenuOpen(false)} />
+          </div>
+        )}
+
+        {/* Main Viewport Container */}
+        <main className="flex-1 p-4 md:p-7 max-w-[1360px] w-full mx-auto">
+          {!isTopNavLayout && (
+            <AppTopHeader
+              onOpenCycleModal={() => setIsCycleModalOpen(true)}
+              onOpenDesignDrawer={() => setIsDesignDrawerOpen(true)}
+              onOpenLaunchModal={() => setIsLaunchModalOpen(true)}
+            />
+          )}
+
+          {/* Conditional Zen layout mode vs standard tab views with subtle Framer Motion entry animations */}
+          <AnimatePresence mode="wait">
+            {isZenLayout && activeTab === 'command-center' ? (
+              <motion.div
+                key="focus-zen"
+                initial={{ opacity: 0, y: 8, filter: 'blur(2px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -6, filter: 'blur(2px)' }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full"
+              >
+                <FocusZenLayout />
+              </motion.div>
+            ) : (
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 8, filter: 'blur(2px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -6, filter: 'blur(2px)' }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full"
+              >
+                {activeTab === 'aurora-hybrid' && <AuroraHybridView />}
+                {activeTab === 'sanctuary-studio' && <SovereignSanctuaryView />}
+                {activeTab === 'command-center' && <CommandCenter />}
+                {activeTab === 'rtp-mtp-pyq' && <RtpMtpPyqVault />}
+                {activeTab === 'ca-interactive-arena' && <CAInteractiveArena />}
+                {activeTab === 'revision-engine' && <RevisionEngineView />}
+                {activeTab === 'active-recall' && <ActiveRecallView />}
+                {activeTab === 'exam-simulator' && <ExamSimulatorView />}
+                {activeTab === 'mistake-vault' && <MistakeVaultView />}
+                {activeTab === 'analytics' && <AnalyticsView />}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </main>
+      </div>
+
+      {/* Interactive Modals & Drawers */}
+      <AdaptiveSessionModal />
+      <CycleSwitcherModal
+        isOpen={isCycleModalOpen}
+        onClose={() => setIsCycleModalOpen(false)}
+      />
+      <DesignStudioDrawer
+        isOpen={isDesignDrawerOpen}
+        onClose={() => setIsDesignDrawerOpen(false)}
+        onOpenCycleModal={() => setIsCycleModalOpen(true)}
+        onOpenLaunchModal={() => setIsLaunchModalOpen(true)}
+      />
+      <LaunchReadyModal
+        isOpen={isLaunchModalOpen}
+        onClose={() => setIsLaunchModalOpen(false)}
+      />
+
+      {/* Floating Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 bg-[var(--panel)] border border-[var(--line)] text-[var(--text)] text-xs font-semibold rounded-xl shadow-2xl animate-in slide-in-from-bottom-3 duration-200">
+          <CheckCircle2 className="w-4 h-4 text-[var(--green)]" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <RevisionProvider>
+      <MainLayout />
+    </RevisionProvider>
+  );
 }
-</script>
-</body>
-</html>
